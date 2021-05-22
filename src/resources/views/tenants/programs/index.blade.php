@@ -7,6 +7,7 @@
 
 
 @section('body_content_main')
+    @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container mt-5">
         <div id="program">
 

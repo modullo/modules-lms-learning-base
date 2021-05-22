@@ -86,7 +86,7 @@
 
 
 @section('body_content_main')
-    @include('modules-lms-base::navigation')
+    @include('modules-lms-base::navigation',['type' => 'learner'])
     <div>
         <div id="program">
 

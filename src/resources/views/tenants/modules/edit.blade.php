@@ -7,6 +7,7 @@
 
 
 @section('body_content_main')
+    @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container">
         <div id="app">
             <h3 class="mt-5">Edit Modules</h3>

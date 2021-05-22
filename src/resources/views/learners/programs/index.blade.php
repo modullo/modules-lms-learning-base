@@ -7,6 +7,7 @@
 
 
 @section('body_content_main')
+    @include('modules-lms-base::navigation',['type' => 'learner'])
     <div>
         <div class="container" id="program" style="padding-top: 60px">
 
