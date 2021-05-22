@@ -15,14 +15,14 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
             __DIR__.'/resources/js/' => resource_path('js/vendor/modules-lms-learning-base')
         ],'lms-vue');
         $this->publishes([
-            __DIR__.'/config/navigation-settings.php' => config_path('modules-lms-learning-base.php')
-        ],'lms-learning-config');
+            __DIR__.'/config/navigation-settings.php' => config_path('navigation-menu.php')
+        ],'menu-config');
     }
 
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/config/navigation-settings.php', 'navigation-settings.modules-lms-learning-base.sub-menu'
+            __DIR__.'/config/navigation-settings.php', 'navigation-menu'
         );
     }
 }
