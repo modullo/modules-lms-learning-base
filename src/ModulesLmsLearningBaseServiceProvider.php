@@ -12,6 +12,10 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/resources/views', 'modules-lms-learning-base');
 
         $this->publishes([
+            __DIR__.'/resources/carousel' => public_path('LearningBase'),
+        ], 'learning-assets');
+
+        $this->publishes([
             __DIR__.'/resources/js/' => resource_path('js/vendor/modules-lms-learning-base')
         ],'lms-vue');
         $this->publishes([

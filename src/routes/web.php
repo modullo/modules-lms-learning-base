@@ -17,7 +17,7 @@ Route::group(['namespace' => 'Lms\ModulesLmsLearningBase\Http\Controllers','midd
         //        Programs
         Route::group(['prefix' => 'programs'],function() {
             Route::get('/', 'ModulesLmsLearningBaseController@programs');
-            Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
+            Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
         });
     });
 

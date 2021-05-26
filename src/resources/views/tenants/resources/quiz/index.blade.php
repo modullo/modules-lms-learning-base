@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
@@ -14,19 +18,23 @@
                 <h2 class="mb-5">Quiz</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn add-course" href="./create.html">
+                    <a class="btn btn-outline-primary" href="/tenant/quiz/create">
                         <i class="fa fa-plus"> </i>
 
                         Add Quiz
                     </a>
                 </div>
 
-                <div class="form-group has-search mb-5">
-                    <span class="fa fa-search form-control-feedback"></span>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <span class="fa fa-search form-control-feedback"></span>
+                        </div>
+                    </div>
                     <input
                             type="text"
                             class="form-control"
-                            placeholder="Search Quiz"
+                            placeholder="Search Course"
                     />
                 </div>
 
@@ -43,11 +51,11 @@
                                 <h5 class="card-title">@{{ cardinfo.title }}</h5>
 
 
-                                <a class="btn app-btn mx-2" href="./update.html" role="button"
+                                <a class="btn btn-primary mr-2" href="/tenant/quiz/edit" role="button"
                                 >Update</a
                                 >
 
-                                <a class="btn app-btn" href="/#" role="button">Delete</a>
+                                <a class="btn btn-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>

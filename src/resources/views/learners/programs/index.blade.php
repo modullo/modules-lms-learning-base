@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'learner'])
@@ -12,9 +16,17 @@
         <div class="container" id="program" style="padding-top: 60px">
 
 
-            <div class="form-group has-search mb-5">
-                <span class="fa fa-search form-control-feedback"></span>
-                <input type="text" class="form-control" placeholder="Search Course" />
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <span class="fa fa-search form-control-feedback"></span>
+                    </div>
+                </div>
+                <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Search Course"
+                />
             </div>
 
             <h1 class="mb-4">Program</h1>
@@ -33,9 +45,12 @@
                                 width="100%"
                         />
                         <div class="card-body">
-                            <a href="./program.html">
-                                <h5 class="card-title">@{{ cardinfo.title }}</h5>
-                            </a>
+
+                            <h5 class="card-title">
+                                <a :href="'/learner/programs/'+cardinfo.title">
+                                    @{{ cardinfo.title }}
+                                </a>
+                            </h5>
                             <h6 class="card-subtitle mb-2 text-muted">
                                 @{{ cardinfo.author }}
                             </h6>

@@ -2,7 +2,14 @@
 @extends('layouts.themes.tabler.tabler')
 
 @section('head_js')
+    <link
+            href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+            rel="stylesheet"
+    />
+@endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
 @endsection
 
 
@@ -10,6 +17,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container">
         <div id="app">
+
             <h3 class="mt-5">Create Course</h3>
 
             <div class="card col mt-5 mx-auto mb-5">
@@ -27,7 +35,7 @@
                                         id="title"
                                         placeholder="Title of course"
 
-
+                                    v-model="form.title"
                                 />
                             </div>
                             <div class="form-group col-md-3">
@@ -38,15 +46,15 @@
                                         id="subtype"
                                         placeholder="Course caption"
 
-
+                                        v-model="form.caption"
                                 />
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="visibilitytype"> course duration * </label>
                                 <input type="text"
-                                       class="form-control" name="" id=""
-
+                                       class="form-control" name=""
+                                       v-model="form.duration"
                                        aria-describedby="helpId" placeholder="course duration">
 
 
@@ -56,7 +64,7 @@
 
                             <div class="form-group col">
                                 <label for=""> Select Program</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.program_id">
                                     <option></option>
                                     <option></option>
                                     <option></option>
@@ -66,7 +74,7 @@
 
                             <div class="form-group col">
                                 <label for=""> Select certificate</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.certificate">
                                     <option></option>
                                     <option></option>
                                     <option></option>
@@ -76,7 +84,7 @@
 
                             <div class="form-group col">
                                 <label for=""> Course instructor</label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.instructor_id">
                                     <option></option>
                                     <option></option>
                                     <option></option>
@@ -113,14 +121,16 @@
                             <div class="form-group col-6">
                                 <label for="">Publish state</label>
                                 <input type="text"
-                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="course publish state">
+                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="course publish state"
+                                       v-model="form.publish_date">
                             </div>
 
 
                             <div class="form-group col-6">
                                 <label for="">Course pack</label>
                                 <input type="text"
-                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="Course pack">
+                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="Course pack"
+                                       v-model="form.course_pack">
                             </div>
 
 
@@ -130,7 +140,7 @@
 
                                 <label for="">Subscription type</label>
 
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.subscription">
                                     <option></option>
                                     <option></option>
                                     <option></option>
@@ -146,7 +156,7 @@
 
                                 <label for="">Payment type</label>
 
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.payment_type">
                                     <option></option>
                                     <option></option>
                                     <option></option>
@@ -230,7 +240,8 @@
 
                                     Cover image
                                 </label>
-                                <input type="file" class="form-control-file" name="" id="" placeholder="" aria-describedby="fileHelpId">
+                                <input type="file" class="form-control-file" name="" id="" placeholder="" aria-describedby="fileHelpId"
+                                       >
 
                             </div>
 
@@ -263,7 +274,7 @@
     fields with *  are required
   </span>
 
-                    <button type="submit" class="btn btn-outline-primary">Add course</button>
+                    <button @click.prevent="submitForm" class="btn btn-outline-primary">Add course</button>
 
 
 
@@ -273,6 +284,7 @@
         </div>
     </div>
     </div>
+
 @endsection
 
 @section('body_js')
@@ -323,8 +335,10 @@
         });
     </script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vue-swal"></script>
 
     <script>
         "use strict";
@@ -364,10 +378,36 @@
 
         new Vue({
             el: "#app",
-
             data: {
-
+                // return {
+                    overviewVideo:'',
+                    form:{
+                        title:'',
+                        cover_image:'',
+                        payment_type:'',
+                        subscription:'',
+                        course_pack:'',
+                        publish_date:'',
+                        instructor_id:'',
+                        certificate:'',
+                        program_id:'',
+                        caption:'',
+                        duration:''
+                    }
+                // };
             },
+            methods:{
+                submitForm(){
+                    console.log('working!!')
+                    if(!this.form.title)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'You have a missing inputs, All * are required!',
+                    })
+                    return true;
+                }
+            }
 
         });
     </script>

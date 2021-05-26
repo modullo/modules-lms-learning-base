@@ -21,7 +21,7 @@
 
 
                 <div class="add-course-contain">
-                    <a class="btn add-course" href="./create.html">
+                    <a class="btn add-course" href="/tenant/programs/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -29,9 +29,17 @@
                     </a>
                 </div>
 
-                <div class="form-group has-search mb-5">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control" placeholder="Search Program">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <span class="fa fa-search form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Search Course"
+                    />
                 </div>
 
                 <div class="row">
@@ -55,7 +63,7 @@
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
 
-                                <a class="btn app-btn" href="../../Course/course.html" role="button"
+                                <a class="btn app-btn" href="/tenant/programs" role="button"
                                 >View Course</a
                                 >
 
@@ -65,7 +73,7 @@
 
                                 <a
                                         class="btn app-btn mx-2"
-                                        href="./edit.html"
+                                        href="/tenant/programs/edit"
                                         role="button"
                                 >Edit</a
                                 >

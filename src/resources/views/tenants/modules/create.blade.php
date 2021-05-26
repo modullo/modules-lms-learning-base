@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
@@ -14,11 +18,11 @@
 
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
-                    <form class="form">
+                    <form class="form" @submit.prevent="submitForm">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
                                 <label for="tenant"> Tenant * </label>
-                                <select class="form-control" name="" id="">
+                                <select class="form-control" name="" id="" v-model="form.tenant_id">
                                     <option selected>Select tenants</option>
                                     <option></option>
                                     <option></option>
@@ -113,6 +117,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         "use strict";
@@ -120,7 +125,26 @@
         new Vue({
             el: "#app",
 
-            data: {},
+            data: {
+                form:{
+                    tenant_id:''
+                }
+            },
+            methods: {
+                submitForm() {
+                    console.log('working!!')
+                    if (!this.form.tenant_id) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'You have a missing inputs, All * are required!',
+                        })
+                        return true;
+                    }
+
+                },
+            }
+
         });
     </script>
 @endsection

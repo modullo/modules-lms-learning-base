@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])

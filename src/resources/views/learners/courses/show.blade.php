@@ -1,15 +1,11 @@
 @extends('layouts.themes.tabler.tabler')
 
-@section('head_js')
-
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
 @endsection
 
 
 @section('body_content_main')
-    <div class="mt-3">
-        Single Course Preview
-    </div>
-
     <div id="course">
         <div class="jumbotron jumbotron-fluid program-jumbotron">
             <div class="container">

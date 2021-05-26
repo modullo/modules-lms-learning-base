@@ -6,6 +6,7 @@
 @endsection
 
 
+
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container mt-5">
@@ -14,7 +15,7 @@
                 <h2 class="mb-5">Course</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn add-course" href="./create.html">
+                    <a class="btn add-course" href="/tenant/courses/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -23,12 +24,19 @@
                 </div>
 
                 <div class="form-group has-search mb-5">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Search Course"
-                    />
+
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fa fa-search form-control-feedback"></span>
+                            </div>
+                        </div>
+                        <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Search Course"
+                        />
+                    </div>
                 </div>
                 <div class="row">
                     <div
@@ -50,12 +58,12 @@
 
                                 <a
                                         class="btn app-btn"
-                                        href="../../../index.html"
+                                        href="/tenant/courses/"
                                         role="button"
                                 >View Course</a
                                 >
 
-                                <a class="btn app-btn mx-2" href="./edit.html" role="button"
+                                <a class="btn app-btn mx-2" href="/tenant/courses/edit" role="button"
                                 >Edit</a
                                 >
 

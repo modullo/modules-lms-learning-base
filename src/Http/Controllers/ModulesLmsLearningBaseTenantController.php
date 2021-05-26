@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 class ModulesLmsLearningBaseTenantController extends Controller
 {
+
     public function create()
     {
         return view('modules-lms-learning-base::tenants.course.create');

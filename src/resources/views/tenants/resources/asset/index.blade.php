@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
@@ -14,19 +18,23 @@
                 <h2 class="mb-5">Resources</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn add-course" href="./create.html">
+                    <a class="btn btn-outline-primary" href="/tenant/assets/create">
                         <i class="fa fa-plus"> </i>
 
                         Add Assets
                     </a>
                 </div>
 
-                <div class="form-group has-search mb-5">
-                    <span class="fa fa-search form-control-feedback"></span>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <span class="fa fa-search form-control-feedback"></span>
+                        </div>
+                    </div>
                     <input
                             type="text"
                             class="form-control"
-                            placeholder="Search assets"
+                            placeholder="Search Course"
                     />
                 </div>
 
@@ -42,7 +50,7 @@
 
                                 <p>Resources Type : Video</p>
 
-                                <a class="btn app-btn" href="/#" role="button">Delete</a>
+                                <a class="btn btn-outline-primary" href="/#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>

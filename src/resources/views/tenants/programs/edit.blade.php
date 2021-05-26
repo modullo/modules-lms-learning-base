@@ -5,6 +5,10 @@
 
 @endsection
 
+@section('head_css')
+    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+@endsection
+
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
@@ -14,7 +18,7 @@
 
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
-                    <form class="form"  @submit="checkForm">
+                    <form class="form"  @submit="submitForm">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="title">Title *</label>
@@ -189,6 +193,20 @@
                 cardinfos: dummyData,
 
             },
+            methods: {
+                submitForm() {
+                    console.log('working!!')
+                    if (!this.form.title) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'You have a missing inputs, All * are required!',
+                        })
+                        return true;
+                    }
+
+                },
+            }
 
 
         });

@@ -1,25 +1,94 @@
 <?php
 
 return [
-    'quizzes' => [
-        'icon' => 'fa fa-home',
+    'resources' => [
+        'icon' => 'fa fa-file',
         'dashboard' => 'all',
-        'title' => 'Quiz Management',
-        'route' => 'learner/dashboard',
+        'title' => 'Resources',
+        'route' => 'tenant/quiz',
         'clickable' => true,
         'navbar' => true,
         'visibility' => false,
         'sub-menu' => [
-            'product' => [
+            'quiz' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'Product',
-                'route' => 'password',
+                'title' => 'Quiz',
+                'route' => 'tenant/quiz',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+            'asset' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'Assets',
+                'route' => 'tenant/assets',
                 'clickable' => true,
                 'navbar' => true,
             ],
         ],
-//        'sub-menu-display' => 'hide'
+    ],
+    'course-mgt' => [
+        'icon' => 'fa fa-graduation-cap',
+        'dashboard' => 'all',
+        'title' => 'Courses Component',
+        'route' => '#',
+        'clickable' => true,
+        'navbar' => true,
+        'visibility' => false,
+        'sub-menu' => [
+            'modules' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'Modules',
+                'route' => 'tenant/modules',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+            'course' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'Courses',
+                'route' => 'tenant/courses',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+            'lesson' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'Lessons',
+                'route' => 'tenant/lessons',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+        ],
+    ],
+    'program-mgt' => [
+        'icon' => 'fa fa-home',
+        'dashboard' => 'all',
+        'title' => 'Program Management',
+        'route' => '#',
+        'clickable' => true,
+        'navbar' => true,
+        'visibility' => false,
+        'sub-menu' => [
+            'create' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'Create Programs',
+                'route' => 'tenant/programs/create',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+            'programs' => [
+                'icon' => 'fa fa-home',
+                'dashboard' => 'all',
+                'title' => 'All Programs',
+                'route' => 'tenant/programs',
+                'clickable' => true,
+                'navbar' => true,
+            ],
+        ],
     ],
     'courses' => [
         'icon' => 'fa fa-home',
@@ -28,29 +97,40 @@ return [
         'route' => 'learner/courses',
         'clickable' => true,
         'navbar' => true,
-        'visibility' => true,
+        'visibility' => false,
         'sub-menu' => [
-            'product' => [
+            'my-courses' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'Product',
-                'route' => 'password',
+                'title' => 'My Courses',
+                'route' => 'learner/courses',
                 'clickable' => true,
                 'navbar' => true,
             ],
-            'school' => [
+            'courses' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'School',
-                'route' => 'password',
+                'title' => 'Courses',
+                'route' => 'learner/courses',
                 'clickable' => true,
                 'navbar' => true,
             ],
-            'market' => [
+        ],
+    ],
+    'programs' => [
+        'icon' => 'fa fa-home',
+        'dashboard' => 'all',
+        'title' => 'Programs',
+        'route' => 'learner/programs',
+        'clickable' => true,
+        'navbar' => true,
+        'visibility' => false,
+        'sub-menu' => [
+            'programs' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'Market',
-                'route' => 'password',
+                'title' => 'All Programs',
+                'route' => 'learner/programs',
                 'clickable' => true,
                 'navbar' => true,
             ],

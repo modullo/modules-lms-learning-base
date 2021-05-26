@@ -25,4 +25,9 @@ class ModulesLmsLearningBaseController extends Controller
     {
         return view('modules-lms-learning-base::learners.programs.index');
     }
+
+    public function showProgram()
+    {
+        return view('modules-lms-learning-base::learners.programs.show');
+    }
 }

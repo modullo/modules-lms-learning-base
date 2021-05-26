@@ -14,19 +14,23 @@
                 <h2 class="mb-5">Modules</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn add-course" href="./create.html">
+                    <a class="btn add-course" href="/tenant/modules/create">
                         <i class="fa fa-plus"> </i>
 
                         Add Modules
                     </a>
                 </div>
 
-                <div class="form-group has-search mb-5">
-                    <span class="fa fa-search form-control-feedback"></span>
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <span class="fa fa-search form-control-feedback"></span>
+                        </div>
+                    </div>
                     <input
                             type="text"
                             class="form-control"
-                            placeholder="Search Program"
+                            placeholder="Search Course"
                     />
                 </div>
 
@@ -48,7 +52,7 @@
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
 
-                                <a class="btn app-btn mx-2" href="./edit.html" role="button"
+                                <a class="btn app-btn mx-2" href="/tenant/modules/edit" role="button"
                                 >Edit</a
                                 >
 
