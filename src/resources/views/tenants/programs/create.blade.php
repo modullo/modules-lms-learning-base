@@ -19,6 +19,14 @@
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
                     <form class="form" @submit.prevent="submitForm">
+                        <div class="">
+                            <p v-if="errors.length > 0">
+                                <b>Please correct the following error(s):</b>
+                                <ul class="text-danger">
+                                    <li v-for="error in errors" :key="error.id"> @{{ error }}</li>
+                                </ul>
+                            </p>
+                        </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="title">Title *</label>
@@ -28,8 +36,11 @@
                                         id="title"
                                         placeholder="Title of program"
                                         v-model="form.programTitle"
-
+                                        @focus="clearError"
                                 />
+                                <small class="text-danger">
+                                    @{{ errors['title'] }}
+                                </small>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="subtype"> Subscription type * </label>
@@ -39,7 +50,7 @@
                                         id="subtype"
                                         placeholder="Select Subscription type"
                                         v-model="form.subscriptionType"
-
+                                        @focus="clearError"
                                 />
                             </div>
 
@@ -51,6 +62,7 @@
                                         name=""
                                         v-model="form"
                                         id="visibilitytype"
+                                        @focus="clearError"
                                 >
                                     <option disabled selected="selected">
                                         Select program Visibility *
@@ -72,6 +84,7 @@
                                         placeholder="Program Description"
                                         rows="3"
                                         v-model="form.programDescription"
+                                        @focus="clearError"
                                 ></textarea>
                             </div>
                             <div class="form-group col-lg-6">
@@ -86,6 +99,7 @@
                                         id=""
                                         placeholder=""
                                         aria-describedby="fileHelpId"
+                                        @focus="clearError"
                                 />
 
 
@@ -101,6 +115,7 @@
                                         class="form-control"
                                         id="subscriptioncost"
                                         v-model="form.subscriptioncost"
+                                        @focus="clearError"
                                 />
                             </div>
 
@@ -110,6 +125,7 @@
 
                                        class="form-control" id="overviewvideo"
                                        v-model="overviewVideo"
+                                       @focus="clearError"
                                 />
                             </div>
                         </div>
@@ -141,17 +157,6 @@
 
                         </div>
                     </form>
-
-
-
-                    <p v-if="errors.length" class="text-danger">
-                        <b>Please correct the following error(s):</b>
-                    <ul class="text-danger">
-                        <li v-for="error in errors">@{{ error }}</li>
-                    </ul>
-                    </p>
-
-
                 </div>
             </div>
         </div>
@@ -225,16 +230,32 @@
             methods: {
                 submitForm() {
                     console.log('working!!')
-                    if (!this.form.programTitle) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'You have a missing inputs, All * are required!',
-                        })
-                        return true;
-                    }
+                    this.validation()
 
                 },
+                clearError(){
+                    this.errors = [];
+                },
+                validation() {
+                    if(!this.form.programTitle){
+                        this.errors.push('Program Title cannot be empty')
+
+                    }
+                    if(!this.form.subscriptioncost){
+                        this.errors.push('Cost cannot be empty')
+
+                    }
+                    if(!this.form.visiblityType){
+                        this.errors.push('Type cannot be empty')
+
+                    }
+                    if(!this.form.programDescription){
+                        this.errors.push('Subscription cannot be empty')
+
+                    }
+
+                    return true
+                }
             }
 
 
