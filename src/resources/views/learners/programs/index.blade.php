@@ -16,7 +16,7 @@
         <div class="container" id="program" style="padding-top: 60px">
 
 
-            <div class="input-group mb-2">
+            <div class="input-group mb-4 mb-4">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
                         <span class="fa fa-search form-control-feedback"></span>
@@ -25,11 +25,11 @@
                 <input
                         type="text"
                         class="form-control"
-                        placeholder="Search Course"
+                        placeholder="Search Major"
                 />
             </div>
 
-            <h1 class="mb-4">Program</h1>
+            <h1 class="mb-4">Majors</h1>
 
             <div class="row">
                 <div
@@ -70,7 +70,7 @@
         "use strict";
         var dummyData = [
             {
-                title: " Program title",
+                title: "Programming",
                 details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
                 author: "Evan you",
 
@@ -78,28 +78,14 @@
                     "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
             },
             {
-                title: "Program Title",
+                title: "UI UX ",
                 details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
                 author: "Evan you",
 
                 image:
                     "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
             },
-            {
-                title: "Program Title",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
 
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "Program Title",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
         ];
         new Vue({
             el: "#program",

@@ -41,12 +41,11 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for=""> Upload type </label>
-                                <select class="form-control" name="" v-model="form.type" @focus="clearError">
+                                <select class="form-control" name="" @focus="clearError">
                                     <option selected>Select upload type</option>
 
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                    <option>Video</option>
+                                    <option>Image</option>
                                 </select>
                                 <small class="text-danger">
                                     @{{ errors['type'] }}

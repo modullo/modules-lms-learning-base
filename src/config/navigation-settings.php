@@ -31,7 +31,7 @@ return [
     'course-mgt' => [
         'icon' => 'fa fa-graduation-cap',
         'dashboard' => 'all',
-        'title' => 'Courses Component',
+        'title' => 'Teaching Components',
         'route' => '#',
         'clickable' => true,
         'navbar' => true,
@@ -56,7 +56,7 @@ return [
             'lesson' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'Lessons',
+                'title' => 'Tracks',
                 'route' => 'tenant/lessons',
                 'clickable' => true,
                 'navbar' => true,
@@ -66,7 +66,7 @@ return [
     'program-mgt' => [
         'icon' => 'fa fa-home',
         'dashboard' => 'all',
-        'title' => 'Program Management',
+        'title' => 'Majors Management',
         'route' => '#',
         'clickable' => true,
         'navbar' => true,
@@ -75,7 +75,7 @@ return [
             'create' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'Create Programs',
+                'title' => 'Create Major',
                 'route' => 'tenant/programs/create',
                 'clickable' => true,
                 'navbar' => true,
@@ -83,7 +83,7 @@ return [
             'programs' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'All Programs',
+                'title' => 'All Majors',
                 'route' => 'tenant/programs',
                 'clickable' => true,
                 'navbar' => true,
@@ -120,7 +120,7 @@ return [
     'programs' => [
         'icon' => 'fa fa-home',
         'dashboard' => 'all',
-        'title' => 'Programs',
+        'title' => 'Majors',
         'route' => 'learner/programs',
         'clickable' => true,
         'navbar' => true,
@@ -129,7 +129,7 @@ return [
             'programs' => [
                 'icon' => 'fa fa-home',
                 'dashboard' => 'all',
-                'title' => 'All Programs',
+                'title' => 'All Majors',
                 'route' => 'learner/programs',
                 'clickable' => true,
                 'navbar' => true,

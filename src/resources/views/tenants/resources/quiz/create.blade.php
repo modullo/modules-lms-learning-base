@@ -23,7 +23,6 @@
 
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
-                    <form class="form" @submit.prevent="submitForm">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
                                 <label for=""> Quiz Name </label>
@@ -135,71 +134,64 @@
                             </div>
                         </div>
 
-                        <div class="form-row ">
-                            <div class="form-group">
-                                <label for=""> Quiz Score </label>
-                                <input
-                                        type="number"
-                                        class="form-control"
-                                        name=""
-                                        id=""
-                                        aria-describedby="helpId"
-                                        placeholder=""
-                                />
-                            </div>
-                        </div>
 
-                        <div class="form-row mb-5">
-                            <div class="form-group col-lg-6 mb-5">
-                                <h2>Question</h2>
-
-                                <div id="question"></div>
-                            </div>
-                        </div>
-
-
-                        <div class="form-row mt-5">
-                            <div class="form-group col-lg-12 " style="margin-top: 40px">
-                                <label for=""> Options </label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        name=""
-                                        id=""
-                                        aria-describedby="helpId"
-                                        placeholder="quiz options"
-                                />
-
-                                <input
-                                        type="text"
-                                        class="form-control mt-2"
-                                        name=""
-                                        id=""
-                                        aria-describedby="helpId"
-                                        placeholder="quiz options"
-                                />
-                            </div>
-                            <button type="button" class="btn btn-outline-primary">
-                                Add options
+                        <div class="mb-8 mt-8" v-for="(quiz,index) in quizzes" :key="index">
+                                <div class="mt-4 mb-4 col-md-6">
+                                      <label for=""> Quiz Score </label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                name=""
+                                                id=""
+                                                placeholder=""
+                                        />
+                                </div>
+                            <button v-if="index >= 1" @click.prevent="addQuiz" class="btn btn-outline-danger float-lg-right">
+                                Remove Quiz
                             </button>
+                            <div class="form-row mb-5">
+                                <div class="form-group col-lg-6 mb-5">
+                                    <h2>Question @{{ index+1 }}</h2>
+
+                                    <div id="question"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-5">
+                                <div class="form-group col-md-6 "   v-for="i in 4" :key="i">
+                                    <label for=""> Options </label>
+                                    <input
+
+                                            type="text"
+                                            class="form-control"
+                                            name=""
+                                            id=""
+                                            aria-describedby="helpId"
+                                            placeholder="quiz options"
+                                    />
+                                </div>
+                            </div>
+
+
                         </div>
 
-                        <div
-                                class="
+                    <div
+                            class="
                   submit-btn
                   d-flex
                   justify-content-between
                   align-items-center
                   mt-5
                 "
-                        >
-                            <span class="muted"> fields with * are required </span>
-
-                            <button type="submit" class="btn btn-outline-primary">
-                                Add Quiz
-                            </button>
-                        </div>
-                    </form>
+                    >
+                        <span class="muted"> fields with * are required </span>
+                        <button @click.prevent="addQuiz" class="btn btn-outline-primary float-lg-right">
+                            Add Quiz
+                        </button>
+                        <button @submit.prevent="submitForm" class="btn btn-outline-primary">
+                            Submit Quiz
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,51 +223,21 @@
 
     <script>
         "use strict";
-        var dummyData = [
-            {
-                title: " objects and classes",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "constructor",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-        ];
 
         new Vue({
             el: "#app",
 
             data: {
-                author: "Evan you",
-                programTitle: "C++ Certificate Program",
-                numberOfStudentEnrolled: 240,
-                desc: "Learn how to use Postman to build REST & GraphQL request",
-                cardinfos: dummyData,
-                rating: "(86900 ratings)",
                 errors: [],
+                quizzes:[
+                    {
+                        score:'',
+                        question:'',
+                        options:[
+
+                        ]
+                    }
+                ],
                 aboutProgram:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
                 form:{
@@ -283,7 +245,8 @@
                 }
             },
             methods: {
-                submitForm() {
+                submitForm(event) {
+                    event.preventDefault()
                     console.log('working!!')
                     if (!this.form.tenant_id) {
                         Swal.fire({
@@ -295,6 +258,18 @@
                     }
 
                 },
+
+                addQuiz(){
+                    this.quizzes.push(
+                        {
+                            score:'',
+                            question:'',
+                            options:[
+
+                            ]
+                        }
+                    )
+                }
             }
         });
     </script>

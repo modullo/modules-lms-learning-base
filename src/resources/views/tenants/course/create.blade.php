@@ -1,24 +1,20 @@
-
 @extends('layouts.themes.tabler.tabler')
 
-@section('head_js')
-    <link
-            href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-            rel="stylesheet"
-    />
-@endsection
-
 @section('head_css')
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+
 @endsection
 
+@section('head_js')
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+@endsection
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container">
         <div id="app">
-
-            <h3 class="mt-5">Create Course</h3>
+            <h3 class="mt-5">New Course</h3>
 
             <div class="card col mt-5 mx-auto mb-5">
                 <div class="card-body">
@@ -33,9 +29,10 @@
                                         type="text"
                                         class="form-control"
                                         id="title"
-                                        placeholder="Title of course"
+                                        placeholder="Enter the title of the course"
+                                        :value="programTitle"
 
-                                    v-model="form.title"
+
                                 />
                             </div>
                             <div class="form-group col-md-3">
@@ -46,16 +43,16 @@
                                         id="subtype"
                                         placeholder="Course caption"
 
-                                        v-model="form.caption"
+
                                 />
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="visibilitytype"> course duration * </label>
-                                <input type="text"
-                                       class="form-control" name=""
-                                       v-model="form.duration"
-                                       aria-describedby="helpId" placeholder="course duration">
+                                <label for="visibility's"> course duration * </label>
+                                <input type="datetime-local"
+                                       class="form-control" name="" id=""
+
+                                       aria-describedby="helpId">
 
 
                             </div>
@@ -63,31 +60,31 @@
                         <div class="form-row">
 
                             <div class="form-group col">
-                                <label for=""> Select Program</label>
-                                <select class="form-control" name="" id="" v-model="form.program_id">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                <label for=""> Select Major</label>
+                                <select class="form-control" name="" id="">
+                                    <option>Select A Major</option>
+                                    <option>Beginner</option>
+                                    <option>Intermediate</option>
+                                    <option>Master</option>
                                 </select>
                             </div>
 
 
                             <div class="form-group col">
                                 <label for=""> Select certificate</label>
-                                <select class="form-control" name="" id="" v-model="form.certificate">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                <select class="form-control" name="" id="">
+                                    <option>Select a certificate for the course</option>
+                                    <option>Introduction to Objects Cert</option>
+                                    <option>Intermediate Degree to Objects and Classes Cert</option>
                                 </select>
                             </div>
 
 
                             <div class="form-group col">
                                 <label for=""> Course instructor</label>
-                                <select class="form-control" name="" id="" v-model="form.instructor_id">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                <select class="form-control" name="" id="">
+                                    <option>Select Appopriate Course Instructor</option>
+                                    <option>Evan you</option>
                                 </select>
                             </div>
 
@@ -99,8 +96,8 @@
 
                             <div class="form-group col-md-6">
                                 <label for="overviewvideo">Overview Video *</label>
-                                <input type="text"
-
+                                <input type="url"
+                                       placeholder="https://aws.s3.lms_videos/videos/videohere.mp4"
                                        class="form-control" id="overviewvideo"
                                        v-model="overviewVideo"
                                 />
@@ -119,58 +116,38 @@
 
 
                             <div class="form-group col-6">
-                                <label for="">Publish state</label>
-                                <input type="text"
-                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="course publish state"
-                                       v-model="form.publish_date">
+                                <label for=""> Publish State</label>
+                                <select class="form-control" name="" id="">
+                                    <option>Select Course Publish State</option>
+                                    <option>Publish</option>
+                                    <option>draft</option>
+                                </select>
                             </div>
-
-
-                            <div class="form-group col-6">
-                                <label for="">Course pack</label>
-                                <input type="text"
-                                       class="form-control" name="" id="" aria-describedby="helpId" placeholder="Course pack"
-                                       v-model="form.course_pack">
-                            </div>
-
-
                             <div class="form-group col-lg-6">
-
-
-
                                 <label for="">Subscription type</label>
 
-                                <select class="form-control" name="" id="" v-model="form.subscription">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                <select class="form-control" name="" id="">
+                                    <option>Select Subscription Type</option>
+                                    <option>Free</option>
+                                    <option>Recurring</option>
                                 </select>
                             </div>
 
 
-
-
                             <div class="form-group col-6">
-
 
 
                                 <label for="">Payment type</label>
 
-                                <select class="form-control" name="" id="" v-model="form.payment_type">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                <select class="form-control" name="" id="">
+                                    <option>Select payment type</option>
+                                    <option>Card</option>
+                                    <option>Coupon</option>
                                 </select>
                             </div>
 
 
-
-
-
-
-
                         </div>
-
 
 
                         <div class="form-row mb-3">
@@ -192,10 +169,6 @@
                                 </div>
 
 
-
-
-
-
                             </div>
 
 
@@ -206,14 +179,10 @@
                                 </div>
 
 
-
-
-
                             </div>
 
 
                             <div class="form-group col-lg-6 mt-5 mb-5">
-
 
 
                                 <label for="">Course Requirement</label>
@@ -222,16 +191,7 @@
                                 </div>
 
 
-
-
-
-
-
-
-
                             </div>
-
-
 
 
                             <div class="form-group col-6 mt-5">
@@ -240,32 +200,16 @@
 
                                     Cover image
                                 </label>
-                                <input type="file" class="form-control-file" name="" id="" placeholder="" aria-describedby="fileHelpId"
-                                       >
+                                <input type="file" class="form-control-file" name="" id="" placeholder=""
+                                       aria-describedby="fileHelpId">
 
                             </div>
-
-
-
-
-
 
 
                         </div>
 
 
-
-
-
-
-
-
-
-
-
-
                 </div>
-
 
 
                 <div class="submit-btn mt-5 mb-5 d-flex justify-content-between align-items-center">
@@ -274,21 +218,19 @@
     fields with *  are required
   </span>
 
-                    <button @click.prevent="submitForm" class="btn btn-outline-primary">Add course</button>
-
+                    <button type="submit" class="btn btn-outline-primary">Update course</button>
 
 
                 </div>
-                </form>
+
+
             </div>
         </div>
-    </div>
     </div>
 
 @endsection
 
 @section('body_js')
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <!-- Initialize Quill editor -->
     <script>
@@ -296,7 +238,7 @@
             theme: 'snow', placeholder: 'Course requirement ',
             modules: {
                 toolbar: [
-                    [{ header: [1, 2, false] }],
+                    [{header: [1, 2, false]}],
                     ['bold', 'italic', 'underline'],
                     ['image', 'code-block']
                 ]
@@ -311,7 +253,7 @@
             placeholder: 'Course description...',
             modules: {
                 toolbar: [
-                    [{ header: [1, 2, false] }],
+                    [{header: [1, 2, false]}],
                     ['bold', 'italic', 'underline'],
                     ['image', 'code-block']
                 ]
@@ -326,7 +268,7 @@
             placeholder: 'What you will learn...',
             modules: {
                 toolbar: [
-                    [{ header: [1, 2, false] }],
+                    [{header: [1, 2, false]}],
                     ['bold', 'italic', 'underline'],
                     ['image', 'code-block']
                 ]
@@ -335,79 +277,28 @@
         });
     </script>
 
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://unpkg.com/vue-swal"></script>
 
     <script>
         "use strict";
-        var dummyData = [
-            {
-                title: " objects and classes",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "constructor",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-        ];
 
         new Vue({
             el: "#app",
+
             data: {
-                // return {
-                    overviewVideo:'',
-                    form:{
-                        title:'',
-                        cover_image:'',
-                        payment_type:'',
-                        subscription:'',
-                        course_pack:'',
-                        publish_date:'',
-                        instructor_id:'',
-                        certificate:'',
-                        program_id:'',
-                        caption:'',
-                        duration:''
-                    }
-                // };
+
+                author: "Evan you",
+                programTitle: "Objects And Classes",
+                numberOfStudentEnrolled: 240,
+                desc: "Learn how to use Postman to build REST & GraphQL request",
+                cardinfos: dummyData,
+                rating: "(86900 ratings)",
+                errors: [],
+                aboutProgram:
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
             },
-            methods:{
-                submitForm(){
-                    console.log('working!!')
-                    if(!this.form.title)
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'You have a missing inputs, All * are required!',
-                    })
-                    return true;
-                }
-            }
+
 
         });
     </script>

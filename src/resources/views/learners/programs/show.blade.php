@@ -118,9 +118,9 @@
 
             data: {
                 author: "Evan you",
-                programTitle: "C++ Certificate Program",
+                programTitle: 'Programming',
                 numberOfStudentEnrolled: 240,
-                desc: "Learn how to use Postman to build REST & GraphQL request",
+                desc: "Introduction to Programming",
                 cardinfos: dummyData,
                 rating: "(86900 ratings)",
                 aboutProgram:

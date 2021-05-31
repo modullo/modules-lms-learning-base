@@ -14,7 +14,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container">
         <div id="app">
-            <h3 class="mt-5">Create Program</h3>
+            <h3 class="mt-5">Create Major</h3>
 
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
@@ -34,8 +34,8 @@
                                         type="text"
                                         class="form-control"
                                         id="title"
-                                        placeholder="Title of program"
-                                        v-model="form.programTitle"
+                                        placeholder="Title of Major"
+                                        v-model="form.MajorTitle"
                                         @focus="clearError"
                                 />
                                 <small class="text-danger">
@@ -44,14 +44,22 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="subtype"> Subscription type * </label>
-                                <input
-                                        type="text"
+                                <select
                                         class="form-control"
-                                        id="subtype"
-                                        placeholder="Select Subscription type"
-                                        v-model="form.subscriptionType"
+                                        name=""
+
+                                        id="visibilitytype"
                                         @focus="clearError"
-                                />
+                                >
+                                    <option disabled selected="selected">
+                                        Select Subscription Type *
+                                    </option>
+
+                                    <option>Free </option>
+                                    <option>Individual</option>
+                                    <option>Bulk</option>
+                                    <option>Discounted</option>
+                                </select>
                             </div>
 
                             <div class="form-group col-md-3">
@@ -60,17 +68,16 @@
                                 <select
                                         class="form-control"
                                         name=""
-                                        v-model="form"
+
                                         id="visibilitytype"
                                         @focus="clearError"
                                 >
                                     <option disabled selected="selected">
-                                        Select program Visibility *
+                                        Select Major Visibility *
                                     </option>
 
-                                    <option>select 1</option>
-                                    <option></option>
-                                    <option></option>
+                                    <option>Public </option>
+                                    <option>Private</option>
                                 </select>
                             </div>
                         </div>
@@ -83,7 +90,7 @@
                                         id="description"
                                         placeholder="Program Description"
                                         rows="3"
-                                        v-model="form.programDescription"
+                                        v-model="form.MajorDescription"
                                         @focus="clearError"
                                 ></textarea>
                             </div>
@@ -109,7 +116,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="subscriptioncost">Subscription Cost *</label>
+                                <label for="subscriptioncost">Subscription Cost Amount *</label>
                                 <input
                                         type="text"
                                         class="form-control"
@@ -208,16 +215,16 @@
 
             data: {
                 form: {
-                    programTitle: null,
+                    MajorTitle: null,
                     subscriptionType: null,
-                    programDescription: null,
+                    MajorDescription: null,
                     visiblityType: null,
                     subscriptioncost:null,
                     overviewImageUrl: null,
                     overviewVideo: null
                 },
                 author: "Evan you",
-                programTitle: "C++ Certificate Program",
+                MajorTitle: "C++ Certificate Program",
                 numberOfStudentEnrolled: 240,
                 desc: "Learn how to use Postman to build REST & GraphQL request",
                 cardinfos: dummyData,
@@ -237,7 +244,7 @@
                     this.errors = [];
                 },
                 validation() {
-                    if(!this.form.programTitle){
+                    if(!this.form.MajorTitle){
                         this.errors.push('Program Title cannot be empty')
 
                     }
@@ -249,7 +256,7 @@
                         this.errors.push('Type cannot be empty')
 
                     }
-                    if(!this.form.programDescription){
+                    if(!this.form.MajorDescription){
                         this.errors.push('Subscription cannot be empty')
 
                     }

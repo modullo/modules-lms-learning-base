@@ -25,16 +25,17 @@
                     </a>
                 </div>
 
-                <div class="input-group mb-2">
+                <div class="input-group mb-5 mt-5">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <span class="fa fa-search form-control-feedback"></span>
                         </div>
                     </div>
                     <input
+                            v-model="search"
                             type="text"
                             class="form-control"
-                            placeholder="Search Course"
+                            placeholder="Search Quiz"
                     />
                 </div>
 
@@ -109,10 +110,17 @@
             el: "#modules",
 
             data: {
+                search: '',
                 cardinfos: dummyData,
             },
 
             methods: {},
+            computed:{
+                searchQuiz(){
+                    return this.cardinfos.filter(card => card.title.match(this.search))
+
+                }
+            }
         });
     </script>
 @endsection

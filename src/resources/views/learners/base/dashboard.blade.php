@@ -7,7 +7,7 @@
 
 @section('body_content_main')
 
-    @include('modules-lms-base::navigation',['type' => 'tenant'])
+    @include('modules-lms-base::navigation',['type' => 'learner'])
     <div class="container p-5">
        Dashboard
     </div>

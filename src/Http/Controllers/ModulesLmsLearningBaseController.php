@@ -1,6 +1,6 @@
 <?php
 
-namespace Lms\ModulesLmsLearningBase\Http\Controllers;
+namespace Modullo\ModulesLmsLearningBase\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
@@ -8,8 +8,14 @@ class ModulesLmsLearningBaseController extends Controller
 {
     public function index()
     {
-        return view('modules-lms-learning-base::welcome');
+        return view('modules-lms-learning-base::learners.base.dashboard');
     }
+
+    public function settings()
+    {
+        return view('modules-lms-learning-base::learners.base.settings');
+    }
+
 
     public function courses()
     {

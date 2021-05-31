@@ -1,6 +1,6 @@
 <?php
 
-namespace Lms\ModulesLmsLearningBase;
+namespace Modullo\ModulesLmsLearningBase;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +18,10 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources/js/' => resource_path('js/vendor/modules-lms-learning-base')
         ],'lms-vue');
+
+        $this->publishes([
+            __DIR__.'/resources/js' => public_path('vendor/learning-base'),
+        ], 'learning-base-assets');
         $this->publishes([
             __DIR__.'/config/navigation-settings.php' => config_path('navigation-menu.php')
         ],'menu-config');

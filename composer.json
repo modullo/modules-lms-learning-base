@@ -1,7 +1,6 @@
 {
-  "name": "lms/modules-lms-learning-base",
+  "name": "modullo/modules-lms-learning-base",
   "description": "description",
-  "minimum-stability": "library",
   "license": "GPL-3.0-or-later",
   "authors": [
     {
@@ -23,13 +22,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Lms\\ModulesLmsLearningBase\\": "src/"
+      "Modullo\\ModulesLmsLearningBase\\": "src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Lms\\ModulesLmsLearningBase\\ModulesLmsLearningBaseServiceProvider"
+        "Modullo\\ModulesLmsLearningBase\\ModulesLmsLearningBaseServiceProvider"
       ]
     }
   },

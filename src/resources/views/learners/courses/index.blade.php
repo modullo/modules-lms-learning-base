@@ -107,39 +107,6 @@
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'learner'])
     <div class="" style="min-height: 100vh">
-{{--        <div class="owl-carousel">--}}
-{{--            <div class="card-carousel--card" v-for="item in items" style="margin-right: 10px">--}}
-{{--                <img :src="item.image"/>--}}
-{{--                <div class="card-carousel--card--footer">--}}
-
-{{--                    <h6 class="card-carousel-title">--}}
-{{--                        @{{ item.title }}--}}
-
-{{--                    </h6>--}}
-
-
-{{--                    <small>--}}
-
-{{--                        @{{item.author}}--}}
-{{--                    </small>--}}
-
-{{--                    <div class="star-rating">--}}
-{{--                        <i class="fa fa-star star"></i>--}}
-{{--                        <i class="fa fa-star star"></i>--}}
-{{--                        <i class="fa fa-star star"></i>--}}
-{{--                        <i class="fa fa-star star"></i>--}}
-{{--                        <i class="fa fa-star star"></i>--}}
-
-
-{{--                    </div>--}}
-
-{{--                    <p class="course-descrition px-3">--}}
-
-{{--                        @{{item.details}}--}}
-{{--                    </p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
         <div class="card-container" id="course-card" >
             <div class="card-carosuel-row">
 
@@ -166,15 +133,6 @@
                                                 @{{item.author}}
                                             </small>
 
-                                            {{--                                        <div class="star-rating">--}}
-                                            {{--                                            <i class="fa fa-star star"></i>--}}
-                                            {{--                                            <i class="fa fa-star star"></i>--}}
-                                            {{--                                            <i class="fa fa-star star"></i>--}}
-                                            {{--                                            <i class="fa fa-star star"></i>--}}
-                                            {{--                                            <i class="fa fa-star star"></i>--}}
-
-
-                                            {{--                                        </div>--}}
 
                                             <p class="course-descrition">
 
@@ -234,46 +192,6 @@
                     "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
             },
 
-
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
         ];
 
 
@@ -293,7 +211,7 @@
                 paginationFactor: 220,
                 items: dummyData,
                 author: "Evan you",
-                programTitle: "C++ Certificate Program",
+                programTitle: "Introduction to programming",
                 numberOfStudentEnrolled: 240,
                 desc: "Learn how to use Postman to build REST & GraphQL request",
                 cardinfos: dummyData,

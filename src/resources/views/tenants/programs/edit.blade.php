@@ -14,11 +14,19 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div class="container">
         <div id="app">
-            <h3 class="mt-5">Edit Program</h3>
+            <h3 class="mt-5">Edit Major</h3>
 
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
-                    <form class="form"  @submit="submitForm">
+                    <form class="form" @submit.prevent="submitForm">
+                        <div class="">
+                            <p v-if="errors.length > 0">
+                                <b>Please correct the following error(s):</b>
+                            <ul class="text-danger">
+                                <li v-for="error in errors" :key="error.id"> @{{ error }}</li>
+                            </ul>
+                            </p>
+                        </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="title">Title *</label>
@@ -26,21 +34,32 @@
                                         type="text"
                                         class="form-control"
                                         id="title"
-                                        placeholder="Title of program"
-
-
+                                        placeholder="Title of Major"
+                                        v-model="form.MajorTitle"
+                                        @focus="clearError"
                                 />
+                                <small class="text-danger">
+                                    @{{ errors['title'] }}
+                                </small>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="subtype"> Subscription type * </label>
-                                <input
-                                        type="text"
+                                <select
                                         class="form-control"
-                                        id="subtype"
-                                        placeholder="Select Subscription type"
+                                        name=""
 
+                                        id="visibilitytype"
+                                        @focus="clearError"
+                                >
+                                    <option disabled selected="selected">
+                                        Select Subscription Type *
+                                    </option>
 
-                                />
+                                    <option>Free </option>
+                                    <option>Individual</option>
+                                    <option>Bulk</option>
+                                    <option>Discounted</option>
+                                </select>
                             </div>
 
                             <div class="form-group col-md-3">
@@ -49,16 +68,16 @@
                                 <select
                                         class="form-control"
                                         name=""
-                                        v-model="form"
+
                                         id="visibilitytype"
+                                        @focus="clearError"
                                 >
                                     <option disabled selected="selected">
-                                        Select program Visibility *
+                                        Select Major Visibility *
                                     </option>
 
-                                    <option>select 1</option>
-                                    <option></option>
-                                    <option></option>
+                                    <option>Public </option>
+                                    <option>Private</option>
                                 </select>
                             </div>
                         </div>
@@ -71,11 +90,15 @@
                                         id="description"
                                         placeholder="Program Description"
                                         rows="3"
-
+                                        v-model="form.MajorDescription"
+                                        @focus="clearError"
                                 ></textarea>
                             </div>
                             <div class="form-group col-lg-6">
-                                <label for=""></label>
+                                <label for="">
+
+                                    Program Cover image
+                                </label>
                                 <input
                                         type="file"
                                         class="form-control-file mx-auto"
@@ -83,6 +106,7 @@
                                         id=""
                                         placeholder=""
                                         aria-describedby="fileHelpId"
+                                        @focus="clearError"
                                 />
 
 
@@ -92,12 +116,13 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="subscriptioncost">Subscription Cost *</label>
+                                <label for="subscriptioncost">Subscription Cost Amount *</label>
                                 <input
                                         type="text"
                                         class="form-control"
                                         id="subscriptioncost"
-
+                                        v-model="form.subscriptioncost"
+                                        @focus="clearError"
                                 />
                             </div>
 
@@ -106,7 +131,8 @@
                                 <input type="text"
 
                                        class="form-control" id="overviewvideo"
-
+                                       v-model="overviewVideo"
+                                       @focus="clearError"
                                 />
                             </div>
                         </div>
@@ -127,19 +153,17 @@
                         </div>
 
                         <div class="submit-btn d-flex justify-content-between align-items-center">
+  <span class="muted">
 
+    fields with *  are required
+  </span>
 
-                            <button type="submit" class="btn btn-outline-primary">Update Program</button>
+                            <button type="submit" class="btn btn-outline-primary">Update</button>
 
 
 
                         </div>
                     </form>
-
-
-
-
-
                 </div>
             </div>
         </div>
@@ -148,6 +172,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         "use strict";
@@ -189,24 +214,60 @@
             el: "#app",
 
             data: {
-
+                form: {
+                    MajorTitle: null,
+                    subscriptionType: null,
+                    MajorDescription: null,
+                    visiblityType: null,
+                    subscriptioncost:null,
+                    overviewImageUrl: null,
+                    overviewVideo: null
+                },
+                author: "Evan you",
+                MajorTitle: "C++ Certificate Program",
+                numberOfStudentEnrolled: 240,
+                desc: "Learn how to use Postman to build REST & GraphQL request",
                 cardinfos: dummyData,
-
+                rating: "(86900 ratings)",
+                errors:[],
+                aboutProgram:
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
             },
+
             methods: {
                 submitForm() {
                     console.log('working!!')
-                    if (!this.form.title) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'You have a missing inputs, All * are required!',
-                        })
-                        return true;
-                    }
+                    this.validation()
 
                 },
+                clearError(){
+                    this.errors = [];
+                },
+                validation() {
+                    if(!this.form.MajorTitle){
+                        this.errors.push('Program Title cannot be empty')
+
+                    }
+                    if(!this.form.subscriptioncost){
+                        this.errors.push('Cost cannot be empty')
+
+                    }
+                    if(!this.form.visiblityType){
+                        this.errors.push('Type cannot be empty')
+
+                    }
+                    if(!this.form.MajorDescription){
+                        this.errors.push('Subscription cannot be empty')
+
+                    }
+
+                    return true
+                }
             }
+
+
+
+
 
 
         });
