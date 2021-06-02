@@ -68,32 +68,6 @@
                                     <option>Master</option>
                                 </select>
                             </div>
-
-
-                            <div class="form-group col">
-                                <label for=""> Select certificate</label>
-                                <select class="form-control" name="" id="">
-                                    <option>Select a certificate for the course</option>
-                                    <option>Introduction to Objects Cert</option>
-                                    <option>Intermediate Degree to Objects and Classes Cert</option>
-                                </select>
-                            </div>
-
-
-                            <div class="form-group col">
-                                <label for=""> Course instructor</label>
-                                <select class="form-control" name="" id="">
-                                    <option>Select Appopriate Course Instructor</option>
-                                    <option>Evan you</option>
-                                </select>
-                            </div>
-
-
-                        </div>
-
-                        <div class="form-row">
-
-
                             <div class="form-group col-md-6">
                                 <label for="overviewvideo">Overview Video *</label>
                                 <input type="url"
@@ -123,15 +97,16 @@
                                     <option>draft</option>
                                 </select>
                             </div>
-                            <div class="form-group col-lg-6">
-                                <label for="">Subscription type</label>
 
-                                <select class="form-control" name="" id="">
-                                    <option>Select Subscription Type</option>
-                                    <option>Free</option>
-                                    <option>Recurring</option>
-                                </select>
-                            </div>
+{{--                            <div class="form-group col-lg-6">--}}
+{{--                                <label for="">Subscription type</label>--}}
+
+{{--                                <select class="form-control" name="" id="">--}}
+{{--                                    <option>Select Subscription Type</option>--}}
+{{--                                    <option>Free</option>--}}
+{{--                                    <option>Recurring</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
 
 
                             <div class="form-group col-6">
@@ -218,7 +193,7 @@
     fields with *  are required
   </span>
 
-                    <button type="submit" class="btn btn-outline-primary">Update course</button>
+                    <button type="submit" class="btn btn-outline-primary">Create course</button>
 
 
                 </div>

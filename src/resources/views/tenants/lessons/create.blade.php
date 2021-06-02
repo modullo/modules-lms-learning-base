@@ -62,15 +62,14 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <label for="description">  Track description * </label>
-                                <textarea
+                            <div class="form-group col-md-6">
+                                <label for="duration">Duration*</label>
+                                <input
+                                        type="text"
                                         class="form-control"
-                                        name=""
-                                        id="description"
-                                        placeholder="Modules Description"
-                                        rows="3"
-                                ></textarea>
+                                        id=""
+
+                                />
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="image">
@@ -88,16 +87,18 @@
                                 <label for="skill-gained">Skill gained *</label>
                                 <div id="skills_gained"></div>
                             </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="duration">Duration*</label>
-                                <input
-                                        type="text"
+                            <div class="form-group col-lg-6">
+                                <label for="description">  Track description * </label>
+                                <textarea
                                         class="form-control"
-                                        id=""
-
-                                />
+                                        name=""
+                                        id="description"
+                                        placeholder="Tracks Description"
+                                        rows="3"
+                                ></textarea>
                             </div>
+
+
                         </div>
 
                         <div class="form-row mb-8">

@@ -146,7 +146,7 @@
                                                 placeholder=""
                                         />
                                 </div>
-                            <button v-if="index >= 1" @click.prevent="addQuiz" class="btn btn-outline-danger float-lg-right">
+                            <button v-if="index >= 1" @click.prevent="removeQuiz(index)" class="btn btn-outline-danger float-lg-right">
                                 Remove Quiz
                             </button>
                             <div class="form-row mb-5">
@@ -269,6 +269,10 @@
                             ]
                         }
                     )
+                },
+
+                removeQuiz(index){
+                    this.quizzes.splice(index,1)
                 }
             }
         });

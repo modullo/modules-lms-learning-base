@@ -29,7 +29,7 @@
                                         type="text"
                                         class="form-control"
                                         id="title"
-                                        placeholder="Title of course"
+                                        placeholder="Enter the title of the course"
                                         :value="programTitle"
 
 
@@ -48,11 +48,11 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="visibilitytype"> course duration * </label>
+                                <label for="visibility's"> course duration * </label>
                                 <input type="datetime-local"
                                        class="form-control" name="" id=""
 
-                                       aria-describedby="helpId" placeholder="course duration">
+                                       aria-describedby="helpId">
 
 
                             </div>
@@ -62,35 +62,12 @@
                             <div class="form-group col">
                                 <label for=""> Select Major</label>
                                 <select class="form-control" name="" id="">
+                                    <option>Select A Major</option>
                                     <option>Beginner</option>
                                     <option>Intermediate</option>
                                     <option>Master</option>
                                 </select>
                             </div>
-
-
-                            <div class="form-group col">
-                                <label for=""> Select certificate</label>
-                                <select class="form-control" name="" id="">
-                                    <option>Introduction to Objects Cert</option>
-                                    <option>Intermediate Degree to Objects and Classes Cert</option>
-                                </select>
-                            </div>
-
-
-                            <div class="form-group col">
-                                <label for=""> Course instructor</label>
-                                <select class="form-control" name="" id="">
-                                    <option>Evan you</option>
-                                </select>
-                            </div>
-
-
-                        </div>
-
-                        <div class="form-row">
-
-
                             <div class="form-group col-md-6">
                                 <label for="overviewvideo">Overview Video *</label>
                                 <input type="url"
@@ -115,18 +92,21 @@
                             <div class="form-group col-6">
                                 <label for=""> Publish State</label>
                                 <select class="form-control" name="" id="">
+                                    <option>Select Course Publish State</option>
                                     <option>Publish</option>
                                     <option>draft</option>
                                 </select>
                             </div>
-                            <div class="form-group col-lg-6">
-                                <label for="">Subscription type</label>
 
-                                <select class="form-control" name="" id="">
-                                    <option>Free</option>
-                                    <option>Recurring</option>
-                                </select>
-                            </div>
+                            {{--                            <div class="form-group col-lg-6">--}}
+                            {{--                                <label for="">Subscription type</label>--}}
+
+                            {{--                                <select class="form-control" name="" id="">--}}
+                            {{--                                    <option>Select Subscription Type</option>--}}
+                            {{--                                    <option>Free</option>--}}
+                            {{--                                    <option>Recurring</option>--}}
+                            {{--                                </select>--}}
+                            {{--                            </div>--}}
 
 
                             <div class="form-group col-6">
@@ -135,6 +115,7 @@
                                 <label for="">Payment type</label>
 
                                 <select class="form-control" name="" id="">
+                                    <option>Select payment type</option>
                                     <option>Card</option>
                                     <option>Coupon</option>
                                 </select>

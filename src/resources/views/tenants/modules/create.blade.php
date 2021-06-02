@@ -21,15 +21,6 @@
                     <form class="form" @submit.prevent="submitForm">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
-                                <label for="tenant"> Tenant * </label>
-                                <select class="form-control" name="" id="" v-model="form.tenant_id">
-                                    <option selected>Select tenants</option>
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-6">
                                 <label for="tenant"> Courses * </label>
                                 <select class="form-control" name="" id="">
                                     <option selected>Select Courses</option>
@@ -62,18 +53,6 @@
                                         placeholder="Modules Duration"
                                 />
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <label for="description"> Program description * </label>
-                                <textarea
-                                        class="form-control"
-                                        name=""
-                                        id="description"
-                                        placeholder="Modules Description"
-                                        rows="3"
-                                ></textarea>
-                            </div>
                             <div class="form-group col-lg-6">
                                 <label for="module-no"> Module No </label>
                                 <input
@@ -86,13 +65,25 @@
                                 />
                             </div>
                         </div>
-
                         <div class="form-row">
+                            <div class="form-group col-lg-6">
+                                <label for="description"> Module description * </label>
+                                <textarea
+                                        class="form-control"
+                                        name=""
+                                        id="description"
+                                        placeholder="Modules Description"
+                                        rows="3"
+                                ></textarea>
+                            </div>
                             <div class="form-group col-md-6">
                                 <label for="skill-gained">Skill gained*</label>
-                                <input type="text" class="form-control" id="skill-gained" />
+                                <textarea cols="5" rows="3" type="text" class="form-control" id="skill-gained">
+                                </textarea>
                             </div>
                         </div>
+
+
 
                         <div
                                 class="
