@@ -4,14 +4,25 @@
 @section('head_js')
 
 @endsection
+@section('head_css')
+<style>
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: ">>";
+    }
+</style>
+@endsection
 
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Modules</li>
+        </ol>
+    </nav>
     <div class="container mt-5">
         <div id="lessons">
-
-
             <section class="container program-contain">
                 <h2 class="mb-5">
 

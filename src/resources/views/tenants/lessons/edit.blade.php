@@ -9,24 +9,42 @@
 @section('head_css')
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <style>
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">>";
+        }
+    </style>
 @endsection
-
-
 
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="/tenant/lessons">Lesson</a></li>
+            <li class="breadcrumb-item active">Create Lesson</li>
+        </ol>
+    </nav>
     <div class="container">
         <div id="app">
-            <h3 class="mt-5">Create Track</h3>
+            <h3 class="mt-5">Edit Track</h3>
+            <div class="">
+                <p v-if="errors.length > 0">
+                    <b class="text-danger">Please correct the following error(s):</b>
+                    <ul class="text-danger">
+                        <li v-for="error in errors" :key="error.id"> @{{ error }}</li>
+                    </ul>
+                </p>
+            </div>
             <div class="card col mt-5 mx-auto">
                 <div class="card-body">
                     <form class="form">
                         <div class="form-row">
 
                             <div class="form-group col-lg-6">
-                                <label for="tenant"> Courses * </label>
-                                <select  class="form-control" name="" id="">
+                                <label for="tenant"> Courses *</label>
+                                <select  class="form-control" v-model="form.course_id">
                                     <option selected>Select Courses</option>
                                     <option>Objects and Classes</option>
                                     <option>Inheritance</option>
@@ -36,11 +54,11 @@
 
                             <div class="form-group col-lg-6">
                                 <label for="modules"> Modules * </label>
-                                <select  class="form-control" name="" id="">
+                                <select  class="form-control" v-model="form.module_id">
                                     <option selected>Select Modules</option>
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
+                                    <option>Module 1</option>
+                                    <option>Module 2</option>
+                                    <option> Module 3</option>
                                 </select>
                             </div>
 
@@ -66,7 +84,7 @@
                                 <label for="description">  Track description * </label>
                                 <textarea
                                         class="form-control"
-                                        name=""
+                                        v-model="form.description"
                                         id="description"
                                         placeholder="Modules Description"
                                         rows="3"
@@ -110,7 +128,7 @@
                             <div class="form-group col-md-6">
                                 <label for="additional-resource">Addtional-Resource *</label>
 
-                                <div id="additional_resources"></div>
+                                    <div id="additional_resources"></div>
                             </div>
 
                         </div>
@@ -152,7 +170,7 @@
                             <span class="muted"> fields with * are required </span>
 
                             <button @click.prevent="submitForm" type="submit" class="btn btn-outline-primary">
-                                Update Track
+                                Create Track
                             </button>
                         </div>
                     </form>
@@ -215,21 +233,43 @@
                     module_id:'',
                     course_id:'',
                     program_id:'',
+                    description:'',
                 }
             },
             methods:{
-                submitForm(){
-                    console.log('working!!')
-                    if(!this.form.title){
-                        this.errors['title'] = 'Title cannot be empty';
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'You have a missing inputs, All * are required!',
-                        })
+                submitForm() {
+                    if (this.form.title && this.description && this.form.module_id && this.form.course_id && this.form.program_id) {
                         return true;
                     }
+
+                    this.errors = [];
+
+                    if (!this.form.module_id) {
+                        this.errors.push('Module is required.');
+                    }
+                    if (!this.form.title) {
+                        this.errors.push('Title is required.');
+                    }
+                    if (!this.form.course_id) {
+                        this.errors.push('Course is required.');
+                    }
+                    if (!this.form.program_id) {
+                        this.errors.push('Program is required.');
+                    }
+                    if (!this.form.description) {
+                        this.errors.push('Description is required.');
+                    }
+
+                    // if(!this.form.form.title){
+                    //     this.form.errors['title'] = 'Title cannot be empty';
+
+                    //     Swal.fire({
+                    //         icon: 'error',
+                    //         title: 'Oops...',
+                    //         text: 'You have a missing inputs, All * are required!',
+                    //     })
+                    //     return true;
+                    // }
 
                 },
                 validateTitle(){

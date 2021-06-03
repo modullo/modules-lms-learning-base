@@ -1,102 +1,203 @@
 @extends('layouts.themes.tabler.tabler')
 
 @section('head_js')
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+<script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-ellipse-progress/dist/vue-ellipse-progress.umd.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue-icons.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
 @endsection
 @section('head_css')
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+<link href="{{ asset('Themes/tabler/css/dashboard.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('vendor/assessment/assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/assets/owl.carousel.css') }}">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/assets/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/assets/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/assets/owl.theme.green.css') }}">
     <style>
-
-
-        .card-carousel-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 20px;
-            width:100%;
+        .btn-style {
+            border-radius: 12em !important;
         }
-        .card-carousel {
-            /*display: flex;*/
-            /* justify-content: center; */
-            width: 100%
+        .carousel {
+            margin: 30px auto 60px;
+            padding: 0 80px;
         }
-        .card-carousel--overflow-container {
-            overflow: scroll;
-            width:90vw;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+        .carousel .carousel-item {
+            text-align: center;
+            overflow: hidden;
         }
-
-        .card-carousel--overflow-container::-webkit-scrollbar {
-            display: none;
+        .carousel .carousel-item h4 {
+            font-family: 'Varela Round', sans-serif;
         }
-
-        .card-carousel--nav__left,
-        .card-carousel--nav__right {
+        .carousel .carousel-item img {
+            max-width: 100%;
             display: inline-block;
-            width: 15px;
-            height: 15px;
-            padding: 10px;
-            box-sizing: border-box;
-            border-top: 2px solid #000;
-            border-right: 2px solid #000;
-            cursor: pointer;
-            margin: 0 20px;
-            transition: transform 0.8s cubic-bezier(0.43, 0.195, 0.02, 1);
         }
-        .card-carousel--nav__left[disabled],
-        .card-carousel--nav__right[disabled] {
-            opacity: 0.2;
-            border-color: #000;
+        /* .carousel .carousel-item .btn {
+            border-radius: 0;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: none;
+            background: #a177ff;
+            padding: 6px 15px;
+            margin-top: 5px;
         }
-        .card-carousel--nav__left {
-            transform: rotate(-135deg);
+        .carousel .carousel-item .btn:hover {
+            background: #8c5bff;
+        } */
+        /* .carousel .carousel-item .btn i {
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 5px;
+        } */
+        .carousel .thumb-wrapper {
+            margin: 5px;
+            text-align: left;
+            background: #fff;
+            box-shadow: 0px 2px 2px rgba(0,0,0,0.1);   
         }
-        .card-carousel--nav__left:active {
-            transform: rotate(-135deg) scale(0.9);
+        .carousel .thumb-content {
+            padding: 15px;
+            font-size: 13px;
         }
-        .card-carousel--nav__right {
-            transform: rotate(45deg);
+        .carousel-control-prev, .carousel-control-next {
+            height: 44px;
+            width: 44px;
+            background: none;	
+            margin: auto 0;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 0, 0, 0.8);
         }
-        .card-carousel--nav__right:active {
-            transform: rotate(45deg) scale(0.9);
+        .carousel-control-prev i, .carousel-control-next i {
+            font-size: 36px;
+            position: absolute;
+            top: 50%;
+            display: inline-block;
+            margin: -19px 0 0 0;
+            z-index: 5;
+            left: 0;
+            right: 0;
+            color: rgba(0, 0, 0, 0.8);
+            text-shadow: none;
+            font-weight: bold;
         }
-        .card-carousel-cards {
-            /*white-space: nowrap;*/
-            width:2000px;
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.43, 0.195, 0.02, 1);
+        .carousel-control-prev i {
+            margin-left: -3px;
+        }
+        .carousel-control-next i {
+            margin-right: -3px;
+        }
+        .carousel-indicators {
+            bottom: -50px;
+        }
+        .carousel-indicators li, .carousel-indicators li.active {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 4px;
+            border: none;
+        }
+        .carousel-indicators li {	
+            background: #ababab;
+        }
+        .carousel-indicators li.active {	
+            background: #555;
+        }
+        .checked {
+        color: orange;
+        }
+        .ratings {
+            font-size: .89em;
+            font-weight: bold;
+        }
 
-            transform: translatex(0px);
+        .rating-value {
+            font-size: .89em;
+            font-weight: bold;
+            color: #be5a0e;;
         }
-        .card-carousel-cards .card-carousel--card {
+        .price {
+            font-size: .89em;
+            font-weight: bold; 
+        }
+        .price .old-price{
+            color: #73726c;
+            text-decoration: line-through;
+        }
+        .rated {
+            background-color: #ffc48c;
+            color: #592b00;
+            border-radius: 4px;
+            display: inline-block;
+            padding: .4rem .8rem;
+            white-space: nowrap;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -.02rem;
+            font-size: .8rem;
+        }
+        .col-md-4 col-lg-3{
+            padding: 5px !important;
+        }
+        @media only screen and (max-width: 785px){
+            /* .visible-courses {
+                display: none;
+            } */
+            .carousel-control-prev {
+                display: none;
+            }
+            .carousel-control-next {
+                display: none;
+            }
+        }
+        .carousel {
+            padding: 0 20px !important;
+            margin: 0 !important;
+        }
+        .carousel .carousel-item {
+            text-align: left !important;
+        }
 
-            width: 290px!important;
-            vertical-align: top;
-            padding: 10px;
-            margin: 0 10px;
-            background-color: #fff;
-        }
-        .card-carousel-cards .card-carousel--card:first-child {
-            margin-left: 0;
-        }
-        .card-carousel-cards .card-carousel--card:last-child {
-            margin-right: 0;
-        }
-        .card-carousel-cards .card-carousel--card img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-        .card-carousel-cards .card-carousel--card--footer {
-            padding: 10px;
-            height:150px;
+        .searchbar{
+        margin-bottom: auto;
+        margin-top: 10px;
+        height: 60px;
+        width: 50%;
+        margin: auto;
+        background-color: #353b48;
+        border-radius: 30px;
+        padding: 10px;
+        color: white;
         }
 
-
+        .search_input{
+        color: white;
+        border: 0;
+        outline: 0;
+        width: 92%;
+        background: none;
+        /* caret-color:transparent; */
+        line-height: 40px;
+        transition: width 0.4s linear;
+        }
+        .search_icon{
+        height: 40px;
+        width: 40px;
+        float: right;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        color:white;
+        text-decoration:none;
+        }
 
     </style>
 
@@ -105,144 +206,30 @@
 
 
 @section('body_content_main')
-    @include('modules-lms-base::navigation',['type' => 'learner'])
-    <div class="" style="min-height: 100vh">
-        <div class="card-container" id="course-card" >
-            <div class="card-carosuel-row">
-
-                <h3 class="ml-5 mt-5"> Top courses in @{{programTitle}}</h3>
-
-                <div class="card-carousel-wrapper" >
-
-                    <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div><div class="card-carousel">
-                        <div class="card-carousel--overflow-container">
-                            <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')'}">
-                                <div class="card-carousel--card" v-for="item in items">
-                                    <a href="#" class="text-dark">
-                                        <img :src="item.image"/>
-                                        <div class="card-carousel--card--footer">
-
-                                            <h6 class="card-carousel-title">
-                                                @{{ item.title }}
-
-                                            </h6>
-
-
-                                            <small>
-
-                                                @{{item.author}}
-                                            </small>
-
-
-                                            <p class="course-descrition">
-
-                                                @{{item.details}}
-                                            </p>
-                                        </div>
-                                    </a>
-                                    <div class="d-flex justify-content-between">
-                                        <a :href="'/learner/courses/'+item.title" class="btn btn-primary">
-                                            View
-                                        </a>
-                                        <a :href="'/learner/courses/'+item.title+'/assessment/'+item.author" class="btn btn-primary">
-                                            Take Course
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div></div>
-            </div>
+@include('modules-lms-base::navigation',['type' => 'learner'])
+<div id="app">
+    <div class="d-fle justify-content-cente mt-4 h-100">
+        <div class="searchbar">
+          <input class="search_input" type="text" name="" placeholder="Search For Your Course...">
+          <a href="#" class="search_icon"><i class="fa fa-search"></i></a>
         </div>
-
+    </div>
+    <courses-carousel></courses-carousel>
+</div>
 
 @endsection
 
 @section('body_js')
-    <script src="{{ asset('LearningBase/owl.carousel.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <script>
-        $(document).ready(function(){
-            $(".owl-carousel").owlCarousel();
+    <script src="">
+        $(document).ready(function() {
+            $('#myCarousel0').carousel({
+                interval: 1000
+            })
         });
-        var dummyData = [
-            {
-                title: " objects and classes",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "constructor",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-
-        ];
-
-
-        Vue.component("carousel", {
-            template: "#carousel",
-
-
-        })
-
-        new Vue({
-            el:"#course-card",
-
-            data: {
-
-                currentOffset: 0,
-                windowSize:3,
-                paginationFactor: 220,
-                items: dummyData,
-                author: "Evan you",
-                programTitle: "Introduction to programming",
-                numberOfStudentEnrolled: 240,
-                desc: "Learn how to use Postman to build REST & GraphQL request",
-                cardinfos: dummyData,
-                rating: "(86900 ratings)",
-                aboutProgram:
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
-            },
-
-            computed: {
-                atEndOfList() {
-                    return this.currentOffset <= (this.paginationFactor * -1) * ((this.items.length - 1) - this.windowSize)
-                },
-                atHeadOfList() {
-                    return this.currentOffset === 0
-                }
-            },
-
-
-            methods: {
-                moveCarousel(direction) {
-                    if (direction === 1 && !this.atEndOfList) {
-                        this.currentOffset -= this.paginationFactor
-                    } else if (direction === -1 && !this.atHeadOfList) {
-                        this.currentOffset += this.paginationFactor
-                    }
-                }
-            }
-        })
-
-
     </script>
+    <script src="{{ asset('LearningBase/owl.carousel.js') }}"></script>
+    <script src="{{ asset('vendor/learning-base/components/CoursesCarousel.js') }}"></script>
+    <script src="{{ asset('vendor/assessment/app.js') }}"></script>
 @endsection
 
 

@@ -3,7 +3,11 @@
 @section('head_css')
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
-
+    <style>
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">>";
+        }
+    </style>
 @endsection
 
 @section('head_js')
@@ -12,6 +16,13 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"> <a href="/tenant/courses">Courses</a></li>
+            <li class="breadcrumb-item active">View Course</li>
+        </ol>
+    </nav>
     <div class="container">
         <div id="app">
             <h3 class="mt-5">Edit Course</h3>
