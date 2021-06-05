@@ -171,14 +171,16 @@
         height: 60px;
         width: 50%;
         margin: auto;
-        background-color: #353b48;
         border-radius: 30px;
         padding: 10px;
-        color: white;
+        color: black;
+        border: 1px solid #989586;
+        border-radius: 9999px;
+        background-color: #fbfbf8;
         }
 
         .search_input{
-        color: white;
+        color: black;
         border: 0;
         outline: 0;
         width: 92%;
@@ -195,20 +197,17 @@
         justify-content: center;
         align-items: center;
         border-radius: 50%;
-        color:white;
+        color:black;
         text-decoration:none;
         }
 
     </style>
-
-{{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">--}}
 @endsection
-
 
 @section('body_content_main')
 @include('modules-lms-base::navigation',['type' => 'learner'])
 <div id="app">
-    <div class="d-fle justify-content-cente mt-4 h-100">
+    <div class="mt-4 justify-content-cente h-100">
         <div class="searchbar">
           <input class="search_input" type="text" name="" placeholder="Search For Your Course...">
           <a href="#" class="search_icon"><i class="fa fa-search"></i></a>
