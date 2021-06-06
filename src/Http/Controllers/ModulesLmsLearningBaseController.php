@@ -11,6 +11,11 @@ class ModulesLmsLearningBaseController extends Controller
         return view('modules-lms-learning-base::learners.base.dashboard');
     }
 
+    public function test()
+    {
+        return view('modules-lms-learning-base::learners.courses.test');
+    }
+
     public function settings()
     {
         return view('modules-lms-learning-base::learners.base.settings');
