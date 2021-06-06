@@ -2,11 +2,24 @@
 
 @section('head_css')
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <style>
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">>";
+        }
+    </style>
 @endsection
 
 
 @section('body_content_main')
-    <div id="course">
+@include('modules-lms-base::navigation',['type' => 'tenant'])
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"> <a href="/tenant/courses">Courses</a></li>
+        <li class="breadcrumb-item active">View Course</li>
+    </ol>
+</nav>
+<div id="course">
         <div class="jumbotron jumbotron-fluid program-jumbotron">
             <div class="container">
                 <div class="row">

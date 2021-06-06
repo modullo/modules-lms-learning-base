@@ -15,7 +15,6 @@
 @endsection
 
 @section('body_js')
-
     {{--    <script src="{{ asset('js/app.js') }}"></script>--}}
 @endsection
 

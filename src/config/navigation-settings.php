@@ -1,25 +1,6 @@
 <?php
 
 return [
-    'grades' => [
-        'icon' => 'fa fa-book',
-        'dashboard' => 'all',
-        'title' => 'Grades',
-        'route' => 'tenant/grades',
-        'clickable' => true,
-        'navbar' => true,
-        'visibility' => false,
-        'sub-menu' => [
-            'grades' => [
-
-                'dashboard' => 'all',
-                'title' => 'All Grades',
-                'route' => 'tenant/grades',
-                'clickable' => true,
-                'navbar' => true,
-            ],
-        ],
-    ],
     'resources' => [
         'icon' => 'fa fa-file',
         'dashboard' => 'all',
@@ -139,7 +120,7 @@ return [
     'programs' => [
         'icon' => 'fa fa-home',
         'dashboard' => 'all',
-        'title' => 'Programs',
+        'title' => 'Majors',
         'route' => 'learner/programs',
         'clickable' => true,
         'navbar' => true,

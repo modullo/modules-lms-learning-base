@@ -4,9 +4,15 @@
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
 @endsection
 
-
 @section('body_content_main')
+@include('modules-lms-base::navigation',['type' => 'learner'])
     <div id="course">
+        <breadcrumbs 
+            :items="[
+                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '', title: courseTitle, active: true},
+            ]">
+        </breadcrumbs>
         <div class="jumbotron jumbotron-fluid program-jumbotron">
             <div class="container">
                 <div class="row">
@@ -100,7 +106,7 @@
 
 
 
-                <div class="course-content mt-5">
+                <div class="mt-5 course-content">
 
                     <h2>
 
@@ -116,7 +122,7 @@
                                 </h5>
                             </div>
                             <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -128,7 +134,7 @@
                                     </p>
                                 </div>
 
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -141,7 +147,7 @@
                                 </div>
 
 
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -168,7 +174,7 @@
 
                 </div>
 
-                <div class="requirement mt-5 mb-5">
+                <div class="mt-5 mb-5 requirement">
                     <h2>Requirements</h2>
 
                     <ul class="requirement-list">
@@ -189,7 +195,7 @@
                 </p>
                 <span v-if="readMoreActivated" v-html="description"></span>
 
-                <div class="testimonial-container mt-5 mb-5">
+                <div class="mt-5 mb-5 testimonial-container">
                     <div class="card">
                         <div class="card-body">
                             <h2 class="card-title">Testimonial</h2>
@@ -209,7 +215,7 @@
                                 </div>
                             </div>
 
-                            <div class="star-rating mx-2">
+                            <div class="mx-2 star-rating">
                                 <i class="fa fa-star star"></i>
                                 <i class="fa fa-star star"></i>
                                 <i class="fa fa-star star"></i>
@@ -219,7 +225,7 @@
                                 <span>1 month ago</span>
                             </div>
 
-                            <div class="testimonial mt-4">
+                            <div class="mt-4 testimonial">
                                 <p>@{{testimonial}}</p>
                             </div>
                         </div>
@@ -229,16 +235,11 @@
         </section>
     </div>
 
-    {{--    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>--}}
-
-    {{--    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>--}}
-    {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>--}}
-    {{--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>--}}
-
 @endsection
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script>
         "use strict";
 
