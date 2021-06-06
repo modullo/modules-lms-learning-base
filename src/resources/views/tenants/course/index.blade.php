@@ -4,18 +4,31 @@
 @section('head_js')
 
 @endsection
+@section('head_css')
+<style>
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: ">>";
+    }
+</style>
+@endsection
 
 
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
-    <div class="container mt-5">
-        <div id="program">
+    <div id="program">
+        <breadcrumbs 
+            :items="[
+                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '', title: 'Courses', active: true},
+            ]">
+        </breadcrumbs>
+        <div class="container mt-5">
             <section class="container program-contain">
                 <h2 class="mb-5">Course</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn btn-primary mt-4 mb-4 add-course" href="/tenant/courses/create">
+                    <a class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/courses/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -23,9 +36,9 @@
                     </a>
                 </div>
 
-                <div class="form-group has-search mb-5">
+                <div class="mb-5 form-group has-search">
 
-                    <div class="input-group mb-2">
+                    <div class="mb-2 input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <span class="fa fa-search form-control-feedback"></span>
@@ -41,7 +54,7 @@
                 </div>
                 <div class="row">
                     <div
-                            class="col-lg-4 col-md-4 col-sm-6 col-xs-6 mb-5"
+                            class="mb-5 col-lg-4 col-md-4 col-sm-6 col-xs-6"
                             v-for="(cardinfo, index) in searchCourses"
                             :key="index"
                     >
@@ -52,7 +65,7 @@
                             <!-- </div> -->
                             <div class="card-body">
                                 <h5 class="card-title">@{{ cardinfo.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
+                                <h6 class="mb-2 card-subtitle text-muted">
                                     @{{ cardinfo.author }}
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
@@ -64,7 +77,7 @@
                                 >View Course</a
                                 >
 
-                                <a class="btn app-btn mx-2" href="/tenant/courses/edit" role="button"
+                                <a class="mx-2 btn app-btn" href="/tenant/courses/edit" role="button"
                                 >Edit</a
                                 >
 
@@ -102,7 +115,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script>
         "use strict";
         var dummyData = [

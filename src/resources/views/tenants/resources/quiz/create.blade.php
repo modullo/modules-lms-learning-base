@@ -15,32 +15,30 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="/tenant/quiz">Quiz</a></li>
-            <li class="breadcrumb-item active">Create Quiz</li>
-        </ol>
-    </nav>
-    <div class="container">
-        <div id="app">
+    <div id="app">
+        <breadcrumbs 
+        :items="[
+            {url: 'https://google.com', title: 'Home', active: false},
+            {url: '/tenant/quiz', title: 'Quiz', active: false},
+            {url: '', title: 'Create Quiz', active: true},
+        ]">
+    </breadcrumbs>
+        <div class="container">
             <h3 class="mt-5">Create Quiz</h3>
-            <div class="">
-                <p v-if="errors.length > 0">
-                    <b class="text-danger">Please correct the following error(s):</b>
-                    <ul class="text-danger">
-                        <li v-for="error in errors" :key="error.id"> @{{ error }}</li>
-                    </ul>
-                </p>
-            </div>
-            <div class="card col mt-5 mx-auto">
+            <div class="mx-auto mt-5 card col">
                 <div class="card-body">
-                    <form class="form" @submit.prevent="submitForm">
+                    <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
                                 <label for=""> Quiz Name </label>
-                                <input v-model="name" type="text" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="Title of Quiz" />
+                                <p class="control has-icon has-icon-right">
+                                    <input name="Name" class="form-control" v-model="name" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Name') }" type="text"
+                                        placeholder="Enter Quiz Name">
+                                    <i v-show="errors.has('Name')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Name')"
+                                        class="help text-danger">@{{ errors . first('Name') }}</span>
+                                </p>
                             </div>
 
                             <div class="form-group col-lg-6">
@@ -64,7 +62,7 @@
                             <div class="form-group col-lg-12">
                                 <label> Disable Quiz on submit </label>
 
-                                <div class="form-check form-check-inline mx-3">
+                                <div class="mx-3 form-check form-check-inline">
                                     <label class="form-check-label">
                                         <input class="form-check-input" type="radio" name="" id=""
                                             value="checkedValue" />True
@@ -84,7 +82,7 @@
                             <div class="form-group col-lg-12">
                                 <label> Retake Quiz on Request </label>
 
-                                <div class="form-check form-check-inline mx-3">
+                                <div class="mx-3 form-check form-check-inline">
                                     <label class="form-check-label">
                                         <input class="form-check-input" type="radio" name="" id=""
                                             value="checkedValue" />True
@@ -100,8 +98,8 @@
                             </div>
                         </div>
 
-                        <div class="form-row mb-5">
-                            <div class="form-group col-lg-6 mb-5">
+                        <div class="mb-5 form-row">
+                            <div class="mb-5 form-group col-lg-6">
                                 <h2>Question</h2>
 
                                 <div id="question"></div>
@@ -122,7 +120,7 @@
                                 <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
                                     placeholder="quiz options" />
 
-                                <input type="text" class="form-control mt-2" name="" id="" aria-describedby="helpId"
+                                <input type="text" class="mt-2 form-control" name="" id="" aria-describedby="helpId"
                                     placeholder="quiz options" />
                             </div>
                             <button type="button" class="btn btn-outline-primary">
@@ -130,13 +128,7 @@
                             </button>
                         </div>
 
-                        <div class="
-                      submit-btn
-                      d-flex
-                      justify-content-between
-                      align-items-center
-                      mt-5
-                    ">
+                        <div class="mt-5 submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted"> fields with * are required </span>
 
                             <button type="submit" class="btn btn-outline-primary">
@@ -152,9 +144,6 @@
 
 @section('body_js')
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-
     <script>
         var quill = new Quill("#question", {
             theme: "snow",
@@ -172,7 +161,12 @@
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-
+    <!-- jsdelivr cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script>
+        Vue.use(VeeValidate); 
+    </script>
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script>
         "use strict";
         var dummyData = [{
@@ -218,30 +212,17 @@
                 desc: "Learn how to use Postman to build REST & GraphQL request",
                 cardinfos: dummyData,
                 rating: "(86900 ratings)",
-                errors: [],
                 aboutProgram: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
             },
             methods: {
-                submitForm() {  
-                    if (this.name && this.timer) {
-                        return true;
-                    }
-
-                    this.errors = [];
-
-                    if (!this.name) {
-                        this.errors.push('Name is required.');
-                    }
-                    if (!this.timer) {
-                        this.errors.push('Timer is required.');
-                    }
-                    if (!this.reward) {
-                        this.errors.push('Reward is required.');
-                    }
-                    if (!this.totalRequest) {
-                        this.errors.push('Total Request is required.');
-                    }
-
+                validateBeforeSubmit() {
+                    this.$validator.validateAll().then((result) => {
+                        if (result) {
+                            // eslint-disable-next-line
+                            alert('Form Submitted!');
+                            return;
+                        }
+                    });
                 },
             }
         });

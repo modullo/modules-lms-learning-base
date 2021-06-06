@@ -17,14 +17,14 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Quiz</li>
-        </ol>
-    </nav>
-    <div class="container mt-5">
-        <div id="modules">
+    <div id="modules">
+        <breadcrumbs 
+        :items="[
+            {url: 'https://google.com', title: 'Home', active: false},
+            {url: '', title: 'Quiz', active: true},
+        ]">
+    </breadcrumbs>
+        <div class="container mt-5">
             <section class="container program-contain">
                 <h2 class="mb-5">Quiz</h2>
 
@@ -36,7 +36,7 @@
                     </a>
                 </div>
 
-                <div class="input-group mb-5 mt-5">
+                <div class="mt-5 mb-5 input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <span class="fa fa-search form-control-feedback"></span>
@@ -52,7 +52,7 @@
 
                 <div class="row">
                     <div
-                            class="col-lg-4 col-md-6 mb-5"
+                            class="mb-5 col-lg-4 col-md-6"
                             v-for="(cardinfo, index) in cardinfos"
                             :key="index"
                     >
@@ -63,7 +63,7 @@
                                 <h5 class="card-title">@{{ cardinfo.title }}</h5>
 
 
-                                <a class="btn btn-primary mr-2" href="/tenant/quiz/edit" role="button"
+                                <a class="mr-2 btn btn-primary" href="/tenant/quiz/edit" role="button"
                                 >Update</a
                                 >
 
@@ -80,7 +80,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script>
         "use strict";
         var dummyData = [

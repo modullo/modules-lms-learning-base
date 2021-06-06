@@ -17,51 +17,42 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="/tenant/programs">Programs</a></li>
-            <li class="breadcrumb-item active">Edit Program</li>
-        </ol>
-    </nav>
-    <div class="container">
-        <div id="app">
+    <div id="app">
+        <breadcrumbs 
+            :items="[
+                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/programs', title: 'Programs', active: false},
+                {url: '', title: 'Edit Program', active: true},
+            ]">
+        </breadcrumbs>
+        <div class="container">
             <h3 class="mt-5">Edit Major</h3>
 
-            <div class="card col mt-5 mx-auto">
+            <div class="mx-auto mt-5 card col">
                 <div class="card-body">
-                    <form class="form" @submit.prevent="submitForm">
-                        <div class="">
-                            <p v-if="errors.length > 0">
-                                <b>Please correct the following error(s):</b>
-                            <ul class="text-danger">
-                                <li v-for="error in errors" :key="error.id"> @{{ error }}</li>
-                            </ul>
-                            </p>
-                        </div>
+                    <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="title">Title *</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="title"
-                                        placeholder="Title of Major"
-                                        v-model="form.MajorTitle"
-                                        @focus="clearError"
-                                />
-                                <small class="text-danger">
-                                    @{{ errors['title'] }}
-                                </small>
+                                <p class="control has-icon has-icon-right">
+                                    <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
+                                        placeholder="Enter Course title">
+                                    <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Title')"
+                                        class="help text-danger">@{{ errors . first('Title') }}</span>
+                                </p>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="subtype"> Subscription type * </label>
                                 <select
                                         class="form-control"
-                                        name=""
-
+                                        name="Subscription Type"
+                                        v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Subscription Type') }"
                                         id="visibilitytype"
                                         @focus="clearError"
+                                        v-model="form.subscriptionType"
                                 >
                                     <option disabled selected="selected">
                                         Select Subscription Type *
@@ -72,15 +63,20 @@
                                     <option>Bulk</option>
                                     <option>Discounted</option>
                                 </select>
+                                <i v-show="errors.has('Subscription Type')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Subscription Type')"
+                                        class="help text-danger">@{{ errors . first('Subscription Type') }}</span>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <label for="visibilitytype"> Visibility type * </label>
 
                                 <select
+                                        v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
                                         class="form-control"
-                                        name=""
-
+                                        name="Visibility Type"
+                                        v-model="form.visiblityType"
                                         id="visibilitytype"
                                         @focus="clearError"
                                 >
@@ -91,19 +87,24 @@
                                     <option>Public </option>
                                     <option>Private</option>
                                 </select>
+                                <i v-show="errors.has('Visibility Type')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Visibility Type')"
+                                        class="help text-danger">@{{ errors . first('Visibility Type') }}</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-lg-6 ">
-                                <label for="description"> Program description * </label>
+                                <label for="description"> Program Description * </label>
                                 <textarea
-                                        class="form-control"
-                                        name=""
-                                        id="description"
-                                        placeholder="Program Description"
-                                        rows="3"
-                                        v-model="form.MajorDescription"
-                                        @focus="clearError"
+                                    class="form-control"
+                                    name="Program Description"
+                                    v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
+                                    id="description"
+                                    placeholder="Program Description"
+                                    rows="3"
+                                    v-model="form.MajorDescription"
+                                    @focus="clearError"
                                 ></textarea>
                             </div>
                             <div class="form-group col-lg-6">
@@ -112,13 +113,13 @@
                                     Program Cover image
                                 </label>
                                 <input
-                                        type="file"
-                                        class="form-control-file mx-auto"
-                                        name=""
-                                        id=""
-                                        placeholder=""
-                                        aria-describedby="fileHelpId"
-                                        @focus="clearError"
+                                    type="file"
+                                    class="mx-auto form-control-file"
+                                    name=""
+                                    id=""
+                                    placeholder=""
+                                    aria-describedby="fileHelpId"
+                                    @focus="clearError"
                                 />
 
 
@@ -130,22 +131,33 @@
                             <div class="form-group col-md-6">
                                 <label for="subscriptioncost">Subscription Cost Amount *</label>
                                 <input
-                                        type="text"
-                                        class="form-control"
-                                        id="subscriptioncost"
-                                        v-model="form.subscriptioncost"
-                                        @focus="clearError"
+                                    v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Subscription Cost Amount') }"
+                                    type="text"
+                                    name="Subscription Cost Amount"
+                                    class="form-control"
+                                    id="subscriptioncost"
+                                    v-model="form.subscriptioncost"
+                                    @focus="clearError"
                                 />
+                                <i v-show="errors.has('Subscription Cost Amount')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Subscription Cost Amount')"
+                                        class="help text-danger">@{{ errors . first('Subscription Cost Amount') }}</span>
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="overviewvideo">Overview Video *</label>
                                 <input type="text"
-
-                                       class="form-control" id="overviewvideo"
-                                       v-model="overviewVideo"
-                                       @focus="clearError"
+                                    name="Overview Video"
+                                    v-model="form.overviewVideo"
+                                    v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Overview Video') }"
+                                    class="form-control" id="overviewvideo"
+                                    @focus="clearError"
                                 />
+                                <i v-show="errors.has('Overview Video')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Overview Video')"
+                                        class="help text-danger">@{{ errors . first('Overview Video') }}</span>
                             </div>
                         </div>
 
@@ -165,12 +177,12 @@
                         </div>
 
                         <div class="submit-btn d-flex justify-content-between align-items-center">
-  <span class="muted">
+                        <span class="muted">
 
-    fields with *  are required
-  </span>
+                            fields with *  are required
+                        </span>
 
-                            <button type="submit" class="btn btn-outline-primary">Update</button>
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
 
 
 
@@ -184,6 +196,12 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!-- jsdelivr cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script>
+        Vue.use(VeeValidate); 
+    </script>
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -241,40 +259,23 @@
                 desc: "Learn how to use Postman to build REST & GraphQL request",
                 cardinfos: dummyData,
                 rating: "(86900 ratings)",
-                errors:[],
                 aboutProgram:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
             },
 
             methods: {
-                submitForm() {
-                    console.log('working!!')
-                    this.validation()
-
-                },
                 clearError(){
                     this.errors = [];
                 },
-                validation() {
-                    if(!this.form.MajorTitle){
-                        this.errors.push('Program Title cannot be empty')
-
-                    }
-                    if(!this.form.subscriptioncost){
-                        this.errors.push('Cost cannot be empty')
-
-                    }
-                    if(!this.form.visiblityType){
-                        this.errors.push('Type cannot be empty')
-
-                    }
-                    if(!this.form.MajorDescription){
-                        this.errors.push('Subscription cannot be empty')
-
-                    }
-
-                    return true
-                }
+                validateBeforeSubmit() {
+                    this.$validator.validateAll().then((result) => {
+                        if (result) {
+                            // eslint-disable-next-line
+                            alert('Form Submitted!');
+                            return;
+                        }
+                    });
+                },
             }
 
 

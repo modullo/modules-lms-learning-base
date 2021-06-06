@@ -15,14 +15,14 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Tracks</li>
-        </ol>
-    </nav>
-    <div class="container mt-5">
-        <div id="lessons">
+    <div id="lessons">
+        <breadcrumbs 
+            :items="[
+                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '', title: 'Tracks', active: true},
+            ]">
+        </breadcrumbs>
+        <div class="container mt-5">
 
 
             <section class="container program-contain">
@@ -31,8 +31,8 @@
                     Tracks
                 </h2>
 
-                <div class="add-course-contain d-flex flex-row">
-                    <a class="btn btn-primary mt-4 mb-4 add-course" href="/tenant/lessons/create">
+                <div class="flex-row add-course-contain d-flex">
+                    <a class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/lessons/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -51,7 +51,7 @@
 
                 </div>
 
-                <div class="input-group mb-4 mt-4">
+                <div class="mt-4 mb-4 input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <span class="fa fa-search form-control-feedback"></span>
@@ -70,7 +70,7 @@
 
 
                     <div
-                            class="col-lg-4 col-md-6 mb-5"
+                            class="mb-5 col-lg-4 col-md-6"
                             v-for="(cardinfo, index) in searchLessons"
                             :key="index"
                     >
@@ -81,12 +81,12 @@
                             <!-- </div> -->
                             <div class="card-body">
                                 <h5 class="card-title">@{{ cardinfo.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
+                                <h6 class="mb-2 card-subtitle text-muted">
                                     @{{ cardinfo.author }}
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
                                 <a
-                                        class="btn app-btn mx-2"
+                                        class="mx-2 btn app-btn"
                                         href="/tenant/lessons/edit"
                                         role="button"
                                 >Edit</a
@@ -107,6 +107,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
 
     <script>
         "use strict";

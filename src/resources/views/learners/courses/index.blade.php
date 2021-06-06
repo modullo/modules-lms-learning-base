@@ -164,19 +164,37 @@
         .carousel .carousel-item {
             text-align: left !important;
         }
+        @media only screen and (min-width: 900px){
+            .searchbar{
+            margin-bottom: auto;
+            margin-top: 10px;
+            height: 60px;
+            width: 50%;
+            margin: auto;
+            border-radius: 30px;
+            padding: 10px;
+            color: black;
+            border: 1px solid #989586;
+            border-radius: 9999px;
+            background-color: #fbfbf8;
+            }
+        }
 
-        .searchbar{
-        margin-bottom: auto;
-        margin-top: 10px;
-        height: 60px;
-        width: 50%;
-        margin: auto;
-        border-radius: 30px;
-        padding: 10px;
-        color: black;
-        border: 1px solid #989586;
-        border-radius: 9999px;
-        background-color: #fbfbf8;
+        @media only screen and (max-width: 899px){
+            .searchbar{
+            margin-bottom: auto;
+            margin-top: 10px;
+            margin-left: 50px;
+            margin-right: 50px;
+            height: 60px;
+            width: auto;
+            border-radius: 30px;
+            padding: 10px;
+            color: black;
+            border: 1px solid #989586;
+            border-radius: 9999px;
+            background-color: #fbfbf8;
+            }
         }
 
         .search_input{
@@ -192,10 +210,10 @@
         .search_icon{
         height: 40px;
         width: 40px;
-        float: right;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        /* float: right; */
+        /* display: flex; */
+        /* justify-content: center; */
+        /* align-items: center; */
         border-radius: 50%;
         color:black;
         text-decoration:none;
@@ -207,12 +225,6 @@
 @section('body_content_main')
 @include('modules-lms-base::navigation',['type' => 'learner'])
 <div id="app">
-    <div class="mt-4 justify-content-cente h-100">
-        <div class="searchbar">
-          <input class="search_input" type="text" name="" placeholder="Search For Your Course...">
-          <a href="#" class="search_icon"><i class="fa fa-search"></i></a>
-        </div>
-    </div>
     <courses-carousel></courses-carousel>
 </div>
 
