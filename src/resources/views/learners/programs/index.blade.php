@@ -20,7 +20,7 @@
         <breadcrumbs 
             :items="[
                 {url: 'https://google.com', title: 'Home', active: false},
-                {url: '', title: 'Programs', active: true},
+                {url: '', title: 'Program', active: true},
             ]">
         </breadcrumbs>
         <div class="container" style="padding-top: 60px">

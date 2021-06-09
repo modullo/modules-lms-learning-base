@@ -21,7 +21,7 @@
         <breadcrumbs 
             :items="[
                 {url: 'https://google.com', title: 'Home', active: false},
-                {url: '/tenant/programs', title: 'Programs', active: false},
+                {url: '/tenant/programs', title: 'Program', active: false},
                 {url: '', title: 'Edit Program', active: true},
             ]">
         </breadcrumbs>
@@ -43,30 +43,7 @@
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
                                 </p>
                             </div>
-                            <div class="form-group col-md-3">
-                                <label for="subtype"> Subscription type * </label>
-                                <select
-                                        class="form-control"
-                                        name="Subscription Type"
-                                        v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Subscription Type') }"
-                                        id="visibilitytype"
-                                        @focus="clearError"
-                                        v-model="form.subscriptionType"
-                                >
-                                    <option disabled selected="selected">
-                                        Select Subscription Type *
-                                    </option>
 
-                                    <option>Free </option>
-                                    <option>Individual</option>
-                                    <option>Bulk</option>
-                                    <option>Discounted</option>
-                                </select>
-                                <i v-show="errors.has('Subscription Type')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Subscription Type')"
-                                        class="help text-danger">@{{ errors . first('Subscription Type') }}</span>
-                            </div>
 
                             <div class="form-group col-md-3">
                                 <label for="visibilitytype"> Visibility type * </label>
@@ -76,14 +53,13 @@
                                         :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
                                         class="form-control"
                                         name="Visibility Type"
-                                        v-model="form.visiblityType"
+                                        v-model="form.type"
                                         id="visibilitytype"
                                         @focus="clearError"
                                 >
                                     <option disabled selected="selected">
                                         Select Major Visibility *
                                     </option>
-
                                     <option>Public </option>
                                     <option>Private</option>
                                 </select>
@@ -103,7 +79,7 @@
                                     id="description"
                                     placeholder="Program Description"
                                     rows="3"
-                                    v-model="form.MajorDescription"
+                                    v-model="form.description"
                                     @focus="clearError"
                                 ></textarea>
                             </div>
@@ -127,54 +103,7 @@
 
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="subscriptioncost">Subscription Cost Amount *</label>
-                                <input
-                                    v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Subscription Cost Amount') }"
-                                    type="text"
-                                    name="Subscription Cost Amount"
-                                    class="form-control"
-                                    id="subscriptioncost"
-                                    v-model="form.subscriptioncost"
-                                    @focus="clearError"
-                                />
-                                <i v-show="errors.has('Subscription Cost Amount')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Subscription Cost Amount')"
-                                        class="help text-danger">@{{ errors . first('Subscription Cost Amount') }}</span>
-                            </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="overviewvideo">Overview Video *</label>
-                                <input type="text"
-                                    name="Overview Video"
-                                    v-model="form.overviewVideo"
-                                    v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Overview Video') }"
-                                    class="form-control" id="overviewvideo"
-                                    @focus="clearError"
-                                />
-                                <i v-show="errors.has('Overview Video')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Overview Video')"
-                                        class="help text-danger">@{{ errors . first('Overview Video') }}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <div class="custom-control custom-switch">
-                                    <input
-                                            type="checkbox"
-                                            class="custom-control-input"
-                                            id="customSwitch1"
-                                    />
-                                    <label class="custom-control-label" for="customSwitch1">
-                                        Include Subscription Limit *
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="submit-btn d-flex justify-content-between align-items-center">
                         <span class="muted">
@@ -206,61 +135,12 @@
 
     <script>
         "use strict";
-        var dummyData = [
-            {
-                title: " objects and classes",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "constructor",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image:
-                    "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-        ];
 
         new Vue({
             el: "#app",
 
             data: {
-                form: {
-                    MajorTitle: null,
-                    subscriptionType: null,
-                    MajorDescription: null,
-                    visiblityType: null,
-                    subscriptioncost:null,
-                    overviewImageUrl: null,
-                    overviewVideo: null
-                },
-                author: "Evan you",
-                MajorTitle: "C++ Certificate Program",
-                numberOfStudentEnrolled: 240,
-                desc: "Learn how to use Postman to build REST & GraphQL request",
-                cardinfos: dummyData,
-                rating: "(86900 ratings)",
-                aboutProgram:
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
+                form: {!! json_encode($data) !!}
             },
 
             methods: {

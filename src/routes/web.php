@@ -20,7 +20,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
             });
 
-            //        Programs
+            //        Program
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('/', 'ModulesLmsLearningBaseController@programs');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
@@ -50,10 +50,11 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             });
 
             Route::group(['prefix' => 'programs'],function() {
-                Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms');
+                Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('all-programs');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createProgram');
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitProgram');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
-                Route::get('edit', 'ModulesLmsLearningBaseTenantController@editProgram');
+                Route::get('edit/{id}', 'ModulesLmsLearningBaseTenantController@editProgram');
             });
 
             Route::group(['prefix' => 'modules'],function() {

@@ -3,7 +3,9 @@
 namespace Modullo\ModulesLmsLearningBase\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Nyholm\Psr7\Request;
+use Hostville\Modullo\Sdk;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 class ModulesLmsLearningBaseTenantController extends Controller
 {
@@ -77,20 +79,70 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.modules.index');
     }
 
-    //    Programs
-    public function createProgram()
+    //    Program
+    public function createProgram(Sdk $sdk)
     {
+//        $resource = $sdk->createProgramResource();
+//        $resource = $resource->addBodyParam('allowance_name',$request->allowance_name)
+//            ->addBodyParam('allowance_type',$request->allowance_type)
+//            ->addBodyParam('model',$request->allowance_model)
+//            ->addBodyParam('model_data',json_encode($request->model_data));
+//        if($request->has('authority_id')){
+//            $resource->addBodyParam('authority',$request->authority_id);
+//        }
+//        $response = $resource->send('post',['allowance']);
+//        if (!$response->isSuccessful()) {
+//            $message = $response->errors[0]['title'] ?? '';
+//            throw new \RuntimeException('Failed while adding the Payroll Allowance '.$message);
+//
+//        }
         return view('modules-lms-learning-base::tenants.programs.create');
     }
 
-    public function editProgram()
-    {
-        return view('modules-lms-learning-base::tenants.programs.edit');
+    public function submitProgram(Request $request, Sdk $sdk){
+        $resource = $sdk->createProgramService();
+        $resource = $resource
+            ->addBodyParam('title',$request->title)
+            ->addBodyParam('description',$request->MajorDescription)
+            ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('type',$request->visiblityType);
+        $response = $resource->send('post',['']);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+
+        return response()->json(['message' => 'creation successful blah blah'],200);
     }
 
-    public function allPrograms()
+    public function editProgram(string $id, Sdk $sdk)
     {
-        return view('modules-lms-learning-base::tenants.programs.index');
+        $sdkObject = $sdk->createProgramService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['program'];
+            return view('modules-lms-learning-base::tenants.programs.edit',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.programs.edit',compact('data'));
+    }
+
+    public function allPrograms(Sdk $sdk)
+    {
+        $query = $sdk->createProgramService();
+        $query = $query->addQueryArgument('limit',100);
+        $path = [''];
+        $response = $query->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['programs'];
+            return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
+
     }
 
 
