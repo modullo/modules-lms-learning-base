@@ -37,7 +37,7 @@
                                 <p class="control has-icon has-icon-right">
                                     <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
-                                        placeholder="Enter Course title">
+                                        placeholder="Enter Major title">
                                     <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Title')"
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
@@ -53,16 +53,16 @@
                                     :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
                                     class="form-control"
                                     name="Visibility Type"
-                                    v-model="form.type"
+                                    v-model="form.visibility_type"
                                     id="visibilitytype"
 
                                 >
-                                    <option disabled selected="selected">
-                                        Select Major Visibility *
+                                    <option disabled selected="selected" :value="form.visibility_type" >
+                                      @{{ form.visibility_type }}
                                     </option>
 
-                                    <option value="public">Public </option>
-                                    <option value="private">Private</option>
+                                    <option v-show="form.visibility_type !== 'public'" value="public">Public </option>
+                                    <option v-show="form.visibility_type !== 'private'" value="private">Private</option>
                                 </select>
                                 <i v-show="errors.has('Visibility Type')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Visibility Type')"
@@ -71,14 +71,14 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-lg-6 ">
-                                <label for="description"> Program Description * </label>
+                                <label for="description"> Major Description * </label>
                                 <textarea
                                     v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
                                     class="form-control"
                                     name="Program Description"
                                     id="description"
-                                    placeholder="Program Description"
+                                    placeholder="Major Description"
                                     rows="3"
                                     v-model="form.description"
                                 ></textarea>
@@ -170,18 +170,25 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
-                            axios.put(`${this.baseUrl+ this.form.id}`,this.form).then(res => {
+                            axios.put(`${this.form.id}`,this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
                                 // console.log(e.response.data.error)
-                                const errors = e.response.data.error
-                                Object.entries(errors).forEach(
-                                    ([, value]) => {
-                                        toastr["error"](value)
-                                    },
-                                )
+                                if(e.response.data.error){
+                                    toastr["error"](e.response.data.error)
+                                }
+                                else if(e.response.data.validation_error){
+                                    Object.entries(e.response.data.validation_error).forEach(
+                                        ([, value]) => {
+                                            toastr["error"](value)
+                                        },
+                                    )
+                                }
+
+                                //please be checking the status type before you just do a foreach please
+
                             }) 
                             ev.target.reset()
                         }

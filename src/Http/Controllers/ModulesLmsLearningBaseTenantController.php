@@ -3,7 +3,9 @@
 namespace Modullo\ModulesLmsLearningBase\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Exception\GuzzleException;
 use Hostville\Modullo\Sdk;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 
@@ -95,14 +97,14 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.programs.create');
     }
 
-    public function submitProgram(Request $request, Sdk $sdk): \Illuminate\Http\JsonResponse
+    public function submitProgram(Request $request, Sdk $sdk): JsonResponse
     {
         $resource = $sdk->createProgramService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
             ->addBodyParam('description',$request->MajorDescription)
             ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
-            ->addBodyParam('type',$request->visiblityType);
+            ->addBodyParam('visibility_type',$request->visiblityType);
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -114,18 +116,21 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return response()->json(['message' => 'creation successful blah blah'],200);
     }
 
-    public function updateProgram(string $id, Request $request, Sdk $sdk){
-        // return response(['check' => 'hello']);
+    /**
+     * @throws GuzzleException
+     */
+    public function updateProgram(string $id, Request $request, Sdk $sdk): JsonResponse
+    {
         $resource = $sdk->createProgramService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
             ->addBodyParam('description',$request->MajorDescription)
             ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
-            ->addBodyParam('type',$request->visiblityType);
-        $response = $resource->send('put',[$request->program_id]);
+            ->addBodyParam('visibility_type',$request->visibility_type);
+        $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
             return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
