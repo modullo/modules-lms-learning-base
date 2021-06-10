@@ -104,6 +104,26 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return response()->json(['message' => 'creation successful blah blah'],200);
     }
 
+    public function updateProgram(string $id, Request $request, Sdk $sdk){
+        // return response(['check' => 'hello']);
+        dd($id);
+        $resource = $sdk->createProgramService();
+        $resource = $resource
+            ->addBodyParam('title',$request->title)
+            ->addBodyParam('description',$request->MajorDescription)
+            ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('type',$request->visiblityType);
+        $response = $resource->send('put',[$request->program_id]);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+
+        return response()->json(['message' => 'Updated Successfully'],200);
+    }
+
     public function editProgram(string $id, Sdk $sdk)
     {
         $sdkObject = $sdk->createProgramService();
@@ -130,6 +150,26 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $data = ['error' => 'unable to fetch the requested resource'];
         return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
 
+    }
+
+    public function submitCourse(Request $request, Sdk $sdk){
+        $resource = $sdk->createCourseService();
+        $resource = $resource
+        ->addBodyParam('title',$request->title)
+        ->addBodyParam('course_image',$request->image ?? 'https://aws-demo.com')
+        ->addBodyParam('duration',$request->duration)
+        ->addBodyParam('course_state',$request->course_state)
+        ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
+        ->addBodyParam('description',$request->description);
+        $response = $resource->send('post',['']);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+
+        return response()->json(['message' => 'Course Created Successfully!'],200);
     }
 
 

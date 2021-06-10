@@ -7,8 +7,9 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
 
     Route::middleware('auth')->group(function () {
+        Route::post('create', 'ModulesLmsLearningBaseTenantController@submitCourse');
         Route::group(['prefix' => 'learner'],function(){
-
+            
 
             Route::get('/test','ModulesLmsLearningBaseController@test')->name('learner-test');
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
@@ -37,6 +38,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::group(['prefix' => 'courses'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allCourses');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@create');
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitCourse');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@show');
                 Route::get('edit', 'ModulesLmsLearningBaseTenantController@edit');
             });
@@ -51,6 +53,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('all-programs');
+                Route::put('/{id}', 'ModulesLmsLearningBaseTenantController@updateProgram')->name('update-programs');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createProgram');
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitProgram');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');

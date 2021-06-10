@@ -21,7 +21,7 @@
 
 
                 <div class="add-course-contain">
-                    <a class="btn btn-primary mt-5 mb-5 add-course" href="/tenant/programs/create">
+                    <a class="mt-5 mb-5 btn btn-primary add-course" href="/tenant/programs/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -29,7 +29,7 @@
                     </a>
                 </div>
 
-                <div class="input-group mb-2">
+                <div class="mb-2 input-group">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
                             <span class="fa fa-search form-control-feedback"></span>
@@ -48,7 +48,7 @@
 
 
                     <div
-                            class="col-lg-4 col-md-4 col-sm-6 col-xs-6 mb-5"
+                            class="mb-5 col-lg-4 col-md-4 col-sm-6 col-xs-6"
                             v-for="(cardinfo, index) in searchMajors"
                             :key="index"
                     >
@@ -59,7 +59,7 @@
                             <!-- </div> -->
                             <div class="card-body">
                                 <h5 class="card-title">@{{ cardinfo.title }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
+                                <h6 class="mb-2 card-subtitle text-muted">
                                     @{{ cardinfo.author }}
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.description }} .</p>
@@ -73,7 +73,7 @@
 
 
                                 <a
-                                        class="btn app-btn mx-2"
+                                        class="mx-2 btn app-btn"
                                         :href="`/tenant/programs/edit/${cardinfo.id}`"
                                         role="button"
                                 >Edit</a
