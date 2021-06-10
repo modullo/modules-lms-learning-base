@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class ModulesLmsLearningBaseTenantController extends Controller
 {
+    protected Sdk $sdk;
+    public function __construct(Sdk $sdk)
+    {
+        $this->sdk = $sdk;
+    }
 
     public function index()
     {
@@ -31,7 +36,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
     }
     public function create()
     {
-        return view('modules-lms-learning-base::tenants.course.create');
+        $programs = [];
+        if ($this->getPrograms()->isSuccessful()) {
+            $response = $this->getPrograms()->getData();
+            $programs = $response['programs'];
+        }
+        return view('modules-lms-learning-base::tenants.course.create',compact('programs'));
     }
 
     public function edit()
@@ -106,7 +116,6 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function updateProgram(string $id, Request $request, Sdk $sdk){
         // return response(['check' => 'hello']);
-        dd($id);
         $resource = $sdk->createProgramService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
@@ -137,14 +146,18 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.programs.edit',compact('data'));
     }
 
-    public function allPrograms(Sdk $sdk)
-    {
-        $query = $sdk->createProgramService();
+    protected function getPrograms(){
+        $query = $this->sdk->createProgramService();
         $query = $query->addQueryArgument('limit',100);
         $path = [''];
-        $response = $query->send('get', $path);
-        if ($response->isSuccessful()){
-            $data = $response->data['programs'];
+        return $query->send('get', $path);
+    }
+
+    public function allPrograms(Sdk $sdk)
+    {
+        if ($this->getPrograms()->isSuccessful()){
+            $response = $this->getPrograms()->getData();
+            $data = $response['programs'];
             return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
@@ -161,7 +174,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('course_state',$request->course_state)
         ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
         ->addBodyParam('description',$request->description);
-        $response = $resource->send('post',['']);
+        $response = $resource->send('post',['create',$request->program]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
             if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
