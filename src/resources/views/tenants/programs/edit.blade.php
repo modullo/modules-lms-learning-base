@@ -22,7 +22,7 @@
             :items="[
                 {url: 'https://google.com', title: 'Home', active: false},
                 {url: '/tenant/programs', title: 'Program', active: false},
-                {url: '', title: 'Edit Program', active: true},
+                {url: '', title: 'Create Program', active: true},
             ]">
         </breadcrumbs>
         <div class="container">
@@ -43,25 +43,26 @@
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
                                 </p>
                             </div>
-
+                            <input type="hidden" name="program_id" value="form.id">
 
                             <div class="form-group col-md-3">
                                 <label for="visibilitytype"> Visibility type * </label>
 
                                 <select
-                                        v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
-                                        class="form-control"
-                                        name="Visibility Type"
-                                        v-model="form.type"
-                                        id="visibilitytype"
-                                        @focus="clearError"
+                                    v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
+                                    class="form-control"
+                                    name="Visibility Type"
+                                    v-model="form.type"
+                                    id="visibilitytype"
+
                                 >
                                     <option disabled selected="selected">
                                         Select Major Visibility *
                                     </option>
-                                    <option>Public </option>
-                                    <option>Private</option>
+
+                                    <option value="public">Public </option>
+                                    <option value="private">Private</option>
                                 </select>
                                 <i v-show="errors.has('Visibility Type')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Visibility Type')"
@@ -72,16 +73,18 @@
                             <div class="form-group col-lg-6 ">
                                 <label for="description"> Program Description * </label>
                                 <textarea
-                                    class="form-control"
-                                    name="Program Description"
                                     v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
+                                    class="form-control"
+                                    name="Program Description"
                                     id="description"
                                     placeholder="Program Description"
                                     rows="3"
                                     v-model="form.description"
-                                    @focus="clearError"
                                 ></textarea>
+                                <i v-show="errors.has('Program Description')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Program Description')"
+                                    class="help text-danger">@{{ errors.first('Program Description') }}</span>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="">
@@ -95,15 +98,10 @@
                                     id=""
                                     placeholder=""
                                     aria-describedby="fileHelpId"
-                                    @focus="clearError"
                                 />
-
-
                             </div>
 
                         </div>
-
-
 
                         <div class="submit-btn d-flex justify-content-between align-items-center">
                         <span class="muted">
@@ -112,8 +110,7 @@
                         </span>
 
                             <button type="submit" class="btn btn-outline-primary">Submit</button>
-
-
+                            {{-- <button @click="validateBeforeSubmit" type="submit" class="btn btn-outline-primary">Submit</button> --}}
 
                         </div>
                     </form>
@@ -127,32 +124,66 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <!-- jsdelivr cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Init the plugin and component-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        Vue.use(VeeValidate); 
+        Vue.use(VueLoading);
+        Vue.component('loading', VueLoading)
+        Vue.use(VeeValidate);
+        toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        }
     </script>
+    
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         "use strict";
-
         new Vue({
             el: "#app",
 
             data: {
-                form: {!! json_encode($data) !!}
+                form: {!! json_encode($data) !!},
+                baseUrl: 'http://127.0.0.1:9000/tenant/programs/'
             },
 
             methods: {
-                clearError(){
-                    this.errors = [];
-                },
-                validateBeforeSubmit() {
+                validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
-                            // eslint-disable-next-line
-                            alert('Form Submitted!');
-                            return;
+                            let loader = Vue.$loading.show()
+                            axios.put(`${this.baseUrl+ this.form.id}`,this.form).then(res => {
+                                loader.hide();
+                                toastr["success"](res.data.message)
+                            }).catch(e => {
+                                loader.hide();
+                                // console.log(e.response.data.error)
+                                const errors = e.response.data.error
+                                Object.entries(errors).forEach(
+                                    ([, value]) => {
+                                        toastr["error"](value)
+                                    },
+                                )
+                            }) 
+                            ev.target.reset()
                         }
                     });
                 },

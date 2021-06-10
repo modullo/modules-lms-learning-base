@@ -48,20 +48,20 @@
                                 <label for="visibilitytype"> Visibility type * </label>
 
                                 <select
-                                        v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
-                                        class="form-control"
-                                        name="Visibility Type"
-                                        v-model="form.visiblityType"
-                                        id="visibilitytype"
-                                        @focus="clearError"
+                                    v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
+                                    class="form-control"
+                                    name="Visibility Type"
+                                    v-model="form.visiblityType"
+                                    id="visibilitytype"
+
                                 >
                                     <option disabled selected="selected">
                                         Select Major Visibility *
                                     </option>
 
-                                    <option>public </option>
-                                    <option>private</option>
+                                    <option value="public">Public </option>
+                                    <option value="private">Private</option>
                                 </select>
                                 <i v-show="errors.has('Visibility Type')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Visibility Type')"
@@ -72,16 +72,18 @@
                             <div class="form-group col-lg-6 ">
                                 <label for="description"> Program Description * </label>
                                 <textarea
-                                    class="form-control"
-                                    name="Program Description"
                                     v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
+                                    class="form-control"
+                                    name="Program Description"
                                     id="description"
                                     placeholder="Program Description"
                                     rows="3"
                                     v-model="form.MajorDescription"
-                                    @focus="clearError"
                                 ></textarea>
+                                <i v-show="errors.has('Program Description')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Program Description')"
+                                    class="help text-danger">@{{ errors.first('Program Description') }}</span>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="">
@@ -95,33 +97,10 @@
                                     id=""
                                     placeholder=""
                                     aria-describedby="fileHelpId"
-                                    @focus="clearError"
                                 />
-
-
                             </div>
 
                         </div>
-
-                        <div class="form-row">
-
-                            <div class="form-group col-md-6">
-                                <label for="overviewvideo">Overview Video *</label>
-                                <input type="text"
-                                    name="Overview Video"
-                                    v-model="form.overviewVideo"
-                                    v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Overview Video') }"
-                                    class="form-control" id="overviewvideo"
-                                    @focus="clearError"
-                                />
-                                <i v-show="errors.has('Overview Video')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Overview Video')"
-                                        class="help text-danger">@{{ errors . first('Overview Video') }}</span>
-                            </div>
-                        </div>
-
-
 
                         <div class="submit-btn d-flex justify-content-between align-items-center">
                         <span class="muted">
@@ -129,9 +108,8 @@
                             fields with *  are required
                         </span>
 
-                            <button @click="handleSubmit" type="submit" class="btn btn-outline-primary">Submit</button>
-
-
+                            <button type="submit" class="btn btn-outline-primary">Submit</button>
+                            {{-- <button @click="validateBeforeSubmit" type="submit" class="btn btn-outline-primary">Submit</button> --}}
 
                         </div>
                     </form>
@@ -145,10 +123,34 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <!-- jsdelivr cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Init the plugin and component-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        Vue.use(VueLoading);
+        Vue.component('loading', VueLoading)
         Vue.use(VeeValidate);
+        toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        }
     </script>
+    
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -170,21 +172,24 @@
             },
 
             methods: {
-                clearError(){
-                    this.errors = [];
-                },
-                async handleSubmit(){
-                    // await this.validateBeforeSubmit()
-                    await axios.post('create',this.form).then(res => {
-                        console.log(res)
-                    }).catch()
-                },
-                async validateBeforeSubmit() {
+                validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
-                            // eslint-disable-next-line
-                            alert('Form Submitted!');
-                            return;
+                            let loader = Vue.$loading.show()
+                            axios.post('create',this.form).then(res => {
+                                loader.hide();
+                                toastr["success"](res.data.message)
+                            }).catch(e => {
+                                loader.hide();
+                                // console.log(e.response.data.error)
+                                const errors = e.response.data.error
+                                Object.entries(errors).forEach(
+                                    ([, value]) => {
+                                        toastr["error"](value)
+                                    },
+                                )
+                            }) 
+                            ev.target.reset()
                         }
                     });
                 },
