@@ -82,24 +82,11 @@ class ModulesLmsLearningBaseTenantController extends Controller
     //    Program
     public function createProgram(Sdk $sdk)
     {
-//        $resource = $sdk->createProgramResource();
-//        $resource = $resource->addBodyParam('allowance_name',$request->allowance_name)
-//            ->addBodyParam('allowance_type',$request->allowance_type)
-//            ->addBodyParam('model',$request->allowance_model)
-//            ->addBodyParam('model_data',json_encode($request->model_data));
-//        if($request->has('authority_id')){
-//            $resource->addBodyParam('authority',$request->authority_id);
-//        }
-//        $response = $resource->send('post',['allowance']);
-//        if (!$response->isSuccessful()) {
-//            $message = $response->errors[0]['title'] ?? '';
-//            throw new \RuntimeException('Failed while adding the Payroll Allowance '.$message);
-//
-//        }
         return view('modules-lms-learning-base::tenants.programs.create');
     }
 
-    public function submitProgram(Request $request, Sdk $sdk){
+    public function submitProgram(Request $request, Sdk $sdk): \Illuminate\Http\JsonResponse
+    {
         $resource = $sdk->createProgramService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
