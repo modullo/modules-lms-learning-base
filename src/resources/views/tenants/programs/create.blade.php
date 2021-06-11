@@ -183,11 +183,16 @@
                                 loader.hide();
                                 // console.log(e.response.data.error)
                                 const errors = e.response.data.error
-                                Object.entries(errors).forEach(
-                                    ([, value]) => {
-                                        toastr["error"](value)
-                                    },
-                                )
+                                if (e.response.status === 400) {
+                                    Object.entries(errors).forEach(
+                                        ([, value]) => {
+                                            toastr["error"](value)
+                                        },
+                                    )
+                                } else {
+                                    toastr["error"](e.response.data.error)
+                                    
+                                }
                             }) 
                             ev.target.reset()
                         }

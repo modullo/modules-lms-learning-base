@@ -32,10 +32,43 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.base.learner-management');
     }
 
-
-    public function allCourses(){
-        return view('modules-lms-learning-base::tenants.course.index');
+    protected function getCourses(){
+        $query = $this->sdk->createCourseService();
+        $query = $query->addQueryArgument('limit',100);
+        $path = ['all'];
+        return $query->send('get', $path);
     }
+
+    public function allCourses(Sdk $sdk){
+        if ($this->getCourses()->isSuccessful()){
+            $response = $this->getCourses()->getData();
+            $data = $response['courses'];
+            return view('modules-lms-learning-base::tenants.course.index',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.course.index', compact('data'));
+    }
+
+    public function updateCourse(string $id, Request $request, Sdk $sdk): JsonResponse
+    {
+        $resource = $sdk->createCourseService();
+        $resource = $resource
+            ->addBodyParam('title',$request->title)
+            ->addBodyParam('course_image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('duration',$request->duration)
+            ->addBodyParam('course_state',$request->course_state)
+            ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
+            ->addBodyParam('description',$request->description);
+        $response = $resource->send('put',[$id]);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['message' => 'Updated Successfully'],200);
+    }
+
     public function create()
     {
         $programs = [];
@@ -46,14 +79,30 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.course.create',compact('programs'));
     }
 
-    public function edit()
+    public function editCourse(string $id, Sdk $sdk)
     {
-        return view('modules-lms-learning-base::tenants.course.edit');
+        $sdkObject = $sdk->createCourseService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['course'];
+            return view('modules-lms-learning-base::tenants.course.edit',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.course.edit',compact('data'));
     }
 
-    public function show()
+    public function show(string $id, Sdk $sdk)
     {
-        return view('modules-lms-learning-base::tenants.course.show');
+        $sdkObject = $sdk->createCourseService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['course'];
+            return view('modules-lms-learning-base::tenants.course.show',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.course.show',compact('data'));
     }
 
 
@@ -134,7 +183,6 @@ class ModulesLmsLearningBaseTenantController extends Controller
             return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
-
         return response()->json(['message' => 'Updated Successfully'],200);
     }
 
@@ -190,8 +238,23 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return response()->json(['message' => 'Course Created Successfully!'],200);
     }
 
+    // Asset
+    public function uploadAsset(Request $request, Sdk $sdk)
+    {
+        // dd($request->file);
+        $resource = $sdk->createAssetService();
+        $resource = $resource
+        ->addMultipartParam('asset_file',$request->file('file'));
+        $path = ['custom', 'upload'];
+        $response = $resource->send('post', $path);
+        dd($response);
+        if ($response->isSuccessful()){
+            $data = $response->data['program'];
+            return view('modules-lms-learning-base::tenants.programs.edit',compact('data'));
+        }
+        return response(['message'  => 'file uploaded successfully!!!']);
+    }
 
-    //    Asset
     public function createAsset()
     {
         return view('modules-lms-learning-base::tenants.resources.asset.create');

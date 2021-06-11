@@ -14,7 +14,7 @@
 @include('modules-lms-base::navigation',['type' => 'tenant'])
 <nav>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item ml-4"><a href="#">Home</a></li>
+        <li class="ml-4 breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item"> <a href="/tenant/courses">Courses</a></li>
         <li class="breadcrumb-item active">View Course</li>
     </ol>
@@ -24,9 +24,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h1>@{{ courseTitle }}</h1>
+                        <h1>@{{ courseData.title }}</h1>
 
-                        <h4>@{{shortDesc}}</h4>
+                        <h4 v-html="courseData.description"></h4>
 
                         <p>Author by @{{author}}</p>
                         <small class="rating">
@@ -113,7 +113,7 @@
 
 
 
-                <div class="course-content mt-5">
+                <div class="mt-5 course-content">
 
                     <h2>
 
@@ -129,7 +129,7 @@
                                 </h5>
                             </div>
                             <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -141,7 +141,7 @@
                                     </p>
                                 </div>
 
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -154,7 +154,7 @@
                                 </div>
 
 
-                                <div class="card-body d-flex  justify-content-between">
+                                <div class="card-body d-flex justify-content-between">
                                     <h6>
                                         <i class="fa fa-play" aria-hidden="true"></i>
                                         Section 1 content
@@ -181,7 +181,7 @@
 
                 </div>
 
-                <div class="requirement mt-5 mb-5">
+                <div class="mt-5 mb-5 requirement">
                     <h2>Requirements</h2>
 
                     <ul class="requirement-list">
@@ -202,7 +202,7 @@
                 </p>
                 <span v-if="readMoreActivated" v-html="description"></span>
 
-                <div class="testimonial-container mt-5 mb-5">
+                <div class="mt-5 mb-5 testimonial-container">
                     <div class="card">
                         <div class="card-body">
                             <h2 class="card-title">Testimonial</h2>
@@ -222,7 +222,7 @@
                                 </div>
                             </div>
 
-                            <div class="star-rating mx-2">
+                            <div class="mx-2 star-rating">
                                 <i class="fa fa-star star"></i>
                                 <i class="fa fa-star star"></i>
                                 <i class="fa fa-star star"></i>
@@ -232,7 +232,7 @@
                                 <span>1 month ago</span>
                             </div>
 
-                            <div class="testimonial mt-4">
+                            <div class="mt-4 testimonial">
                                 <p>@{{testimonial}}</p>
                             </div>
                         </div>
@@ -273,6 +273,7 @@
                     "The instructor has perfect explaining skills. This course helped to clarify some things and prepare me (hopefully) to start playing around with postman. I will also be looking forward to see the Postman course from Valentin.",
                 requirments:
                     "The possibility of installing new tools on your computer.",
+                courseData: {!! json_encode($data) !!},
             },
 
             methods: {

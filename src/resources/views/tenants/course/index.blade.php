@@ -72,12 +72,12 @@
 
                                 <a
                                         class="btn app-btn"
-                                        href="/tenant/courses/show"
+                                        :href="`/tenant/courses/show/${cardinfo.id}`"
                                         role="button"
                                 >View Course</a
                                 >
 
-                                <a class="mx-2 btn app-btn" href="/tenant/courses/edit" role="button"
+                                <a class="mx-2 btn app-btn" :href="`/tenant/courses/${cardinfo.id}`" role="button"
                                 >Edit</a
                                 >
 
@@ -156,7 +156,7 @@
             el: "#program",
 
             data: {
-                cardinfos: dummyData,
+                cardinfos: {!! json_encode($data) !!},
                 search:'',
             },
 

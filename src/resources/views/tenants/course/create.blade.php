@@ -32,7 +32,7 @@
 
 
                     <h3 class="mb-3 form-heading">About Course </h3>
-                    <form class="form" @submit.prevent="formSubmit">
+                    <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="title">Title *</label>
@@ -136,7 +136,7 @@
 
                                     Cover image
                                 </label>
-                                <input v-on:change="form.course_image" type="file" class="form-control-file" name="" id="" placeholder=""
+                                <input v-on:change="accessImage" type="file" class="form-control-file" name="" id="" placeholder=""
                                     aria-describedby="fileHelpId">
 
                             </div>
@@ -148,7 +148,7 @@
                         <div class="mt-5 mb-5 submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted">
         
-                                fields with * are required
+                                fields with * are required   // @{{loadedImage}}
                             </span>
         
                             <button type="submit" class="btn btn-outline-primary">Create course</button>
@@ -218,16 +218,13 @@
                     description: '',
                     program: null,
                 },
+                loadedImage: '',
                 programs: {!! json_encode($programs) !!}
             },
 
             methods: {
-                val() {
-                    this.value = "This's new value";
-                },
-
-                onChange(html, text) {
-                    console.log(html.length, text.length);
+                accessImage(e) {
+                    this.loadedImage = e.target.files[0]
                 },
                 async formSubmit() {
                     await axios.post('create',this.form).then(res => {
@@ -253,28 +250,48 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
-                            // axios.post(`${this.baseUrl}/4775dd7d-40b4-4206-ae08-e1918dd4f812`,this.form).then(res => {
-                            axios.post('/create',this.form).then(res => {
+                            // this.uploadImage()
+                            axios.post('create',this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
-                                // console.log(e.response.data.error)
                                 const errors = e.response.data.error
-                                if (e.response.status === 400) {
-                                    
-                                    Object.entries(errors).forEach(
+                                if(e.response.data.error){
+                                    toastr["error"](e.response.data.error)
+                                }
+                                else if(e.response.data.validation_error){
+                                    Object.entries(e.response.data.validation_error).forEach(
                                         ([, value]) => {
                                             toastr["error"](value)
                                         },
                                     )
-                                }else {
-                                    toastr["error"](e.response.data.error)
                                 }
+                                // if (e.response.status === 400) {
+                                    
+                                //     Object.entries(errors).forEach(
+                                //         ([, value]) => {
+                                //             toastr["error"](value)
+                                //         },
+                                //     )
+                                // }else {
+                                //     toastr["error"](e.response.data.error)
+                                // }
                             }) 
                             ev.target.reset()
                         }
                     });
+                },
+                async uploadImage() {
+                    const formData = new FormData();
+                    formData.append("file", this.loadedImage, this.loadedImage.name);
+                    await axios.post('/tenant/assets/custom/upload', formData)
+                    .then( res => {
+                        this.loadedImage = res.file_url
+                    })
+                    .catch(e => {
+                        console.log(e.response.data.error)
+                    })
                 },
             },
 

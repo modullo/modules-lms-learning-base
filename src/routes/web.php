@@ -7,7 +7,6 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
 
     Route::middleware('auth')->group(function () {
-        Route::post('create', 'ModulesLmsLearningBaseTenantController@submitCourse');
         Route::group(['prefix' => 'learner'],function(){
             
 
@@ -39,8 +38,9 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allCourses');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@create');
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitCourse');
-                Route::get('show', 'ModulesLmsLearningBaseTenantController@show');
-                Route::get('edit', 'ModulesLmsLearningBaseTenantController@edit');
+                Route::get('show/{id}', 'ModulesLmsLearningBaseTenantController@show');
+                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editCourse');
+                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateCourse');  
             });
 
 
@@ -83,6 +83,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
             Route::group(['prefix' => 'assets'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allAsset');
+                Route::post('custom/upload', 'ModulesLmsLearningBaseTenantController@uploadAsset');
+                Route::get('create', 'ModulesLmsLearningBaseTenantController@createAsset');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createAsset');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
                 Route::get('edit', 'ModulesLmsLearningBaseTenantController@editAsset');

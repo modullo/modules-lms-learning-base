@@ -175,7 +175,6 @@
                                 toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
-                                // console.log(e.response.data.error)
                                 if(e.response.data.error){
                                     toastr["error"](e.response.data.error)
                                 }
@@ -190,7 +189,6 @@
                                 //please be checking the status type before you just do a foreach please
 
                             }) 
-                            ev.target.reset()
                         }
                     });
                 },
