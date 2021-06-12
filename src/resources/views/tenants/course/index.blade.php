@@ -60,7 +60,7 @@
                     >
                         <div class="card-course">
                             <!-- <div class="card-image"> -->
-                            <img class="card-img-top" :src="cardinfo.image" alt="" />
+                            <img class="card-img-top" style="height: 180px; width:340px; object-fit: cover" :src="cardinfo.course_image" alt="" />
 
                             <!-- </div> -->
                             <div class="card-body">

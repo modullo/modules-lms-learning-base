@@ -83,27 +83,19 @@
                                 class="help text-danger">@{{ errors.first('Publish State') }}</span>
                             </div>
                             <div class="form-group col-6">
-
-                                <label for="">
-
-                                    Cover image
-                                </label>
-                                <input  type="file" class="form-control-file" name="">
-
-                            </div>
-                            {{-- <div class="form-group col-6">
-                                <label for=""> Select Designated Program</label>
+                                <label for=""> Select Designated Program </label>
                                 <select
+                                    v-if="form.program"
                                         v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('program') }"
-                                        name="program"  v-model="form.program" class="form-control">
-                                    <option selected :value="null" disabled>Select Program</option>
-                                    <option v-for="(program,index) in programs" :key="index" :value="program.id">@{{ program.title }}</option>
+                                        name="program"  v-model="form.program.id" class="form-control">
+                                    {{-- <option selected :value="null" disabled>Select Program</option> --}}
+                                    <option v-for="(data,index) in programs" :key="index" :value="data.id">@{{ data.title }}</option>
                                 </select>
                                 <i v-show="errors.has('Publish State')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Publish State')"
                                       class="help text-danger">@{{ errors.first('Publish State') }}</span>
-                            </div> --}}
+                            </div>
 
                         </div>
 
@@ -139,7 +131,17 @@
 
                         </div>
 
+                        <div class="mt-5 form-group col-6">
 
+                            <label for="">
+
+                                Cover image
+                            </label>
+                            <input v-on:change="accessImage" type="file" class="form-control-file" name="" id="" placeholder=""
+                                aria-describedby="fileHelpId">
+
+                        </div>
+                        
                         <div class="mt-5 mb-5 submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted">
         
@@ -205,11 +207,12 @@
 
             data: {
                 form: {!! json_encode($data) !!},
+                programs: {!! json_encode($programs) !!},
             },
 
             methods: {
-                val() {
-                    this.value = "This's new value";
+                accessImage(e) {
+                    this.form.course_image = e.target.files[0]
                 },
                 async formSubmit() {
                     await axios.post('create',this.form).then(res => {
@@ -235,24 +238,40 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
-                            axios.put(`${this.form.id}`,this.form).then(res => {
-                                loader.hide();
-                                toastr["success"](res.data.message)
-                            }).catch(e => {
-                                loader.hide();
-                                if(e.response.data.error){
-                                    toastr["error"](e.response.data.error)
-                                }
-                                else if(e.response.data.validation_error){
-                                    Object.entries(e.response.data.validation_error).forEach(
-                                        ([, value]) => {
-                                            toastr["error"](value)
-                                        },
-                                    )
-                                }
-                            }) 
+                            this.uploadImage()
+                            .then(() => {
+                                    axios.put(`${this.form.id}`,this.form).then(res => {
+                                    loader.hide();
+                                    toastr["success"](res.data.message)
+                                }).catch(e => {
+                                    loader.hide();
+                                    if(e.response.data.error){
+                                        toastr["error"](e.response.data.error)
+                                    }
+                                    else if(e.response.data.validation_error){
+                                        Object.entries(e.response.data.validation_error).forEach(
+                                            ([, value]) => {
+                                                toastr["error"](value)
+                                            },
+                                        )
+                                    }
+                                }) 
+                            })
                         }
                     });
+                },
+                async uploadImage() {
+                    if (this.form.course_image) { 
+                        const formData = new FormData();
+                        formData.append("file", this.form.course_image, this.form.course_image.name);
+                        await axios.post('/tenant/assets/custom/upload', formData)
+                        .then( res => {
+                            this.form.course_image = res.data.file_url
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error)
+                        })
+                    }
                 },
             },
 

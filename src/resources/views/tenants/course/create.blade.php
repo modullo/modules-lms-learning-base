@@ -49,6 +49,7 @@
                             <div class="form-group col-md-6">
                                 <label for="visibility's"> Course Duration * </label>
                                 <input
+                                    v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Duration') }" name="Duration" 
                                     type="text" class="form-control" v-model="form.duration" placeholder="20 days">
                                     <i v-show="errors.has('Duration')" class="fa fa-warning text-danger"></i>
@@ -148,7 +149,7 @@
                         <div class="mt-5 mb-5 submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted">
         
-                                fields with * are required   // @{{loadedImage}}
+                                fields with * are required   // @{{form.course_image}}
                             </span>
         
                             <button type="submit" class="btn btn-outline-primary">Create course</button>
@@ -218,13 +219,13 @@
                     description: '',
                     program: null,
                 },
-                loadedImage: '',
+                // form.course_image: '',
                 programs: {!! json_encode($programs) !!}
             },
 
             methods: {
                 accessImage(e) {
-                    this.loadedImage = e.target.files[0]
+                    this.form.course_image = e.target.files[0]
                 },
                 async formSubmit() {
                     await axios.post('create',this.form).then(res => {
@@ -250,48 +251,53 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
-                            // this.uploadImage()
-                            axios.post('create',this.form).then(res => {
+                            this.uploadImage()
+                            .then(() => {
+                                axios.post('create',this.form).then(res => {
+                                ev.target.reset()
                                 loader.hide();
                                 toastr["success"](res.data.message)
-                            }).catch(e => {
-                                loader.hide();
-                                const errors = e.response.data.error
-                                if(e.response.data.error){
-                                    toastr["error"](e.response.data.error)
-                                }
-                                else if(e.response.data.validation_error){
-                                    Object.entries(e.response.data.validation_error).forEach(
-                                        ([, value]) => {
-                                            toastr["error"](value)
-                                        },
-                                    )
-                                }
-                                // if (e.response.status === 400) {
-                                    
-                                //     Object.entries(errors).forEach(
-                                //         ([, value]) => {
-                                //             toastr["error"](value)
-                                //         },
-                                //     )
-                                // }else {
-                                //     toastr["error"](e.response.data.error)
-                                // }
-                            }) 
-                            ev.target.reset()
+                                }).catch(e => {
+                                    loader.hide();
+                                    const errors = e.response.data.error
+                                    if(e.response.data.error){
+                                        toastr["error"](e.response.data.error)
+                                    }
+                                    else if(e.response.data.validation_error){
+                                        Object.entries(e.response.data.validation_error).forEach(
+                                            ([, value]) => {
+                                                toastr["error"](value)
+                                            },
+                                        )
+                                    }
+                                    // if (e.response.status === 400) {
+                                        
+                                    //     Object.entries(errors).forEach(
+                                    //         ([, value]) => {
+                                    //             toastr["error"](value)
+                                    //         },
+                                    //     )
+                                    // }else {
+                                    //     toastr["error"](e.response.data.error)
+                                    // }
+                                }) 
+                            })
+
                         }
                     });
                 },
                 async uploadImage() {
-                    const formData = new FormData();
-                    formData.append("file", this.loadedImage, this.loadedImage.name);
-                    await axios.post('/tenant/assets/custom/upload', formData)
-                    .then( res => {
-                        this.loadedImage = res.file_url
-                    })
-                    .catch(e => {
-                        console.log(e.response.data.error)
-                    })
+                    if (this.form.course_image) { 
+                        const formData = new FormData();
+                        formData.append("file", this.form.course_image, this.form.course_image.name);
+                        await axios.post('/tenant/assets/custom/upload', formData)
+                        .then( res => {
+                            this.form.course_image = res.data.file_url
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error)
+                        })
+                    }
                 },
             },
 

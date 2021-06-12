@@ -92,10 +92,8 @@
                                 </label>
                                 <input
                                     type="file"
+                                    v-on:change="accessImage"
                                     class="mx-auto form-control-file"
-                                    name=""
-                                    id=""
-                                    placeholder=""
                                     aria-describedby="fileHelpId"
                                 />
                             </div>
@@ -172,31 +170,50 @@
             },
 
             methods: {
+                accessImage(e) {
+                    this.form.overviewImageUrl = e.target.files[0]
+                },
                 validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
-                            axios.post('create',this.form).then(res => {
-                                loader.hide();
-                                toastr["success"](res.data.message)
-                            }).catch(e => {
-                                loader.hide();
-                                // console.log(e.response.data.error)
-                                const errors = e.response.data.error
-                                if (e.response.status === 400) {
-                                    Object.entries(errors).forEach(
-                                        ([, value]) => {
-                                            toastr["error"](value)
-                                        },
-                                    )
-                                } else {
-                                    toastr["error"](e.response.data.error)
-                                    
-                                }
-                            }) 
-                            ev.target.reset()
+                            this.uploadImage()
+                            .then(() => {
+                                axios.post('create',this.form).then(res => {
+                                    loader.hide();
+                                    toastr["success"](res.data.message)
+                                }).catch(e => {
+                                    loader.hide();
+                                    // console.log(e.response.data.error)
+                                    const errors = e.response.data.error
+                                    if (e.response.status === 400) {
+                                        Object.entries(errors).forEach(
+                                            ([, value]) => {
+                                                toastr["error"](value)
+                                            },
+                                        )
+                                    } else {
+                                        toastr["error"](e.response.data.error)
+                                        
+                                    }
+                                }) 
+                                ev.target.reset()
+                            })
                         }
                     });
+                },
+                async uploadImage() {
+                    if (this.form.course_image) { 
+                        const formData = new FormData();
+                        formData.append("file", this.form.overviewImageUrl, this.form.overviewImageUrl.name);
+                        await axios.post('/tenant/assets/custom/upload', formData)
+                        .then( res => {
+                            this.form.overviewImageUrl = res.data.file_url
+                        })
+                        .catch(e => {
+                            console.log(e.response.data.error)
+                        })
+                    }
                 },
             }
 

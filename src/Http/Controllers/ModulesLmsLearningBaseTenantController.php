@@ -54,11 +54,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $sdk->createCourseService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
-            ->addBodyParam('course_image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('course_image',$request->course_image)
             ->addBodyParam('duration',$request->duration)
             ->addBodyParam('course_state',$request->course_state)
             ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
-            ->addBodyParam('description',$request->description);
+            ->addBodyParam('description',$request->description)
+            ->addBodyParam('program_id',$request->program['id']);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -84,12 +85,19 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $sdkObject = $sdk->createCourseService();
         $path = [$id];
         $response = $sdkObject->send('get', $path);
+
+        $programs = [];
+        if ($this->getPrograms()->isSuccessful()) {
+            $programResponse = $this->getPrograms()->getData();
+            $programs = $programResponse['programs'];
+        }
+
         if ($response->isSuccessful()){
             $data = $response->data['course'];
-            return view('modules-lms-learning-base::tenants.course.edit',compact('data'));
+            return view('modules-lms-learning-base::tenants.course.edit',compact('data', 'programs'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
-        return view('modules-lms-learning-base::tenants.course.edit',compact('data'));
+        return view('modules-lms-learning-base::tenants.course.edit',compact('data', 'programs'));
     }
 
     public function show(string $id, Sdk $sdk)
@@ -152,7 +160,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $resource
             ->addBodyParam('title',$request->title)
             ->addBodyParam('description',$request->MajorDescription)
-            ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('image',$request->overviewImageUrl)
             ->addBodyParam('visibility_type',$request->visiblityType);
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
@@ -174,7 +182,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $resource
             ->addBodyParam('title',$request->title)
             ->addBodyParam('description',$request->MajorDescription)
-            ->addBodyParam('image',$request->image ?? 'https://aws-demo.com')
+            ->addBodyParam('image',$request->image)
             ->addBodyParam('visibility_type',$request->visibility_type);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
@@ -222,7 +230,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $sdk->createCourseService();
         $resource = $resource
         ->addBodyParam('title',$request->title)
-        ->addBodyParam('course_image',$request->image ?? 'https://aws-demo.com')
+        ->addBodyParam('course_image',$request->course_image)
         ->addBodyParam('duration',$request->duration)
         ->addBodyParam('course_state',$request->course_state)
         ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
@@ -243,16 +251,19 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         // dd($request->file);
         $resource = $sdk->createAssetService();
+        $file = $request->file('file');
         $resource = $resource
-        ->addMultipartParam('asset_file',$request->file('file'));
+            ->addMultipartParam('asset_file', file_get_contents($file->getRealPath(), false), 
+            $file->getClientOriginalName());
         $path = ['custom', 'upload'];
         $response = $resource->send('post', $path);
-        dd($response);
         if ($response->isSuccessful()){
-            $data = $response->data['program'];
-            return view('modules-lms-learning-base::tenants.programs.edit',compact('data'));
+            return response([
+                'message'       => 'file uploaded successfully!!!',
+                'file_url'      =>  $response->getData()['file_url'],
+                ]);
         }
-        return response(['message'  => 'file uploaded successfully!!!']);
+        return response(['message'  => 'file not uploaded']);
     }
 
     public function createAsset()
