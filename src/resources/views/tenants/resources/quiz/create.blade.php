@@ -1,14 +1,13 @@
 @extends('layouts.themes.tabler.tabler')
-
 @section('head_css')
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
     <style>
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";
         }
-
     </style>
 @endsection
 
@@ -16,13 +15,12 @@
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="app">
-        <breadcrumbs 
-        :items="[
-            {url: 'https://google.com', title: 'Home', active: false},
-            {url: '/tenant/quiz', title: 'Quiz', active: false},
-            {url: '', title: 'Create Quiz', active: true},
-        ]">
-    </breadcrumbs>
+        <breadcrumbs :items="[
+                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/quiz', title: 'Quiz', active: false},
+                {url: '', title: 'Create Quiz', active: true},
+            ]">
+        </breadcrumbs>
         <div class="container">
             <h3 class="mt-5">Create Quiz</h3>
             <div class="mx-auto mt-5 card col">
@@ -32,7 +30,7 @@
                             <div class="form-group col-lg-6">
                                 <label for=""> Quiz Name </label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Name" class="form-control" v-model="name" v-validate="'required'"
+                                    <input name="Name" class="form-control" v-model="form.quiz_title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Name') }" type="text"
                                         placeholder="Enter Quiz Name">
                                     <i v-show="errors.has('Name')" class="fa fa-warning text-danger"></i>
@@ -43,89 +41,96 @@
 
                             <div class="form-group col-lg-6">
                                 <label for=""> Quiz Timer </label>
-                                <input v-model="timer" type="text" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="Time of Quiz" />
+                                <input v-model="form.quiz_timer" type="number" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="Time of Quiz" />
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for=""> Reward Points </label>
-                                <input type="text" v-model="reward" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="Reward points" />
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for=""> Total Quiz on Request </label>
-                                <input type="text" v-model="totalRequest" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="Total Quiz marks" />
+                                <label for=""> Total Quiz Mark </label>
+                                <input type="number" v-model="form.total_quiz_mark" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="Reward points" />
                             </div>
 
                             <div class="form-group col-lg-12">
-                                <label> Disable Quiz on submit </label>
-
-                                <div class="mx-3 form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="" id=""
-                                            value="checkedValue" />True
-                                    </label>
-                                </div>
-
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="" id="" value="checkedValue" />
-                                        False
-                                    </label>
+                                <label> Disable Quiz on submit : </label>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" v-model="form.disable_on_submit" value="true" name="customRadioInline1" class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadioInline1">True</label>
+                                  </div>
+                                  <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" v-model="form.disable_on_submit" value="false" name="customRadioInline1" class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadioInline2">False</label>
                                 </div>
                             </div>
 
                             <br />
 
                             <div class="form-group col-lg-12">
-                                <label> Retake Quiz on Request </label>
-
-                                <div class="mx-3 form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="" id=""
-                                            value="checkedValue" />True
-                                    </label>
-                                </div>
-
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="" id="" value="checkedValue" />
-                                        False
-                                    </label>
+                                <label for="">Retake Quiz On Request : </label>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" value="true" v-model="form.retake_on_request" id="customRadioInline3" name="customRadioInline2" 
+                                    class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadioInline3">True</label>
+                                  </div>
+                                  <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" value="false" v-model="form.retake_on_request" id="customRadioInline4" name="customRadioInline2" class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadioInline4">False</label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mb-5 form-row">
-                            <div class="mb-5 form-group col-lg-6">
-                                <h2>Question</h2>
-
-                                <div id="question"></div>
+                        {{-- Questions Sections --}}
+                        <div v-for="(question, index) in form.questions" class="mb-3">
+                            <div class="mb-5 form-row">
+                                <div class="mb-5 form-group col-lg-6">
+                                    <h2>Question</h2>
+                                    <editor style="height: 100px" v-model="question.question_text" theme="snow"></editor>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for=""> Quiz Score </label>
-                                <input type="number" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="" />
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label for=""> Answer </label>
+                                    <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for=""> Quiz Score </label>
+                                    <input type="number" class="form-control" v-model="question.score" aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-lg-12">
-                                <label for=""> Options </label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="quiz options" />
-
-                                <input type="text" class="mt-2 form-control" name="" id="" aria-describedby="helpId"
-                                    placeholder="quiz options" />
+                            <div class="form-row">
+                                <div class="form-group col-lg-6">
+                                    <label for=""> Question Type </label>
+                                    <select v-model="question.question_type" id="" class="form-control">
+                                        <option value="options">Options</option>
+                                        <option value="option 2">Option 2</option>
+                                    </select>
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-outline-primary">
-                                Add options
-                            </button>
+                            <div class="form-row">
+                                <div class="p-0 form-group col-6">
+                                    <label for=""> Options </i> </label>
+                                    <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
+                                        placeholder="quiz options" />
+                                </div>
+                                <div class="my-auto ml-3 col-1">
+                                    <span style="font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
+                                </div>
+                                <div class="my-auto col-1">
+                                    <span style="font-size: 2em" class="mt-4"><i class="far fa-plus-square"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+
+                                <a href="#" @click.prevent="addQuiz" class="btn btn-outline-secondary">
+                                    Add Question
+                                </a>
+                                <a href="#" @click.prevent="removeQuiz(index)" class="ml-5 btn btn-outline-danger">
+                                    Remove Question
+                                </a>
+                            </div>
+                            <hr>
                         </div>
 
                         <div class="mt-5 submit-btn d-flex justify-content-between align-items-center">
@@ -143,89 +148,114 @@
 @endsection
 
 @section('body_js')
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        var quill = new Quill("#question", {
-            theme: "snow",
-            placeholder: "Quiz Question...",
-            modules: {
-                toolbar: [
-                    [{
-                        header: [1, 2, false]
-                    }],
-                    ["bold", "italic", "underline"],
-                    ["image", "code-block"],
-                ],
-            },
-        });
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <!-- jsdelivr cdn -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<!-- jsdelivr cdn -->
+<link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
+<script src="https://unpkg.com/@morioh/v-quill-editor/dist/editor.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Init the plugin and component-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        Vue.use(VeeValidate); 
+        Vue.use(VueLoading);
+        Vue.component('loading', VueLoading)
+        Vue.use(VeeValidate);
+        toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        }
     </script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script>
-        "use strict";
-        var dummyData = [{
-                title: " objects and classes",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "inheritance",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "constructor",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "interface",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                image: "https://images.unsplash.com/photo-1491841651911-c44c30c34548?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
-            },
-        ];
-
         new Vue({
             el: "#app",
             data: {
-                name: '',
-                timer: '',
-                reward: '',
-                totalRequest: '',
-                timer: '',
-                author: "Evan you",
-                programTitle: "C++ Certificate Program",
-                numberOfStudentEnrolled: 240,
-                desc: "Learn how to use Postman to build REST & GraphQL request",
-                cardinfos: dummyData,
-                rating: "(86900 ratings)",
-                aboutProgram: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
+                form: {
+                    quiz_title: '',
+                    total_quiz_mark: '',
+                    quiz_timer: '',
+                    disable_on_submit: '',
+                    retake_on_request: '',
+                    questions: [
+                        {
+                            question_text: '',
+                            score: '',
+                            answer: '',
+                            question_type: '',
+                            options: [
+                                "A", "B", "C" 
+                            ],
+                        },
+                    ],
+                }
             },
             methods: {
                 validateBeforeSubmit() {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
-                            // eslint-disable-next-line
-                            alert('Form Submitted!');
-                            return;
+                            console.log(JSON.stringify(this.form.questions))
+                            const payload = {
+                                quiz_title: this.form.quiz_title,
+                                total_quiz_mark: this.form.total_quiz_mark,
+                                quiz_timer: this.form.quiz_timer,
+                                disable_on_submit: this.form.disable_on_submit,
+                                retake_on_request: this.form.retake_on_request, 
+                                questions: JSON.stringify(this.form.questions), 
+                            }
+                            let loader = Vue.$loading.show()
+                            axios.post('create', this.form).then(res => {
+                            // ev.target.reset()
+                            loader.hide();
+                            toastr["success"](res.data.message)
+                            }).catch(e => {
+                                loader.hide();
+                                const errors = e.response.data.error
+                                if(e.response.data.error){
+                                    toastr["error"](e.response.data.error)
+                                }
+                                else if(e.response.data.validation_error){
+                                    Object.entries(e.response.data.validation_error).forEach(
+                                        ([, value]) => {
+                                            toastr["error"](value)
+                                        },
+                                    )
+                                }
+                            }) 
                         }
                     });
                 },
-            }
-        });
-
+                addQuiz() {
+                    this.form.questions.push(
+                        {
+                            question_text: '',
+                            score: '',
+                            answer: '',
+                            question_type: '',
+                            options: [
+                                "A", "B", "C" 
+                            ],
+                        },
+                    )
+                },
+                removeQuiz(quiz_id) {
+                    this.form.questions.splice(quiz_id, 1)
+                },
+            },
+        })
     </script>
 @endsection

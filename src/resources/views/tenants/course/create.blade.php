@@ -197,9 +197,6 @@
     <link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
 
     <script src="https://unpkg.com/@morioh/v-quill-editor/dist/editor.min.js" type="text/javascript"></script>
-    <script>
-        Vue.use(VeeValidate); 
-    </script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <!-- Initialize Quill editor -->
 
@@ -219,7 +216,6 @@
                     description: '',
                     program: null,
                 },
-                // form.course_image: '',
                 programs: {!! json_encode($programs) !!}
             },
 

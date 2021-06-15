@@ -197,7 +197,7 @@
                     });
                 },
                 async uploadImage() {
-                    if (this.form.image) { 
+                    if (typeof this.form.image.name !== 'undefined') { 
                         const formData = new FormData();
                         formData.append("file", this.form.image, this.form.image.name);
                         await axios.post('/tenant/assets/custom/upload', formData)

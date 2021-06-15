@@ -16,11 +16,11 @@
             :items="[
                 {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '/tenant/assets', title: 'Assets', active: false},
-                {url: '', title: 'Create Asset', active: true},
+                {url: '', title: 'Edit Asset', active: true},
             ]">
         </breadcrumbs>
         <div class="container">
-            <h3 class="mt-5">Create Assets</h3>
+            <h3 class="mt-5">Edit Assets</h3>
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
@@ -44,10 +44,9 @@
                                     class="form-control"
                                     name="Upload Type"
                                     @change="toggleAssetUpload" 
-                                    v-model="form.asset_type">
-                                    {{-- <option :selected="true">Select Upload Type</option> --}}
-                                    <option value="video">Video</option>
-                                    <option value="image">Image</option>
+                                    v-model="form.type">
+                                    <option value="unknown" :selected="form.type == 'unknown'">Video</option>
+                                    <option value="image" :selected="form.type == 'image'">Image</option>
                                 </select>
                                 <i v-show="errors.has('Upload Type')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Upload Type')"
@@ -56,12 +55,12 @@
                         </div>
 
                         <div class="form-row">
-                            <div v-if="toggleAsset === true" class="form-group col-md-6">
+                            <div v-if="toggleAsset !== 'image'" class="form-group col-md-6">
                                 <label for="asset-name">Video Url</label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Video Url" class="form-control" v-model="form.asset_url" v-validate="'required'"
+                                    <input name="Video Url" class="form-control" v-model="asset_url" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Video Url') }" type="url"
-                                        placeholder="https://video_url">
+                                        :placeholder="form.asset_url">
                                     <i v-show="errors.has('Video Url')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Video Url')"
                                         class="help text-danger">@{{ errors . first('Video Url') }}</span>
@@ -69,7 +68,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div v-if="toggleAsset === false" class="form-group col-md-6">
+                            <div v-if="toggleAsset === 'image'" class="form-group col-md-6">
                                 <label for="">
                                     Upload File
                                 </label>
@@ -85,7 +84,7 @@
                             <span class="muted"> fields with * are required </span>
 
                             <button type="submit" class="btn btn-outline-primary">
-                                Create Assets
+                                Update Assets
                             </button>
                         </div>
                     </form>
@@ -135,12 +134,9 @@
             el: "#app",
 
             data: {   
-                form: {
-                    asset_name: null,
-                    asset_type: null,
-                    asset_url: null,
-                },
-                toggleAsset: true,
+                form: {!! json_encode($data) !!},
+                asset_url: '',
+                toggleAsset: {!! json_encode($data['type']) !!}
             },
             methods: {
                 accessImage(e) {
@@ -150,10 +146,10 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
+                            this.toggleAsset !== 'image' ?  this.form.asset_url = this.asset_url : ''
                             this.uploadImage()
                             .then(() => {
-                                axios.post('create', this.transformToFormData(this.form)).then(res => {
-                                ev.target.reset()
+                                axios.put(`${this.form.id}`, this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)
                                 }).catch(e => {
@@ -192,14 +188,15 @@
                     Object.keys(object).forEach(key => formData.append(key, object[key]))
                     return formData
                 },
-                toggleAssetUpload() {
-                    if (this.form.asset_type === 'image') {
-                        this.toggleAsset = false
-                    }
+                toggleAssetUpload(e) {
+                    // if (this.form.type === 'image') {
+                        this.toggleAsset = e.target.value
+                        this.form.asset_url = ''
+                    // }
 
-                    if (this.form.asset_type === 'video') {
-                        this.toggleAsset = true
-                    }
+                    // if (this.form.type === 'video') {
+                    //     this.toggleAsset = true
+                    // }
                 }
             }
         });

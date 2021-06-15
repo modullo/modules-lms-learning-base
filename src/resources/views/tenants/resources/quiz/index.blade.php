@@ -11,6 +11,33 @@
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
         }
+        .card-course {
+            position: relative;
+            /* width: 319px; */
+            /* display: flex; */
+            /* flex-direction: column; */
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            box-shadow: rgb(31 31 31 / 12%) 0px 1px 6px, rgb(31 31 31 / 12%) 0px 1px 4px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            /* box-shadow: 0 2px 2px rga(0, 0, 0, 0.25); */
+            border: none;
+            border-radius: 0.35rem;
+            border-radius: 8px;
+            transition: transform .5s;
+            cursor: pointer;
+        }
+        .card-course:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+        }
+        .primary-backgroundColor {
+            background-color: #343a40 !important;
+            color: white;
+        }
     </style>
 @endsection
 
@@ -49,25 +76,15 @@
                             placeholder="Search Quiz"
                     />
                 </div>
-
                 <div class="row">
-                    <div
-                            class="mb-5 col-lg-4 col-md-6"
-                            v-for="(cardinfo, index) in cardinfos"
-                            :key="index"
-                    >
-                        <div class="card">
-
-                            <!-- </div> -->
+                    <div class="mb-5 col-lg-4 col-md-6" v-for="(cardinfo, index) in cardinfos" :key="index">
+                        <div class="card-course">
                             <div class="card-body">
-                                <h5 class="card-title">@{{ cardinfo.title }}</h5>
+                                <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
+                                <p class="card-text">@{{ cardinfo . description }} .</p>
+                                <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
 
-
-                                <a class="mr-2 btn btn-primary" href="/tenant/quiz/edit" role="button"
-                                >Update</a
-                                >
-
-                                <a class="btn btn-danger" href="/#" role="button">Delete</a>
+                                <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>

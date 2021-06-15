@@ -240,9 +240,9 @@
                             let loader = Vue.$loading.show()
                             this.uploadImage()
                             .then(() => {
-                                    axios.put(`${this.form.id}`,this.form).then(res => {
-                                    loader.hide();
-                                    toastr["success"](res.data.message)
+                                axios.put(`${this.form.id}`,this.form).then(res => {
+                                loader.hide();
+                                toastr["success"](res.data.message)
                                 }).catch(e => {
                                     loader.hide();
                                     if(e.response.data.error){
@@ -261,7 +261,7 @@
                     });
                 },
                 async uploadImage() {
-                    if (this.form.course_image) { 
+                    if (typeof this.form.course_image.name !== 'undefined') { 
                         const formData = new FormData();
                         formData.append("file", this.form.course_image, this.form.course_image.name);
                         await axios.post('/tenant/assets/custom/upload', formData)

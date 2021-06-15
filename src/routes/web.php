@@ -63,8 +63,11 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::group(['prefix' => 'modules'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allModules');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createModules');
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitModule');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
-                Route::get('edit', 'ModulesLmsLearningBaseTenantController@editModules');
+                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editModules');
+                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateModule'); 
+                Route::get('all/{id}', 'ModulesLmsLearningBaseTenantController@filterModulesByCourse'); 
             });
 
             Route::group(['prefix' => 'lessons'],function() {
@@ -77,6 +80,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::group(['prefix' => 'quiz'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allQuiz');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createQuiz');
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitQuiz');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
                 Route::get('edit', 'ModulesLmsLearningBaseTenantController@editQuiz');
             });
@@ -84,10 +88,10 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::group(['prefix' => 'assets'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allAsset');
                 Route::post('custom/upload', 'ModulesLmsLearningBaseTenantController@uploadAsset');
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitAsset');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createAsset');
-                Route::get('create', 'ModulesLmsLearningBaseTenantController@createAsset');
-                Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
-                Route::get('edit', 'ModulesLmsLearningBaseTenantController@editAsset');
+                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateAsset');
+                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editAsset');
             });
 
         });

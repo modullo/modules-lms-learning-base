@@ -203,7 +203,7 @@
                     });
                 },
                 async uploadImage() {
-                    if (this.form.course_image) { 
+                    if (this.form.overviewImageUrl) { 
                         const formData = new FormData();
                         formData.append("file", this.form.overviewImageUrl, this.form.overviewImageUrl.name);
                         await axios.post('/tenant/assets/custom/upload', formData)

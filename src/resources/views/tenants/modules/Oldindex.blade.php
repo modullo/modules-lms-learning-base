@@ -62,9 +62,9 @@
                         Add Module
                     </a>
                     <div class="ml-auto col-md-6">
-                        <label for="tenant">Filter By Course</label>
+                        <label for="tenant"> Select Course</label>
                         <select @change="handleSelection" v-model="currentCourse" class="form-control">
-                            <option :selected="true">All Modules</option>
+                            <option :selected="true" disabled>Filter By Course</option>
                             <option v-for="(course, index) in courses" :key="index" :value="course.id">@{{ course.title }}</option>
                         </select>
                     </div>
@@ -85,9 +85,9 @@
                             <div class="card-body">
                                 <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
                                 <p class="card-text">@{{ cardinfo . description }} .</p>
-                                <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
+                                <a class="mx-2 primary-backgroundColor btn btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
 
-                                <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
+                                <a class="btn app-btn btn-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -101,14 +101,6 @@
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
-    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
-    <!-- Init the plugin and component-->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-        Vue.use(VueLoading);
-        Vue.component('loading', VueLoading)
-    </script>
     <script>
         "use strict";
         var dummyData = [{
@@ -140,51 +132,22 @@
 
             data: {
                 search: "",
-                currentCourse: "All Modules",
+                currentCourse: "Filter By Course",
                 selected: "Filter By Course",
                 cardinfos: {!! json_encode($data) !!},
                 courses: {!! json_encode($courses) !!},
-                filteredData: '',
             },
 
             methods: {
                 handleSelection(event) {
                     this.currentCourse = event.target.value
-                    let loader = Vue.$loading.show()
-                    axios.get(`modules/all/${this.currentCourse}`)
-                    .then(res => {
-                        loader.hide();
-                        //  = res.data.data
-                        // return 
-                    }).catch(e => {
-                        loader.hide();
-                        console.log(e)
-                    })
-                },
-                filterByCourse() {
-                    let loader = Vue.$loading.show()
-                    axios.get(`modules/all/${this.currentCourse}`)
-                    .then(res => {
-                        loader.hide();
-                        this.filteredData = res.data.data
-                        return 
-                    }).catch(e => {
-                        loader.hide();
-                        console.log(e)
-                    })
+                    console.log(this.currentCourse)
                 }
             },
 
             computed: {
                 searchLessons() {
-                    if (this.search) {
-                        return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
-                    }
-                    // else if(this.currentCourse !== 'All Modules') {
-                    //     this.filterByCourse()
-                    //     return this.filteredData
-                    // }
-                    return this.cardinfos
+                    return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
                 },
             }
         });
