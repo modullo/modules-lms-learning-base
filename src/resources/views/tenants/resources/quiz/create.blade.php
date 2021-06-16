@@ -80,7 +80,7 @@
                         </div>
 
                         {{-- Questions Sections --}}
-                        <div v-for="(question, index) in form.questions" class="mb-3">
+                        <div v-for="(question, index) in form.questions" :key="index" class="mb-3">
                             <div class="mb-5 form-row">
                                 <div class="mb-5 form-group col-lg-6">
                                     <h2>Question</h2>
@@ -88,10 +88,23 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-6">
-                                    <label for=""> Answer </label>
-                                    <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
-                                        placeholder="" />
+                                <div class="form-group col-lg-6">
+                                    <label for=""> Question Type </label>
+                                    <select v-model="question.question_type" id="" class="form-control">
+                                        <option value="options">Options</option>
+                                        <option value="case_study">Case Study</option>
+                                    </select>
+                                </div>
+                                <div v-if="question.question_type === 'options'" class="form-group col-6">
+                                    <label for=""> Options Answer </label>
+                                    <select v-model="question.answer" id="" class="form-control">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                    {{-- <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
+                                        placeholder="" /> --}}
                                 </div>
                                 <div class="form-group col-6">
                                     <label for=""> Quiz Score </label>
@@ -99,28 +112,23 @@
                                         placeholder="" />
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-lg-6">
-                                    <label for=""> Question Type </label>
-                                    <select v-model="question.question_type" id="" class="form-control">
-                                        <option value="options">Options</option>
-                                        <option value="option 2">Option 2</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
+                            {{-- <div v-for="(q, qindex) in question.options" class="form-row">
                                 <div class="p-0 form-group col-6">
-                                    <label for=""> Options </i> </label>
-                                    <input type="text" class="form-control" name="" id="" aria-describedby="helpId"
-                                        placeholder="quiz options" />
+                                        <label for=""> Options </i> </label>
+                                        <select v-model="question.options" id="" class="form-control">
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                        </select>
                                 </div>
                                 <div class="my-auto ml-3 col-1">
                                     <span style="font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
                                 </div>
                                 <div class="my-auto col-1">
-                                    <span style="font-size: 2em" class="mt-4"><i class="far fa-plus-square"></i></span>
+                                    <span @click.prevent="addOptions(index)" style="font-size: 2em; cursor: pointer;" class="mt-4"><i class="far fa-plus-square"></i></span>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-row">
 
                                 <a href="#" @click.prevent="addQuiz" class="btn btn-outline-secondary">
@@ -149,9 +157,9 @@
 
 @section('body_js')
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-<!-- jsdelivr cdn -->
-<link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
-<script src="https://unpkg.com/@morioh/v-quill-editor/dist/editor.min.js" type="text/javascript"></script>
+    <!-- jsdelivr cdn -->
+    <link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
+    <script src="https://unpkg.com/@morioh/v-quill-editor/dist/editor.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -185,6 +193,7 @@
         new Vue({
             el: "#app",
             data: {
+                index: 1,
                 form: {
                     quiz_title: '',
                     total_quiz_mark: '',
@@ -194,32 +203,29 @@
                     questions: [
                         {
                             question_text: '',
+                            question_number: 1,
                             score: '',
                             answer: '',
                             question_type: '',
-                            options: [
-                                "A", "B", "C" 
-                            ],
+                            options: ["A", "B", "C", "D"],
                         },
                     ],
                 }
             },
             methods: {
-                validateBeforeSubmit() {
+                validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
-                            console.log(JSON.stringify(this.form.questions))
+                            let loader = Vue.$loading.show()
                             const payload = {
                                 quiz_title: this.form.quiz_title,
                                 total_quiz_mark: this.form.total_quiz_mark,
                                 quiz_timer: this.form.quiz_timer,
                                 disable_on_submit: this.form.disable_on_submit,
-                                retake_on_request: this.form.retake_on_request, 
-                                questions: JSON.stringify(this.form.questions), 
+                                retake_on_request: this.form.retake_on_request,
+                                questions: JSON.stringify(this.form.questions)
                             }
-                            let loader = Vue.$loading.show()
-                            axios.post('create', this.form).then(res => {
-                            // ev.target.reset()
+                            axios.post('create', payload).then(res => {
                             loader.hide();
                             toastr["success"](res.data.message)
                             }).catch(e => {
@@ -238,21 +244,28 @@
                             }) 
                         }
                     });
+                    ev.target.reset()
+                },
+                addOptions(index) {
+                    
+                    this.form.questions[index].options.push('B')
                 },
                 addQuiz() {
+                    this.index ++
                     this.form.questions.push(
                         {
                             question_text: '',
+                            question_number:  this.index,
                             score: '',
                             answer: '',
                             question_type: '',
-                            options: [
-                                "A", "B", "C" 
-                            ],
+                            options: ["A", "B", "C", "D"],
                         },
                     )
+
                 },
                 removeQuiz(quiz_id) {
+                    this.index --
                     this.form.questions.splice(quiz_id, 1)
                 },
             },

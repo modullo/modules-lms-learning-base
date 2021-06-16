@@ -82,7 +82,7 @@
                             <div class="card-body">
                                 <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
                                 <p class="card-text">@{{ cardinfo . description }} .</p>
-                                <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
+                                <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/quiz/${cardinfo.id}`" role="button">Edit</a>
 
                                 <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
@@ -139,7 +139,7 @@
 
             data: {
                 search: '',
-                cardinfos: dummyData,
+                cardinfos: {!! json_encode($data) !!},
             },
 
             methods: {},
