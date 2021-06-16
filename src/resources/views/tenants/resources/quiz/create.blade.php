@@ -95,16 +95,10 @@
                                         <option value="case_study">Case Study</option>
                                     </select>
                                 </div>
-                                <div v-if="question.question_type === 'options'" class="form-group col-6">
+                                <div class="form-group col-6">
                                     <label for=""> Options Answer </label>
-                                    <select v-model="question.answer" id="" class="form-control">
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="D">D</option>
-                                    </select>
-                                    {{-- <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
-                                        placeholder="" /> --}}
+                                    <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
+                                        placeholder="" />
                                 </div>
                                 <div class="form-group col-6">
                                     <label for=""> Quiz Score </label>
@@ -112,23 +106,21 @@
                                         placeholder="" />
                                 </div>
                             </div>
-                            {{-- <div v-for="(q, qindex) in question.options" class="form-row">
-                                <div class="p-0 form-group col-6">
-                                        <label for=""> Options </i> </label>
-                                        <select v-model="question.options" id="" class="form-control">
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                            <option value="D">D</option>
-                                        </select>
+                            <div v-if="question.question_type === 'options'">
+                                <div v-for="(option, uindex) in question.options" :key="uindex"
+                                class="form-row">
+                                    <div class="p-0 form-group col-lg-6">
+                                        <label for=""> Options</label>
+                                        <input type="text" v-model="question.options[uindex]" class="form-control">
+                                    </div>
+                                    <div class="my-auto ml-3 col-1">
+                                        <span @click.prevent="removeQuizOptionForUpdate(index, uindex)" style="cursor: pointer;font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
+                                    </div>
+                                    <div class="my-auto col-1">
+                                        <span @click.prevent="addQuizOptionForUpdate(index)" style="font-size: 2em; cursor: pointer;" class="mt-4"><i class="far fa-plus-square"></i></span>
+                                    </div>
                                 </div>
-                                <div class="my-auto ml-3 col-1">
-                                    <span style="font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
-                                </div>
-                                <div class="my-auto col-1">
-                                    <span @click.prevent="addOptions(index)" style="font-size: 2em; cursor: pointer;" class="mt-4"><i class="far fa-plus-square"></i></span>
-                                </div>
-                            </div> --}}
+                            </div>
                             <div class="form-row">
 
                                 <a href="#" @click.prevent="addQuiz" class="btn btn-outline-secondary">
@@ -207,12 +199,19 @@
                             score: '',
                             answer: '',
                             question_type: '',
-                            options: ["A", "B", "C", "D"],
+                            options: [""],
                         },
                     ],
                 }
             },
             methods: {
+                removeQuizOptionForUpdate (index, uindex) {
+                    this.form.questions[index].options.splice(uindex, 1)
+                },
+
+                addQuizOptionForUpdate (index) {
+                    this.form.questions[index].options.push('')
+                },
                 validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
@@ -227,6 +226,7 @@
                             }
                             axios.post('create', payload).then(res => {
                             loader.hide();
+                            ev.target.reset()
                             toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
@@ -244,7 +244,7 @@
                             }) 
                         }
                     });
-                    ev.target.reset()
+                    
                 },
                 addOptions(index) {
                     
@@ -259,7 +259,7 @@
                             score: '',
                             answer: '',
                             question_type: '',
-                            options: ["A", "B", "C", "D"],
+                            options: [""],
                         },
                     )
 

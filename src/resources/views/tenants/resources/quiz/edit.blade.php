@@ -18,7 +18,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="app">
         <breadcrumbs :items="[
-                    {url: 'https://google.com', title: 'Home', active: false},
+                    {url: '/tenant/dashboard', title: 'Home', active: false},
                     {url: '/tenant/quiz', title: 'Quiz', active: false},
                     {url: '', title: 'Edit Quiz', active: true},
                 ]">
@@ -127,14 +127,9 @@
                                         <option value="case_study">Case Study</option>
                                     </select>
                                 </div>
-                                <div v-if="question.question_type === 'options'" class="form-group col-6">
+                                <div class="form-group col-6">
                                     <label for=""> Options Answer </label>
-                                    <select v-model="question.answer" id="" class="form-control">
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="D">D</option>
-                                    </select>
+                                    <input type="text" v-model="question.answer" name="answer" id="" class="form-control">
                                 </div>
                                 <div class="form-group col-6">
                                     <label for=""> Quiz Score </label>
@@ -142,20 +137,82 @@
                                         aria-describedby="helpId" placeholder="" />
                                 </div>
                             </div>
+                            <div v-if="question.question_type === 'options'">
+                                <div v-for="(option, uindex) in question.options" :key="uindex"
+                                class="form-row">
+                                    <div class="p-0 form-group col-lg-6">
+                                        <label for=""> Options</label>
+                                        <input type="text" v-model="question.options[uindex]" class="form-control">
+                                    </div>
+                                    <div class="my-auto ml-3 col-1">
+                                        <span @click.prevent="removeQuizOptionForUpdate(index, uindex)" style="cursor: pointer;font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
+                                    </div>
+                                    <div class="my-auto col-1">
+                                        <span @click.prevent="addQuizOptionForUpdate(index)" style="font-size: 2em; cursor: pointer;" class="mt-4"><i class="far fa-plus-square"></i></span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-row">
 
                                 <a href="#" @click.prevent="updateQuestion(question)" class="btn btn-outline-secondary">
                                     Update Question
                                 </a>
-                                <a href="#" @click.prevent="removeQuiz(index)" class="ml-5 btn btn-outline-danger">
+                                <a href="#" @click.prevent="deleteQuestion(question)" class="ml-5 btn btn-outline-danger">
                                     Remove Question
                                 </a>
                             </div>
                             <hr>
                         </div>
                     </div>
+
+                    {{-- Add Quiz Question Section --}}
                     <div class="tab-pane" id="tabs-3" role="tabpanel">
-                        <p>Third Panel</p>
+                        <div class="mt-5 mb-5 form-row">
+                            <div class="mb-5 form-group col-lg-12">
+                                <h2>Question Text</h2>
+                                <editor style="height: 100px" v-model="question_text" theme="snow"></editor>
+                            </div>
+                        </div>
+                        <div class="form-row">
+
+                            <div class="form-group col-lg-6">
+                                <label for=""> Question Type </label>
+                                <select v-model="question_type" id="" class="form-control">
+                                    <option value="options">Options</option>
+                                    <option value="case_study">Case Study</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for=""> Option Answer </label>
+                                <input type="text" v-model="answer" class="form-control">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for=""> Quiz Score </label>
+                                <input type="number" class="form-control" v-model="score"
+                                    aria-describedby="helpId" placeholder="" />
+                            </div>
+                        </div>
+                        <div v-if="question_type === 'options'">
+                            <div v-for="(option, optionIndex) in question.options" :key="optionIndex"
+                            class="form-row">
+                                <div class="p-0 form-group col-lg-6">
+                                    <label for=""> Options</label>
+                                    <input type="text" v-model="question.options[optionIndex]" class="form-control">
+                                </div>
+                                <div class="my-auto ml-3 col-1">
+                                    <span @click.prevent="removeOption(optionIndex)" style="cursor: pointer;font-size: 2em" class="mt-4"><i class="fas fa-backspace"></i></span>
+                                </div>
+                                <div class="my-auto col-1">
+                                    <span @click.prevent="addOptions(optionIndex)" style="font-size: 2em; cursor: pointer;" class="mt-4"><i class="far fa-plus-square"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="float-right m-3 form-row ">
+                            <a href="#" @click.prevent="createQuestion" class="btn btn-outline-secondary">
+                                Submit Question
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -171,6 +228,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
     <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
     <!-- Init the plugin and component-->
@@ -204,8 +262,30 @@
             data: {
                 index: 1,
                 form: {!! json_encode($data) !!},
+                question_text: '',
+                answer: '',
+                question_type: '',
+                score: '',
+                question_number: '',
+                question: {
+                    options: [
+                        ""
+                    ],
+                },
             },
             methods: {
+                addQuizOptionForUpdate (index) {
+                    this.form.questions[index].options.push('')
+                },
+                removeQuizOptionForUpdate (index, uindex) {
+                    this.form.questions[index].options.splice(uindex, 1)
+                },
+                addOptions(index) {
+                    this.question.options.push('')
+                },
+                removeOption(index) {
+                    this.question.options.splice(index, 1)
+                },
                 validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
@@ -237,6 +317,39 @@
                         }
                     });
                 },
+                createQuestion(ev) {
+                    // console.log(this.form.questions[this.form.questions.length - 1].question_number)
+                    let loader = Vue.$loading.show()
+                    const payload = {
+                        question_text: this.question_text,
+                        answer: this.answer,
+                        question_type: this.question_type,
+                        options: this.question.options,
+                        score: this.score,
+                        question_number: this.form.questions[this.form.questions.length - 1].question_number + 1,
+                    }
+                    axios.post(`questions/add/${this.form.id}`, payload).then(res => {
+                        console.log(res)
+                        this.question_text = ''
+                        this.answer = ''
+                        this.question_type = ''
+                        this.score = '',
+                        loader.hide();
+                        toastr["success"](res.data.message)
+                    }).catch(e => {
+                        loader.hide();
+                        if (e.response.data.error) {
+                            toastr["error"](e.response.data.error)
+                        } else if (e.response.data.validation_error) {
+                            Object.entries(e.response.data.validation_error).forEach(
+                                ([, value]) => {
+                                    toastr["error"](value)
+                                },
+                            )
+                        }
+                    })
+                },
+
                 updateQuestion(question) {
                     let loader = Vue.$loading.show()
                     const payload = {
@@ -245,8 +358,8 @@
                         question_type: question.question_type,
                         score: question.score,
                         question_number: question.question_number,
-                        options: ["A", "B", "C"]
-
+                        question_id: question.id,
+                        options: question.options,
                     }
                     axios.put(`questions/${this.form.id}`, payload).then(res => {
                         loader.hide();
@@ -264,6 +377,32 @@
                             )
                         }
                     })
+                },
+
+                deleteQuestion(question) {
+                    swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this Question Again!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                    if (willDelete) {
+                        axios.delete(`questions/${question.id}`).then(res => {
+                            loader.hide();
+                            // toastr["success"](res.data.message)
+                        }).catch(e => {
+                            loader.hide();
+                            swal("Operation Cancelled! Server Error", {icon: 'error'});
+                        })
+                        swal("Poof! Your Question has been deleted!", {
+                        icon: "success",
+                        });
+                    } else {
+                        swal("Operation Cancelled!");
+                    }
+                    });
                 }
             },
         })

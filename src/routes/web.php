@@ -74,8 +74,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allLesson');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createLesson');
                 Route::post('create/{id}', 'ModulesLmsLearningBaseTenantController@submitLesson');
-                Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
-                Route::get('edit', 'ModulesLmsLearningBaseTenantController@editLesson');
+                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateLesson');
+                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editLesson');
             });
 
             Route::group(['prefix' => 'quiz'],function() {
@@ -84,6 +84,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitQuiz');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
                 Route::put('questions/{id}', 'ModulesLmsLearningBaseTenantController@updateQuestions');
+                Route::post('questions/add/{id}', 'ModulesLmsLearningBaseTenantController@addQuestions');
+                Route::delete('questions/{id}', 'ModulesLmsLearningBaseTenantController@destroyQuestions');
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editQuiz');
                 Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateQuiz');
             });

@@ -12,6 +12,12 @@
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";
         }
+        @media only screen and (max-width: 1200) {
+            .alignForMobile {
+                margin-top: 5em;
+                margin-bottom: 2.5em;
+            }
+        }
     </style>
 @endsection
 
@@ -20,47 +26,66 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="app">
         <breadcrumbs :items="[
-                    {url: 'https://google.com', title: 'Home', active: false},
+                    {url: '/tenant/dashboard', title: 'Home', active: false},
                     {url: '/tenant/lessons', title: 'Lesson', active: false},
-                    {url: '', title: 'Edit Track', active: true},
+                    {url: '', title: 'Edit Lesson', active: true},
                 ]">
         </breadcrumbs>
         <div class="container">
             <h3 class="mt-5">Edit Track</h3>
-            <div class="">
-                <p v-if="errors.length > 0">
-                    <b class="text-danger">Please correct the following error(s):</b>
-                <ul class="text-danger">
-                    {{-- <li v-for="error in errors" :key="error.id"> @{{ error }}</li> --}}
-                </ul>
-                </p>
-            </div>
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
-
                             <div class="form-group col-lg-6">
-                                <label for="tenant"> Resource *</label>
-                                <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Resource') }">
-                                    <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
+                                <label for="lesson-type">
+                                    Track Type *
+                                </label>
+                                <select name="Track Type" v-model="form.lesson_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('Track Type') }" class="form-control" id="">
+                                    <option value="video">Video</option>
+                                    <option value="quiz">Quiz</option>
                                 </select>
-                                <i v-show="errors.has('Resource')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Resource')"
-                                    class="help text-danger">@{{ errors . first('Resource') }}</span>
+                                <i v-show="errors.has('Track Type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Track Type')"
+                                    class="help text-danger">@{{ errors . first('Track Type') }}</span>
+                            </div>
+                            <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
+                                <label for="tenant"> Resource *</label>
+                                <select class="form-control" v-model="form.resource_id" name="Resource">
+                                    <option v-for="(quiz, index) in quizzes" :value="quiz.id" :key="index">@{{quiz.title}}</option>
+                                </select>
                             </div>
 
+                            <div v-if="form.lesson_type === 'video'" class="form-group col-lg-6">
+                                <label for="tenant"> Resource *</label>
+                                <select class="form-control" v-model="form.resource_id" name="Resource">
+                                    <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
+                                </select>
+                            </div>
+                            
                             <div class="form-group col-lg-6">
+                                <label for="module No">Track Number *</label>
+                                <p class="control has-icon has-icon-right">
+                                    <input name="Track Number" class="form-control" v-model="form.lesson_number" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Track Number') }" type="number"
+                                        placeholder="1">
+                                    <i v-show="errors.has('Track Number')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Track Number')"
+                                        class="help text-danger">@{{ errors . first('Track Number') }}</span>
+                                </p>
+                            </div>
+
+                            {{-- <div class="form-group col-lg-6">
                                 <label for="tenant"> Module *</label>
-                                <select class="form-control" v-model="module_id" name="Module" v-validate="'required'"
+                                <select class="form-control" v-model="module_id" v-validate="'required'" name="Module"
                                     :class="{'input': true, 'border border-danger': errors.has('Module') }">
                                     <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{module.title}}</option>
                                 </select>
                                 <i v-show="errors.has('Module')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Module')"
                                     class="help text-danger">@{{ errors . first('Module') }}</span>
-                            </div>
+                            </div> --}}
 
                             <div class="form-group col-lg-6">
                                 <label for="title"> Title * </label>
@@ -90,13 +115,10 @@
                                 <label for="image">
                                   Track  Image *
                                 </label>
-                                <input type="file" v-validate="'required'"
+                                <input type="file"
                                 v-on:change="accessImage"
                                 :class="{'input': true, 'border border-danger': errors.has('Image') }" class="form-control" name="Image" id="" aria-describedby="helpId"
                                     placeholder="">
-                                    <i v-show="errors.has('Image')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Image')"
-                                        class="help text-danger">@{{ errors . first('Image') }}</span>
                             </div>
                             
                             <div class="mt-3 form-group col-lg-6">
@@ -108,33 +130,6 @@
                                     <i v-show="errors.has('Duration')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Duration')"
                                         class="help text-danger">@{{ errors . first('Duration') }}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <label for="lesson-type">
-                                    Track Type *
-                                </label>
-                                <select name="Track Type" v-model="form.lesson_type" v-validate="'required'"
-                                :class="{'input': true, 'border border-danger': errors.has('Track Type') }" class="form-control" id="">
-                                    <option value="video">Video</option>
-                                    <option value="quiz">Quiz</option>
-                                </select>
-                                <i v-show="errors.has('Track Type')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Track Type')"
-                                    class="help text-danger">@{{ errors . first('Track Type') }}</span>
-                            </div>
-
-                            <div class="form-group col-lg-6">
-                                <label for="module No">Track Number *</label>
-                                <p class="control has-icon has-icon-right">
-                                    <input name="Track Number" class="form-control" v-model="form.lesson_number" v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Track Number') }" type="number"
-                                        placeholder="1">
-                                    <i v-show="errors.has('Track Number')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Track Number')"
-                                        class="help text-danger">@{{ errors . first('Track Number') }}</span>
                                 </p>
                             </div>
                         </div>
@@ -152,7 +147,7 @@
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted text-danger font-weight-bold"> Fields with * are required </span>
                             <button type="submit" class="btn btn-outline-primary">
-                                Create Track
+                                Edit Track
                             </button>
                         </div>
                     </form>
@@ -207,23 +202,23 @@
             el: "#app",
 
             data: {
-                form: {!! json_encode($data) !!}
-                module_id: '',
+                form: {!! json_encode($data) !!},
                 assets: {!! json_encode($assets) !!},
-                modules: {!! json_encode($modules) !!}
+                module_id: '',
+                modules: {!! json_encode($modules) !!},
+                quizzes: {!! json_encode($quizzes) !!},
             },
             methods: {
                 accessImage(e) {
                     this.form.lesson_image = e.target.files[0]
                 },
-                validateBeforeSubmit() {
+                validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
                             this.uploadImage()
                             .then(() => {
-                                axios.post(`create/${this.module_id}`, this.form).then(res => {
-                                // ev.target.reset()
+                                axios.put(`${this.form.id}`, this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)
                                 }).catch(e => {
@@ -245,16 +240,19 @@
                     });
                 },
                 async uploadImage() {
-                    if (typeof this.form.lesson_image.name !== 'undefined') { 
-                        const formData = new FormData();
-                        formData.append("file", this.form.lesson_image, this.form.lesson_image.name);
-                        await axios.post('/tenant/assets/custom/upload', formData)
-                        .then( res => {
-                            this.form.lesson_image = res.data.file_url
-                        })
-                        .catch(e => {
-                            console.log(e.response.data.error)
-                        })
+                    // if (typeof this.form.lesson_image.name !== 'undefined' null) { 
+                    if (this.form.lesson_image) {           
+                        if (typeof this.form.lesson_image.name !== 'undefined') { 
+                            const formData = new FormData();
+                            formData.append("file", this.form.lesson_image, this.form.lesson_image.name);
+                            await axios.post('/tenant/assets/custom/upload', formData)
+                            .then( res => {
+                                this.form.lesson_image = res.data.file_url
+                            })
+                            .catch(e => {
+                                console.log(e.response.data.error)
+                            })
+                        }
                     }
                 },
             }

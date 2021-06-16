@@ -119,21 +119,25 @@ class ModulesLmsLearningBaseTenantController extends Controller
     protected function getLessons(){
         $query = $this->sdk->createLessonService();
         $query = $query->addQueryArgument('limit',100);
-        $path = ['all'];
+        $path = [''];
         return $query->send('get', $path);
     }
+
     public function createLesson()
     {
         $assets = [];
         $modules = [];
+        $quizzes = [];
         if ($this->getAssets()->isSuccessful()) {
             $assetSdk = $this->getAssets()->getData();
             $modulesSdk = $this->getModules()->getData();
+            $quizzesSdk = $this->getQuiz()->getData();
             $assets = $assetSdk['assets'];
             $modules = $modulesSdk['modules'];
-            return view('modules-lms-learning-base::tenants.lessons.create', compact('assets', 'modules'));
+            $quizzes = $quizzesSdk['quizzes'];
+            return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules'));
         }
-        return view('modules-lms-learning-base::tenants.lessons.create', compact('assets', 'modules'));
+        return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules'));
     }
 
     public function submitLesson(string $id, Request $request, Sdk $sdk) : JsonResponse
@@ -145,11 +149,10 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('duration',$request->duration)
         ->addBodyParam('lesson_number',$request->lesson_number)
         ->addBodyParam('lesson_type',$request->lesson_type)
-        ->addBodyParam('lesson_image',$request->lesson_image)
+        ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
         ->addBodyParam('resource_id',$request->resource_id);
         $response = $resource->send('post',['create', $id]);
-        dd($response);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
             if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
@@ -165,7 +168,8 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $sdkObject = $sdk->createLessonService();
         $path = [$id];
         $response = $sdkObject->send('get', $path);
-
+        $modules = [];
+        $quizzes = [];
         $assets = [];
         if ($this->getAssets()->isSuccessful()) {
             $programResponse = $this->getAssets()->getData();
@@ -173,25 +177,29 @@ class ModulesLmsLearningBaseTenantController extends Controller
         }
 
         if ($response->isSuccessful()){
+            $modulesSdk = $this->getModules()->getData();
+            $quizzesSdk = $this->getQuiz()->getData();
+            $modules = $modulesSdk['modules'];
+            $quizzes = $quizzesSdk['quizzes'];
             $data = $response->data['lesson'];
-            return view('modules-lms-learning-base::tenants.lessons.edit',compact('data', 'assets'));
+            return view('modules-lms-learning-base::tenants.lessons.edit',compact('data', 'assets','quizzes', 'modules'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
-        return view('modules-lms-learning-base::tenants.lessons.edit',compact('data', 'assets'));
+        return view('modules-lms-learning-base::tenants.lessons.edit',compact('data', 'assets','quizzes', 'modules'));
     }
 
     public function updateLesson(string $id, Request $request, Sdk $sdk): JsonResponse
     {
-        $resource = $sdk->createModuleService();
+        $resource = $sdk->createLessonService();
         $resource = $resource
-        ->addBodyParam('title',$request->title)
-        ->addBodyParam('description',$request->description)
-        ->addBodyParam('duration',$request->duration)
-        ->addBodyParam('lesson_number',$request->lesson_number)
-        ->addBodyParam('lesson_type',$request->lesson_type)
-        ->addBodyParam('lesson_image',$request->lesson_image)
-        ->addBodyParam('skills_gained',$request->skills_gained)
-        ->addBodyParam('resource_id',$request->resource_id);
+            ->addBodyParam('title',$request->title)
+            ->addBodyParam('description',$request->description)
+            ->addBodyParam('duration',$request->duration)
+            ->addBodyParam('lesson_number',$request->lesson_number)
+            ->addBodyParam('lesson_type',$request->lesson_type)
+            ->addBodyParam('lesson_image',$request->lesson_image)
+            ->addBodyParam('skills_gained',$request->skills_gained)
+            ->addBodyParam('resource_id', !$request->resource_id ? $request->lesson_resource['id'] : $request->resource_id);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -207,7 +215,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         if ($this->getLessons()->isSuccessful()){
             $response = $this->getLessons()->getData();
             $data = $response['lessons'];
-            return view('modules-lms-learning-base::tenants.course.index',compact('data'));
+            return view('modules-lms-learning-base::tenants.lessons.index',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
         return view('modules-lms-learning-base::tenants.lessons.index', compact('data'));
@@ -557,9 +565,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('quiz_timer',$request->quiz_timer)
         ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
         ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
-        // ->addBodyParam('questions', json_decode($request->questions));
         $response = $resource->send('put',[$id]);
-        dd($response);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
             if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
@@ -567,6 +573,39 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
         }
         return response()->json(['message' => 'Updated Successfully'],200);
+    }
+
+    public function addQuestions(string $id, Request $request, Sdk $sdk): JsonResponse
+    {
+        $resource = $sdk->createQuizService();
+        $resource = $resource
+        ->addBodyParam('question_text',$request->question_text)
+        ->addBodyParam('answer',$request->answer)
+        ->addBodyParam('question_type',$request->question_type)
+        ->addBodyParam('score',$request->score)
+        ->addBodyParam('question_number',$request->question_number)
+        ->addBodyParam('options',$request->options);
+        $response = $resource->send('post',['questions', 'add',$id]);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['message' => 'Created Successfully'],200);
+    }
+
+    public function destroyQuestions(string $id, Request $request, Sdk $sdk): JsonResponse
+    {
+        $resource = $sdk->createQuizService();
+        $response = $resource->send('delete',['questions',$id]);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['message' => 'Deleted Successfully'],200);
     }
 
     public function updateQuestions(string $id, Request $request, Sdk $sdk): JsonResponse
@@ -577,9 +616,9 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('answer',$request->answer)
         ->addBodyParam('question_type',$request->question_type)
         ->addBodyParam('score',$request->score)
-        ->addBodyParam('question_number',$request->question_number);
-        $response = $resource->send('put',['questions',$id]);
-        dd($response);
+        ->addBodyParam('question_number',$request->question_number)
+        ->addBodyParam('options',$request->options);
+        $response = $resource->send('put',['questions',$request->question_id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
             if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);

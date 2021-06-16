@@ -33,20 +33,35 @@
         </breadcrumbs>
         <div class="container">
             <h3 class="mt-5">Create Track</h3>
-            <div class="">
-                <p v-if="errors.length > 0">
-                    <b class="text-danger">Please correct the following error(s):</b>
-                <ul class="text-danger">
-                    {{-- <li v-for="error in errors" :key="error.id"> @{{ error }}</li> --}}
-                </ul>
-                </p>
-            </div>
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
-
                             <div class="form-group col-lg-6">
+                                <label for="lesson-type">
+                                    Track Type *
+                                </label>
+                                <select name="Track Type" v-model="form.lesson_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('Track Type') }" class="form-control" id="">
+                                    <option value="video">Video</option>
+                                    <option value="quiz">Quiz</option>
+                                </select>
+                                <i v-show="errors.has('Track Type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Track Type')"
+                                    class="help text-danger">@{{ errors . first('Track Type') }}</span>
+                            </div>
+                            <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
+                                <label for="tenant"> Resource *</label>
+                                <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
+                                    :class="{'input': true, 'border border-danger': errors.has('Resource') }">
+                                    <option v-for="(quiz, index) in quizzes" :value="quiz.id" :key="index">@{{quiz.title}}</option>
+                                </select>
+                                <i v-show="errors.has('Resource')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Resource')"
+                                    class="help text-danger">@{{ errors . first('Resource') }}</span>
+                            </div>
+                            
+                            <div v-if="form.lesson_type === 'video'" class="form-group col-lg-6">
                                 <label for="tenant"> Resource *</label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Resource') }">
@@ -118,19 +133,6 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <label for="lesson-type">
-                                    Track Type *
-                                </label>
-                                <select name="Track Type" v-model="form.lesson_type" v-validate="'required'"
-                                :class="{'input': true, 'border border-danger': errors.has('Track Type') }" class="form-control" id="">
-                                    <option value="video">Video</option>
-                                    <option value="quiz">Quiz</option>
-                                </select>
-                                <i v-show="errors.has('Track Type')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Track Type')"
-                                    class="help text-danger">@{{ errors . first('Track Type') }}</span>
-                            </div>
 
                             <div class="form-group col-lg-6">
                                 <label for="module No">Track Number *</label>
@@ -219,26 +221,27 @@
                     resource_id: '',
                     duration: '',
                     lesson_number: '',
-                    lesson_type: '',
+                    lesson_type: 'quiz',
                     lesson_image: '',
                     skills_gained: '',
                 },
                 module_id: '',
                 assets: {!! json_encode($assets) !!},
-                modules: {!! json_encode($modules) !!}
+                modules: {!! json_encode($modules) !!},
+                quizzes: {!! json_encode($quizzes) !!},
             },
             methods: {
                 accessImage(e) {
                     this.form.lesson_image = e.target.files[0]
                 },
-                validateBeforeSubmit() {
+                validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
                             this.uploadImage()
                             .then(() => {
                                 axios.post(`create/${this.module_id}`, this.form).then(res => {
-                                // ev.target.reset()
+                                ev.target.reset()
                                 loader.hide();
                                 toastr["success"](res.data.message)
                                 }).catch(e => {
