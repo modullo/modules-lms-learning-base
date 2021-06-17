@@ -146,7 +146,7 @@
                         </div>
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted text-danger font-weight-bold"> Fields with * are required </span>
-                            <button type="submit" class="btn btn-outline-primary">
+                            <button type="submit" class="btn btn-outline-secondary">
                                 Edit Track
                             </button>
                         </div>

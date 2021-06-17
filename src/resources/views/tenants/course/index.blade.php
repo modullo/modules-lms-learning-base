@@ -9,6 +9,33 @@
     .breadcrumb-item + .breadcrumb-item::before {
         content: ">>";
     }
+    .card-course {
+        position: relative;
+        /* width: 319px; */
+        /* display: flex; */
+        /* flex-direction: column; */
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        box-shadow: rgb(31 31 31 / 12%) 0px 1px 6px, rgb(31 31 31 / 12%) 0px 1px 4px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        /* box-shadow: 0 2px 2px rga(0, 0, 0, 0.25); */
+        border: none;
+        border-radius: 0.35rem;
+        border-radius: 8px;
+        transition: transform .5s;
+        cursor: pointer;
+    }
+    .card-course:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    }
+    .primary-backgroundColor {
+        background-color: #343a40 !important;
+        color: white;
+    }
 </style>
 @endsection
 
@@ -19,7 +46,7 @@
     <div id="program">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '', title: 'Courses', active: true},
             ]">
         </breadcrumbs>
@@ -28,7 +55,7 @@
                 <h2 class="mb-5">Course</h2>
 
                 <div class="add-course-contain">
-                    <a class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/courses/create">
+                    <a style="background-color: #343a40; color:white" class="mt-4 mb-4 btn add-course" href="/tenant/courses/create">
 
                         <i class="fa fa-plus"> </i>
 
@@ -71,17 +98,17 @@
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
 
                                 <a
-                                        class="btn app-btn"
+                                        class="btn btn-outline-secondary"
                                         :href="`/tenant/courses/show/${cardinfo.id}`"
                                         role="button"
                                 >View Course</a
                                 >
 
-                                <a class="mx-2 btn app-btn" :href="`/tenant/courses/${cardinfo.id}`" role="button"
+                                <a class="mx-2 btn btn-outline-secondary" :href="`/tenant/courses/${cardinfo.id}`" role="button"
                                 >Edit</a
                                 >
 
-                                <a class="btn app-btn" href="/#" role="button">Delete</a>
+                                <a class="btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>

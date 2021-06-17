@@ -84,7 +84,7 @@
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted"> fields with * are required </span>
 
-                            <button type="submit" class="btn btn-outline-primary">
+                            <button type="submit" class="btn btn-outline-secondary">
                                 Create Assets
                             </button>
                         </div>

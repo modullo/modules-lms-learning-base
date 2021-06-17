@@ -17,7 +17,7 @@
     <div id="settings">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '', title: 'Profile Settings', active: true},
             ]">
         </breadcrumbs>
@@ -86,9 +86,9 @@
                 phone: '',
                 errors: [],
                 breadcrumbData: [
-                    {url: 'https://google.com', title: 'Home', active: false},
-                    {url: 'https://google.com', title: 'Page 1', active: false},
-                    {url: 'https://google.com', title: 'Page 2', active: true}
+                    {url: '/tenant/dashboard', title: 'Home', active: false},
+                    {url: '/tenant/dashboard', title: 'Page 1', active: false},
+                    {url: '/tenant/dashboard', title: 'Page 2', active: true}
                 ]
             },
             methods: {

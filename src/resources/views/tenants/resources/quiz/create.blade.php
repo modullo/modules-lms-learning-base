@@ -16,7 +16,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="app">
         <breadcrumbs :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '/tenant/quiz', title: 'Quiz', active: false},
                 {url: '', title: 'Create Quiz', active: true},
             ]">
@@ -96,7 +96,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for=""> Options Answer </label>
+                                    <label for=""> Question Answer </label>
                                     <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
                                         placeholder="" />
                                 </div>

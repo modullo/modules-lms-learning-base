@@ -43,7 +43,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="lessons">
         <breadcrumbs :items="[
-                    {url: 'https://google.com', title: 'Home', active: false},
+                    {url: '/tenant/dashboard', title: 'Home', active: false},
                     {url: '', title: 'Modules', active: true},
                 ]">
         </breadcrumbs>

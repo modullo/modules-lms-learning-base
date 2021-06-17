@@ -43,27 +43,30 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="lessons">
         <breadcrumbs :items="[
-                    {url: 'https://google.com', title: 'Home', active: false},
+                    {url: '/tenants/dashboard', title: 'Home', active: false},
                     {url: '', title: 'Modules', active: true},
                 ]">
         </breadcrumbs>
         <div class="container mt-5">
             <section class="container program-contain">
                 <h2 class="mb-5">
-
                     Modules
                 </h2>
 
-                <div class="flex-row add-course-contain d-flex">
-                    <a  style="background-color: #343a40;" class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/modules/create">
-
-                        <i class="fa fa-plus"> </i>
-
-                        Add Module
-                    </a>
-                    <div class="ml-auto col-md-6">
+                <div class="flex-ro add-course-contain d-flex">
+                    <div class="col-sm-12 col-md-6">
+                        <a  style="background-color: #343a40;" class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/modules/create">
+        
+                            <i class="fa fa-plus"> </i>
+        
+                            Add Module
+                        </a>
+                    </div>
+                    <div class="ml-auto col-sm-12 col-md-6">
                         <label for="tenant">Filter By Course</label>
-                        <select @change="handleSelection" v-model="currentCourse" class="form-control">
+                        <select @change="filterByCourse" 
+                        v-model="currentCourse" 
+                        class="form-control">
                             <option :selected="true">All Modules</option>
                             <option v-for="(course, index) in courses" :key="index" :value="course.id">@{{ course.title }}</option>
                         </select>
@@ -78,12 +81,24 @@
                     </div>
                     <input v-model="search" type="text" class="form-control" placeholder="Search Modules" />
                 </div>
+                <div v-if="filteredData" class="row">
+                    <div class="mb-5 col-lg-4 col-md-6" v-for="(cardinfo, index) in filteredData" :key="index">
+                        <div class="card-course">
+                            <div class="card-body">
+                                <h4><span style="white-space: normal !important" class="badge text-wrap badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h4>
+                                <p class="card-text">@{{ cardinfo . description }} .</p>
+                                <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
 
-                <div class="row">
+                                <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="row">
                     <div class="mb-5 col-lg-4 col-md-6" v-for="(cardinfo, index) in searchLessons" :key="index">
                         <div class="card-course">
                             <div class="card-body">
-                                <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
+                                <h4><span style="white-space: normal !important" class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h4>
                                 <p class="card-text">@{{ cardinfo . description }} .</p>
                                 <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/modules/${cardinfo.id}`" role="button">Edit</a>
 
@@ -95,7 +110,6 @@
             </section>
         </div>
     </div>
-
 @endsection
 
 @section('body_js')
@@ -110,34 +124,8 @@
         Vue.component('loading', VueLoading)
     </script>
     <script>
-        "use strict";
-        var dummyData = [{
-                title: "Intro",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-                course_id: "1",
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-
-            {
-                title: "Assessment",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                course_id: "2",
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "Assessment 2",
-                details: ".",
-                author: "Evan you",
-                course_id: "2",
-                image: "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-        ];
-
         new Vue({
             el: "#lessons",
-
             data: {
                 search: "",
                 currentCourse: "All Modules",
@@ -146,48 +134,31 @@
                 courses: {!! json_encode($courses) !!},
                 filteredData: '',
             },
-
             methods: {
-                handleSelection(event) {
-                    this.currentCourse = event.target.value
-                    let loader = Vue.$loading.show()
-                    axios.get(`modules/all/${this.currentCourse}`)
-                    .then(res => {
-                        loader.hide();
-                        //  = res.data.data
-                        // return 
-                    }).catch(e => {
-                        loader.hide();
-                        console.log(e)
-                    })
+                filterByCourse(event) {
+                    if (event) { 
+                        this.currentCourse = event.target.value
+                        let loader = Vue.$loading.show()
+                        axios.get(`modules/all/${this.currentCourse}`)
+                        .then(res => {
+                            loader.hide();
+                            this.filteredData = res.data.data
+                            return
+                        }).catch(e => {
+                            loader.hide();
+                            console.log(e)
+                        })
+                    }
                 },
-                filterByCourse() {
-                    let loader = Vue.$loading.show()
-                    axios.get(`modules/all/${this.currentCourse}`)
-                    .then(res => {
-                        loader.hide();
-                        this.filteredData = res.data.data
-                        return 
-                    }).catch(e => {
-                        loader.hide();
-                        console.log(e)
-                    })
-                }
             },
-
             computed: {
                 searchLessons() {
                     if (this.search) {
                         return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
                     }
-                    // else if(this.currentCourse !== 'All Modules') {
-                    //     this.filterByCourse()
-                    //     return this.filteredData
-                    // }
                     return this.cardinfos
                 },
             }
-        });
-
+        })
     </script>
 @endsection

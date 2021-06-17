@@ -45,7 +45,7 @@
     <div id="lessons">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '', title: 'Tracks', active: true},
             ]">
         </breadcrumbs>
@@ -59,20 +59,19 @@
                 </h2>
 
                 <div class="flex-row add-course-contain d-flex">
-                    <a class="mt-4 mb-4 btn btn-primary add-course" href="/tenant/lessons/create">
+                    <div class="col-sm-12 col-md-6">
+                        <a style="background-color: #343a40; color:white" class="mt-4 mb-4 btn add-course" href="/tenant/lessons/create">
 
-                        <i class="fa fa-plus"> </i>
-
-                        Add Track
-                    </a>
-
-
+                            <i class="fa fa-plus"> </i>
+    
+                            Add Track
+                        </a>
+                    </div>
                     <div class="ml-auto col-md-6">
-                        <label for="tenant"> Select Module </label>
-                        <select @change="handleSelection"  class="form-control" name="" id="">
-                            <option selected>Select Modules</option>
-                            <option value="1">Intro</option>
-                            <option value="2">Assessment</option>
+                        <label for="tenant"> Filter Tracks By Module </label>
+                        <select @change="filterByModule" v-model="currentModule" class="form-control" name="" id="">
+                            <option :selected="true">All Lessons</option>
+                            <option v-for="(module, index) in modules" :key="index" :value="module.id">@{{module.title}}</option>
                         </select>
                     </div>
 
@@ -94,21 +93,17 @@
 
                 <div class="row">
 
-
-
                     <div
                             class="mb-5 col-lg-4 col-md-6"
                             v-for="(cardinfo, index) in searchLessons"
                             :key="index"
                     >
-
                         <div class="card-course">
                             <img class="card-img-top" style="height: 180px; width:340px; object-fit: cover" :src="cardinfo.lesson_image" alt="" />
                             <div class="card-body">
-                                <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
-                                <p class="card-text">@{{ cardinfo . skills_gained }} .</p>
+                                <h4><span style="white-space: normal !important" class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h4>
+                                <p class="card-text" v-html="cardinfo.skills_gained"></p>
                                 <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/lessons/${cardinfo.id}`" role="button">Edit</a>
-
                                 <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
@@ -123,56 +118,52 @@
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Init the plugin and component-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        "use strict";
-        var dummyData = [
-            {
-                title: "OOP",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-                module_id: "1",
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-
-            {
-                title: "Variables",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-                module_id: "2",
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "Loops",
-                details: ".",
-                author: "Evan you",
-                module_id: "2",
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-        ];
-
+        Vue.use(VueLoading);
+        Vue.component('loading', VueLoading)
+    </script>
+    <script>
         new Vue({
             el: "#lessons",
 
             data: {
                 search: "",
-                currentModule: "",
+                currentModule: "All Lessons",
                 cardinfos: {!! json_encode($data) !!},
+                modules: {!! json_encode($modules) !!},
+                filteredData: '',
             },
 
             methods: {
-                handleSelection(event){
-                    this.currentModule = event.target.value
-                    console.log(this.currentModule)
-                }
+                filterByModule(event) {
+                    if (this.currentModule !== 'All Lessons') { 
+                        this.currentModule = event.target.value
+                        let loader = Vue.$loading.show()
+                        axios.get(`lessons/all/${this.currentModule}`)
+                        .then(res => {
+                            loader.hide();
+                            this.filteredData = res.data.data
+                            this.cardinfos = res.data.data
+                            return
+                        }).catch(e => {
+                            loader.hide();
+                            console.log(e)
+                        })
+                    }
+                    this.cardinfos = {!! json_encode($data) !!}
+                },
             },
 
             computed:{
                 searchLessons(){
-                    return this.cardinfos.filter(card => card.title.match(this.search))
+                    if (this.search) {
+                        return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
+                    }
+                    return this.cardinfos
                 }
             }
         });

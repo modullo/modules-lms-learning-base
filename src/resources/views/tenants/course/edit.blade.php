@@ -148,7 +148,7 @@
                                 fields with * are required
                             </span>
         
-                            <button type="submit" class="btn btn-outline-primary">Update course</button>
+                            <button type="submit" class="btn btn-outline-secondary">Update course</button>
         
                         </div>
                     </form>

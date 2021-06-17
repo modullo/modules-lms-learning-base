@@ -212,13 +212,28 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function allLesson()
     {
+        $modules = [];
         if ($this->getLessons()->isSuccessful()){
+            $modulesSdk = $this->getModules()->getData();
+            $modules = $modulesSdk['modules'];
             $response = $this->getLessons()->getData();
             $data = $response['lessons'];
-            return view('modules-lms-learning-base::tenants.lessons.index',compact('data'));
+            return view('modules-lms-learning-base::tenants.lessons.index',compact('data', 'modules'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
-        return view('modules-lms-learning-base::tenants.lessons.index', compact('data'));
+        return view('modules-lms-learning-base::tenants.lessons.index', compact('data', 'modules'));
+    }
+
+    public function filterLessonsByModule(string $id, Sdk $sdk) 
+    {
+        $sdkObject = $sdk->createLessonService();
+        $path = ['all', $id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful())
+        {
+            return response(['data' => $response->getData()['lessons']], 200);
+        }
+        return response(['message'  => 'Error While Fetching lessons']);
     }
 
 
@@ -523,7 +538,6 @@ class ModulesLmsLearningBaseTenantController extends Controller
     }
 
     public function submitQuiz(Request $request, Sdk $sdk){
-        // dd($request->questions);
         $resource = $sdk->createQuizService();
         $resource = $resource
         ->addBodyParam('title',$request->quiz_title)

@@ -20,7 +20,7 @@
     <div id="app">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '/tenant/courses', title: 'Courses', active: false},
                 {url: '', title: 'Create Course', active: true},
             ]">
@@ -149,10 +149,10 @@
                         <div class="mt-5 mb-5 submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted">
         
-                                fields with * are required   // @{{form.course_image}}
+                                fields with * are required  
                             </span>
         
-                            <button type="submit" class="btn btn-outline-primary">Create course</button>
+                            <button type="submit" class="btn btn-outline-secondary">Create course</button>
         
                         </div>
                     </form>

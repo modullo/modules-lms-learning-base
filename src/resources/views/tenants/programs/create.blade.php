@@ -20,7 +20,7 @@
     <div id="app">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '/tenant/programs', title: 'Program', active: false},
                 {url: '', title: 'Create Program', active: true},
             ]">
@@ -106,9 +106,7 @@
                             fields with *  are required
                         </span>
 
-                            <button type="submit" class="btn btn-outline-primary">Submit</button>
-                            {{-- <button @click="validateBeforeSubmit" type="submit" class="btn btn-outline-primary">Submit</button> --}}
-
+                            <button type="submit" class="btn btn-outline-secondary">Submit</button>
                         </div>
                     </form>
                 </div>

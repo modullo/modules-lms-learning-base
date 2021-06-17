@@ -76,6 +76,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::post('create/{id}', 'ModulesLmsLearningBaseTenantController@submitLesson');
                 Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateLesson');
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editLesson');
+                Route::get('all/{id}', 'ModulesLmsLearningBaseTenantController@filterLessonsByModule');
             });
 
             Route::group(['prefix' => 'quiz'],function() {

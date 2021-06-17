@@ -21,7 +21,7 @@
     <div id="program">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '', title: 'Assets', active: true},
             ]">
         </breadcrumbs>
@@ -30,7 +30,7 @@
                 <h2 class="mb-5">Resources</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn btn-outline-primary" href="/tenant/assets/create">
+                    <a class="btn" style="background-color: #343a40; color:white" href="/tenant/assets/create">
                         <i class="fa fa-plus"> </i>
 
                         Add Assets
@@ -61,8 +61,8 @@
                             <img style="height: 180px; width:340px; object-fit: cover" :src="cardinfo.asset_url" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">@{{ cardinfo.asset_name }}</h5>
-                                <p>Resources Type : Video</p>
-                                <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-info" role="button">Edit</a>
+                                <p>Resources Type : Image</p>
+                                <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
                                 <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 <h5 class="mt-2 card-title">@{{ cardinfo.asset_name }}</h5>
                                 <p>Resources Type : Video</p>
-                                <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-info" role="button">Edit</a>
+                                <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
                                 <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
                         </div>

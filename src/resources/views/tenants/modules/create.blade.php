@@ -114,7 +114,7 @@
                         >
                             <span class="muted"> fields with * are required </span>
 
-                            <button type="submit" class="btn btn-outline-primary">
+                            <button type="submit" class="btn btn-outline-secondary">
                                 Create Module
                             </button>
                         </div>

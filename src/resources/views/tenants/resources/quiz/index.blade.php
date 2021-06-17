@@ -47,7 +47,7 @@
     <div id="modules">
         <breadcrumbs 
         :items="[
-            {url: 'https://google.com', title: 'Home', active: false},
+            {url: '/tenant/dashboard', title: 'Home', active: false},
             {url: '', title: 'Quiz', active: true},
         ]">
     </breadcrumbs>
@@ -56,7 +56,7 @@
                 <h2 class="mb-5">Quiz</h2>
 
                 <div class="add-course-contain">
-                    <a class="btn btn-outline-primary" href="/tenant/quiz/create">
+                    <a class="btn" style="background-color: #343a40; color:white" href="/tenant/quiz/create">
                         <i class="fa fa-plus"> </i>
 
                         Add Quiz

@@ -9,7 +9,7 @@
     <div id="course">
         <breadcrumbs 
             :items="[
-                {url: 'https://google.com', title: 'Home', active: false},
+                {url: '/tenant/dashboard', title: 'Home', active: false},
                 {url: '', title: courseTitle, active: true},
             ]">
         </breadcrumbs>

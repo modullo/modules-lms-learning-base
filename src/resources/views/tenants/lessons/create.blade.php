@@ -26,7 +26,7 @@
     @include('modules-lms-base::navigation',['type' => 'tenant'])
     <div id="app">
         <breadcrumbs :items="[
-                    {url: 'https://google.com', title: 'Home', active: false},
+                    {url: '/tenant/dashboard', title: 'Home', active: false},
                     {url: '/tenant/lessons', title: 'Lesson', active: false},
                     {url: '', title: 'Create Lesson', active: true},
                 ]">
@@ -159,7 +159,7 @@
                         </div>
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted text-danger font-weight-bold"> Fields with * are required </span>
-                            <button type="submit" class="btn btn-outline-primary">
+                            <button type="submit" class="btn btn-outline-secondary">
                                 Create Track
                             </button>
                         </div>
