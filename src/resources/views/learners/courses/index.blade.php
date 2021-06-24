@@ -218,7 +218,7 @@
         color:black;
         text-decoration:none;
         }
-
+    
     </style>
 @endsection
 
@@ -238,9 +238,19 @@
             })
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+    <!-- NOTE: prior to v2.2.1 tiny-slider.js need to be in <body> -->    
+    <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Init the plugin and component-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        Vue.use(VueLoading);
+        Vue.component('loading', VueLoading)
+    </script>
     <script src="{{ asset('LearningBase/owl.carousel.js') }}"></script>
-    <script src="{{ asset('vendor/learning-base/components/CoursesCarousel.js') }}"></script>
-    <script src="{{ asset('vendor/assessment/app.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/learning-base/components/CoursesCarousel.js') }}"></script> --}}
+    <script src="{{ asset('vendor/learning-base/app.js') }}"></script>
 @endsection
 
 

@@ -17,12 +17,14 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 //        Courses
             Route::group(['prefix' => 'courses'],function() {
                 Route::get('', 'ModulesLmsLearningBaseController@courses')->name('learner-courses');
+                Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
             });
 
             //        Program
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('/', 'ModulesLmsLearningBaseController@programs');
+                Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
             });
         });
