@@ -19,6 +19,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('', 'ModulesLmsLearningBaseController@courses')->name('learner-courses');
                 Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
+                Route::get('all/{id}', 'ModulesLmsLearningBaseController@allProgramCourses');
             });
 
             //        Program

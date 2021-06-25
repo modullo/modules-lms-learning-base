@@ -57,7 +57,7 @@
                         <div class="card-body">
 
                             <h5 class="card-title">
-                                <a :href="'/learner/programs/'+cardinfo.title">
+                                <a :href="'/learner/programs/'+cardinfo.id">
                                     @{{ cardinfo.title }}
                                 </a>
                             </h5>
@@ -82,26 +82,6 @@
         Vue.component('loading', VueLoading)
     </script>
     <script>
-        "use strict";
-        var dummyData = [
-            {
-                title: "Programming",
-                details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-            {
-                title: "UI UX ",
-                details: "alrazy ipsum dolor sit amet, consectetuer adipiscing elit.",
-                author: "Evan you",
-
-                image:
-                    "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-            },
-
-        ];
         new Vue({
             el: "#program",
 

@@ -111,7 +111,7 @@
             background: #555;
         }
         .checked {
-        color: orange;
+            color: orange;
         }
         .ratings {
             font-size: .89em;
@@ -218,7 +218,7 @@
         color:black;
         text-decoration:none;
         }
-    
+
     </style>
 @endsection
 

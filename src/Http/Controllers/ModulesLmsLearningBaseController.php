@@ -74,13 +74,35 @@ class ModulesLmsLearningBaseController extends Controller
         $data = ['error' => 'unable to fetch the requested resource'];
         return response(['Message' => $data, 'programs' => null], 404);
     }
+
     public function programs()
     {
         return view('modules-lms-learning-base::learners.programs.index');
     }
 
-    public function showProgram()
+    public function allProgramCourses(string $id, Sdk $sdk)
     {
-        return view('modules-lms-learning-base::learners.programs.show');
+        $sdkObject = $sdk->createLearnerCourseService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['courses'];
+            return response(['Message' => 'Courses Successfully fetched', 'courses' => $data], 200);
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return response(['Message' => $data, 'courses' => null], 404);
+    }
+
+    public function showProgram(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createProgramService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['program'];
+            return view('modules-lms-learning-base::learners.programs.show', compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::learners.programs.show', compact('data'));
     }
 }
