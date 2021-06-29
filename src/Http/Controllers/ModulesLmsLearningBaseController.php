@@ -51,9 +51,17 @@ class ModulesLmsLearningBaseController extends Controller
         return view('modules-lms-learning-base::learners.courses.index');
     }
 
-    public function showCourse()
+    public function showCourse(string $id, Sdk $sdk)
     {
-        return view('modules-lms-learning-base::learners.courses.show');
+        $sdkObject = $sdk->createCourseService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['course'];
+            return view('modules-lms-learning-base::learners.courses.show',compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::learners.courses.show',compact('data'));
     }
 
     // Programs

@@ -59,8 +59,8 @@ Vue.component('courses-carousel', {
                         <div v-for="(lessonGroup, id) in chunk(item.courses, 4)" :key="id" class="carousel-item" :class="{active: checkActiveClass(id)}">
                             <div class="mb-5 row">
                                 <div v-for="(lesson, id) in lessonGroup" :key="id" class="col-md-4 mb-5 col-lg-3">
-                                    <div class="card h-100">
-                                        <img class="card-img-top" style="height: 180px; width:340px; object-fit: cover" :src="lesson.course_image" alt="Card image cap">
+                                    <div class="card h-60">
+                                        <img class="card-img-top" style="height: 180px; width:auto; object-fit: cover" :src="lesson.course_image" alt="Card image cap">
                                         <div class="card-body">
                                         <h6 style="font-size: .9em; font-weight: bold;">{{lesson.title}}</h6>
                                         <small v-html="lesson.description"></small>
@@ -76,8 +76,8 @@ Vue.component('courses-carousel', {
                                                 <span>Highest Rated</span>
                                             </div>
                                             <div class="mt-3 button-style">
-                                                <a :href="'/learner/courses/'+item.title" style="background-color: #495057; color: white;" class="float-left btn-style btn btn-s">View</a>
-                                                <a :href="'/learner/courses/'+item.title+'/assessment/'+item.author" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
+                                                <a :href="'/learner/courses/'+lesson.id" style="background-color: #495057; color: white;" class="float-left btn-style btn btn-s">View</a>
+                                                <a :href="'/learner/courses/'+lesson.id+'/assessment/'+lesson.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +316,6 @@ Vue.component('courses-carousel', {
             const result =  [].concat.apply([],
                 array.map((elem, i) => i % size ? [] : [array.slice(i, i + size)])
             );
-            console.log(result)
             return result
         }
     }

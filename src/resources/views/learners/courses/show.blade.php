@@ -5,55 +5,50 @@
 @endsection
 
 @section('body_content_main')
-@include('modules-lms-base::navigation',['type' => 'learner'])
+    @include('modules-lms-base::navigation',['type' => 'learner'])
     <div id="course">
-        <breadcrumbs 
+        {{-- <breadcrumbs 
             :items="[
                 {url: '/tenant/dashboard', title: 'Home', active: false},
-                {url: '', title: courseTitle, active: true},
+                {url: '', title: 'courseTitle', active: true},
             ]">
-        </breadcrumbs>
+        </breadcrumbs> --}}
         <div class="jumbotron jumbotron-fluid program-jumbotron">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-8">
-                        <h1>@{{ courseTitle }}</h1>
+                        <h1>@{{ courseDetails . title }}</h1>
 
-                        <h4>@{{shortDesc}}</h4>
+                        <h4>@{{ToText(courseDetails.description)}}</h4>
 
-                        <p>Author by @{{author}}</p>
+                        <p>Author by @{{ author }}</p>
                         <small class="rating">
                             <i class="fa fa-star star"></i>
                             <i class="fa fa-star star"></i>
                             <i class="fa fa-star star"></i>
                             <i class="fa fa-star star"></i>
                             <i class="fa fa-star star"></i>
-                            @{{rating}} @{{numberOfStudentEnrolled}} students </small
-                        ><br />
+                            @{{ rating }} @{{ numberOfStudentEnrolled }} students </small><br />
 
                         <span class="last__updated">
-                <span>
-                  <i class="fa fa-clock-o" aria-hidden="true"></i>
-                  Last updated 3/2021
-                </span>
+                            <span>
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                Last updated 3/2021
+                            </span>
 
-                <span class="language">
-                  <i class="fa fa-globe"></i>
-                  English
-                </span>
+                            <span class="language">
+                                <i class="fa fa-globe"></i>
+                                English
+                            </span>
 
-                <span>
-                  <i class="fa fa-cc" aria-hidden="true"></i> English [Auto]
-                </span>
-              </span>
+                            <span>
+                                <i class="fa fa-cc" aria-hidden="true"></i> English [Auto]
+                            </span>
+                        </span>
                     </div>
 
                     <div class="course-video col-lg-4">
-                        <video
-                                class="course-video"
-                                src="/What A Beautiful Name - Hillsong Worship.mp4"
-                                controls
-                        ></video>
+                        <video class="course-video" src="/What A Beautiful Name - Hillsong Worship.mp4" controls></video>
                     </div>
                 </div>
             </div>
@@ -65,131 +60,81 @@
                     <div class="card-body">
                         <h2>What you'll learn</h2>
 
-                        <div class="row">
-                            <div class="col-lg-6">
-
-                                <ul class="what-you-will-learn-list">
-
-                                    <li>
-
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-
-
-                                </ul>
+                        <ul class="what-you-will-learn-list">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <li> @{{ ToText(courseDetails . skills_to_be_gained) }}</li>
+                                </div>
                             </div>
-
-                            <div class="col-lg-6">
-                                <ul class="what-you-will-learn-list">
-
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        </ul>
                     </div>
                 </div>
-
-
-
 
                 <div class="mt-5 course-content">
 
                     <h2>
-
                         Course content
                     </h2>
                     <div id="accordianId" role="tablist" class="mb-5" aria-multiselectable="true">
                         <div class="card">
-                            <div class="card-header" role="tab" id="section1HeaderId">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" data-parent="#accordianId" class="sectionheading" href="#section1ContentId" aria-expanded="true" aria-controls="section1ContentId">
-                                        Introduction
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
-                                </div>
-
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
-                                </div>
-
-
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
+                            <div class="p-2 card-body" style="cursor: pointer">
+                                <div class="mb-1" v-for="(module, moduleIndex) in courseDetails.modules" :key="moduleIndex">
+                                    <div class="card-header">
+                                        <div class="w-100 d-flex justify-content-between" data-toggle="collapse"
+                                            data-parent="#accordianId" :href="'#section1ContentId'+moduleIndex"
+                                            aria-expanded="true" :aria-controls="'section1ContentId'+moduleIndex" role="tab"
+                                            id="section1HeaderId">
+                                            <span style="font-size: 1.1em">
+                                                {{-- @{{counter = moduleIndex + 1}}. @{{module.title}} --}}
+                                                @{{ module . module_number }}. @{{ module . title }}
+                                            </span>
+                                            <span>
+                                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor"
+                                                    stroke-width="2" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" class="css-i6dzq1">
+                                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div v-if="module.lessons.length > 0" :id="'section1ContentId'+moduleIndex"
+                                        class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
+                                        <div v-for="(lesson, lessonIndex) in module.lessons" :key="lessonIndex"
+                                            class="card-body d-flex justify-content-between">
+                                            <h6>
+                                                <i class="p-1 fa fa-play" aria-hidden="true"></i>
+                                                @{{ lesson . title }}
+                                            </h6>
+                                            <p>
+                                                1:20:00
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div v-else :id="'section1ContentId'+moduleIndex" class="collapse in" role="tabpanel"
+                                        aria-labelledby="section1HeaderId">
+                                        <div class="card-body d-flex justify-content-between">
+                                            <h6>
+                                                No Lesson Available
+                                            </h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
-
-
-
-                    <div class="container">
-
-                    </div>
-
-
                 </div>
 
                 <div class="mt-5 mb-5 requirement">
                     <h2>Requirements</h2>
 
                     <ul class="requirement-list">
-                        <li>@{{requirments}}</li>
+                        <li>@{{ requirments }}</li>
                     </ul>
                 </div>
 
                 <h2>Description</h2>
-                <span v-if="!readMoreActivated">@{{ description.slice(0, 600) }}</span>
-                <p
-                        class="see-more"
-                        v-if="!readMoreActivated"
-                        @click="activateReadMore"
-                        href="#"
-                >
+                <span v-if="!readMoreActivated">@{{ ToText(courseDetails . description . slice(0, 600)) }}</span>
+                <p class="see-more" v-if="!readMoreActivated" @click="activateReadMore" href="#">
                     See more
                     <i class="fa fa-angle-down"></i>
                 </p>
@@ -201,14 +146,12 @@
                             <h2 class="card-title">Testimonial</h2>
 
                             <div class="user-details">
-                                <img
-                                        class="img-fluid avatar"
-                                        src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
-                                        alt="avatar"
-                                />
+                                <img class="img-fluid avatar"
+                                    src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
+                                    alt="avatar" />
 
                                 <div class="user">
-                                    <span class="username">@{{username}}</span>
+                                    <span class="username">@{{ username }}</span>
 
                                     <span>131 course</span>
                                     <span>23 reviews</span>
@@ -226,7 +169,7 @@
                             </div>
 
                             <div class="mt-4 testimonial">
-                                <p>@{{testimonial}}</p>
+                                <p>@{{ testimonial }}</p>
                             </div>
                         </div>
                     </div>
@@ -247,31 +190,35 @@
             el: "#course",
 
             data: {
+                courseDetails: {!! json_encode($data) !!},
                 author: "Evan you",
-                courseTitle: "Objects And Classes",
+                counter: 1,
                 numberOfStudentEnrolled: 240,
                 shortDesc: "Learn how to use Postman to build REST & GraphQL request",
                 rating: "(86900 ratings)",
                 username: "John doe",
-                description:
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
+                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
                 readMoreActivated: false,
 
-                testimonial:
-                    "The instructor has perfect explaining skills. This course helped to clarify some things and prepare me (hopefully) to start playing around with postman. I will also be looking forward to see the Postman course from Valentin.",
-                requirments:
-                    "The possibility of installing new tools on your computer.",
+                testimonial: "The instructor has perfect explaining skills. This course helped to clarify some things and prepare me (hopefully) to start playing around with postman. I will also be looking forward to see the Postman course from Valentin.",
+                requirments: "The possibility of installing new tools on your computer.",
             },
 
             methods: {
+                generateIdForModules() {
+                    ++this.counter
+                },
                 activateReadMore() {
                     this.readMoreActivated = true;
+                },
+                ToText(HTML) {
+                    var input = HTML;
+                    return input.replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '').replace(
+                        /<[^>]+?>/g, '').replace(/\s+/g, ' ').replace(/ /g, ' ').replace(/>/g, ' ');
                 },
             },
 
         });
     </script>
-    {{--    <script src="{{ asset('js/app.js') }}"></script>--}}
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 @endsection
-
-
