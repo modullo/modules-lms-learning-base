@@ -62,7 +62,7 @@
                             </div>
                             
                             <div v-if="form.lesson_type === 'video'" class="form-group col-lg-6">
-                                <label for="tenant"> Resource *</label>
+                                <label for="tenant"> Resource * </label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Resource') }">
                                     <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
@@ -111,7 +111,7 @@
                                 <label for="image">
                                   Track  Image *
                                 </label>
-                                <input type="file" v-validate="'required'"
+                                <input type="file"
                                 v-on:change="accessImage"
                                 :class="{'input': true, 'border border-danger': errors.has('Image') }" class="form-control" name="Image" id="" aria-describedby="helpId"
                                     placeholder="">
@@ -137,7 +137,7 @@
                             <div class="form-group col-lg-6">
                                 <label for="module No">Track Number *</label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Track Number" class="form-control" v-model="form.lesson_number" v-validate="'required'"
+                                    <input name="Track Number" class="form-control" v-model="form.lesson_number"
                                         :class="{'input': true, 'border border-danger': errors.has('Track Number') }" type="number"
                                         placeholder="1">
                                     <i v-show="errors.has('Track Number')" class="fa fa-warning text-danger"></i>

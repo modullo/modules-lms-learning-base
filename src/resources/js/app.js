@@ -1,42 +1,6 @@
 $(document).ready(function(){
     $(".owl-carousel").owlCarousel();
 });
-var dummyData = [
-    {
-        title: "MERN Stack ECommerce App - React,Redux,Node,Express,Mongo DB",
-        details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-        author: "Academia By Dr Allen Grey",
-        price: "$12.99",
-        oldPrice: "$99.78",
-        highest_rated: true,
-        star: 5,
-        image:
-            "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-    },
-    {
-        title: " objects and classes",
-        details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-        author: "Evan you",
-        price: "$12.99",
-        oldPrice: "$99.78",
-        highest_rated: true,
-        star: 5,
-        image:
-            "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-    },
-    {
-        title: " objects and classes",
-        details: "Lorem ipsum dolor sit amet, consectetuer adipiscing .",
-        author: "Evan you",
-        price: "$12.99",
-        oldPrice: "$99.78",
-        highest_rated: true,
-        star: 5,
-        image:
-            "https://images.pexels.com/photos/39811/pexels-photo-39811.jpeg?h=350&amp;auto=compress&amp;cs=tinysrgb",
-    },
-
-];
 
 
 Vue.component('courses-carousel', {
@@ -45,8 +9,18 @@ Vue.component('courses-carousel', {
     <div>
         <div class="mt-4 justify-content-cente h-100">
             <div class="searchbar">
-            <input class="search_input" type="text" name="" placeholder="Search For Your Course...">
+            <input class="search_input" @change="filterAllCourses" v-model="searchQuery" type="text" name="" placeholder="Search For Your Course...">
             <a href="#" class="search_icon"><i class="fa fa-search"></i></a>
+            <div style="position:absolute; z-index: 20; width:inherit" class="card mt-2 mx-auto" v-if="searchQuery">
+                    <div class="card-body" v-for="(course, courseIndex) in filterAllCourses()" :key="courseIndex">
+                        <img class="card-img-top" style="height: 50px; width:50px; object-fit: cover" :src="course.course_image" alt="Card image cap">
+                        <span class="ml-3">{{course.title}}</span>
+                        <span clas="d-flex justify-content-between">
+                        <a :href="'/learner/courses/'+course.id" style="background-color: #495057; color: white;" class="float-right btn-style btn ml-3">View</a>
+                        <a :href="'/learner/courses/'+course.id+'/assessment/'+course.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
+                        </span>
+                    </div>
+            </div>
             </div>
         </div>
         <h2 v-if="user" class="pl-4 font-weight-bold" style="margin-top: 2em">Let's start learning, {{user.first_name + ' ' + user.last_name}}</h2>
@@ -255,7 +229,9 @@ Vue.component('courses-carousel', {
                     }
                 ],
             allCourses: [],
+            allSearchableCourses: [],
             user: null,
+            searchQuery: '',
         }
     },
     created() {
@@ -279,6 +255,7 @@ Vue.component('courses-carousel', {
                 //     ]
                 // )
                 this.user = res.data.user
+                this.allSearchableCourses = res.data.courses
                 const programs = {}
                 res.data.courses.map((course) => programs[course.program.title]
                     ? programs[course.program.title].push(course)
@@ -317,6 +294,14 @@ Vue.component('courses-carousel', {
                 array.map((elem, i) => i % size ? [] : [array.slice(i, i + size)])
             );
             return result
+        },
+        filterAllCourses(){
+            if (this.searchQuery) {
+                return this.allSearchableCourses.filter(card => card.title.toLowerCase().match(this.searchQuery.toLowerCase())).slice(0, 6)
+                // return this.allSearchableCourses.map((course) => {
+                //     return course.courses.filter(card => card.title.toLowerCase().match(this.searchQuery.toLowerCase()))
+                // })
+            }
         }
     }
 })
@@ -326,17 +311,6 @@ var app = new Vue({
     el:"#app",
     // delimiters: ['!{', '}!'],
     data: {
-
-        currentOffset: 0,
-        windowSize:3,
-        paginationFactor: 220,
-        items: dummyData,
-        author: "Evan you",
-        programTitle: "Introduction to programming",
-        numberOfStudentEnrolled: 240,
-        desc: "Learn how to use Postman to build REST & GraphQL request",
-        cardinfos: dummyData,
-        rating: "(86900 ratings)",
         aboutProgram:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
     },

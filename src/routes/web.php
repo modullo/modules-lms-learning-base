@@ -20,6 +20,9 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
                 Route::get('all/{id}', 'ModulesLmsLearningBaseController@allProgramCourses');
+                Route::post('completeCourse/{id}', 'ModulesLmsLearningBaseController@completeLesson');
+                Route::get('fetchQuiz/{id}', 'ModulesLmsLearningBaseController@fetchLessonQuiz');
+                Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
             });
 
             //        Program
@@ -28,6 +31,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
             });
+
         });
 
         Route::group(['prefix' => 'tenant'],function(){

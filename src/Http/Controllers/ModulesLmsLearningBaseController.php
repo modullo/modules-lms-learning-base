@@ -113,4 +113,74 @@ class ModulesLmsLearningBaseController extends Controller
         $data = ['error' => 'unable to fetch the requested resource'];
         return view('modules-lms-learning-base::learners.programs.show', compact('data'));
     }
+
+    // Lessons
+    public function completeLesson(string $id, Sdk $sdk, Request $request) 
+    {
+        $sdkObject = $sdk->createLearnerLessonService();
+        $path = ['complete', $id];
+        $response = $sdkObject->send('post', $path);
+        if ($response->isSuccessful()){
+            $sdkObject = $sdk->createCourseService();
+            $path = [$request->course_id];
+            $courseResponse = $sdkObject->send('get', $path);
+            $courseData = $courseResponse->data['course'];
+            // dd($request->course_id);
+            $lessonData = $response->data['lesson'];
+            return response([
+                'Message' => 'Lesson Completed', 
+                'course' => $courseData, 
+                'lesson' => $lessonData
+            ], 200);
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return response(['Message' => $data, 'courses' => null], 404);
+    }
+
+    public function submitQuiz(string $quiz_id, string $lesson_id, Sdk $sdk, Request $request) 
+    {
+        $resource = $sdk->createLearnerLessonService();
+        $resource = $resource
+        ->addBodyParam('score', 40)
+        ->addBodyParam('submission',$request->all());
+        $path = ['quiz', 'submit', $quiz_id, $lesson_id];
+        $response = $resource->send('post', $path);
+        if ($response->isSuccessful()){
+            // Complete the lesson
+            $sdkObject = $sdk->createLearnerLessonService();
+            $path = ['complete', $lesson_id];
+            $lessonResponse = $sdkObject->send('post', $path);
+            $lessonData = $lessonResponse->data['lesson'];
+            
+            // Fetch updated Course
+            $sdkObject = $sdk->createCourseService();
+            $path = [$request->course_id];
+            $courseResponse = $sdkObject->send('get', $path);
+            $courseData = $courseResponse->data['course'];
+
+            return response([
+                'Message' => 'Lesson Completed', 
+                'course' => $courseData, 
+                'lesson' => $lessonData
+            ], 200);
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return response(['Message' => $data, 'lesson' => null], 404);
+    }
+
+    public function fetchLessonQuiz(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createQuizService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['quiz'];
+            return response([
+                'Message' => 'Lesson Completed', 
+                'quiz' => $data, 
+            ], 200);
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return response(['Message' => $data, 'quiz' => null], 404);
+    }
 }

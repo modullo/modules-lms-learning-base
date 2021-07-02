@@ -67,7 +67,7 @@
 
                             <a
                                     class="mx-2 btn btn-outline-secondary"
-                                    href="Jumbo action link"
+                                    :href="'/learner/courses/'+cardinfo.id+'/assessment/'+cardinfo.title"
                                     role="button"
                             >Start course</a
                             >

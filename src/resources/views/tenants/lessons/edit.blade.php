@@ -57,7 +57,7 @@
                                 </select>
                             </div>
 
-                            <div v-if="form.lesson_type === 'video'" class="form-group col-lg-6">
+                            <div v-if="form.lesson_type !== 'quiz'" class="form-group col-lg-6">
                                 <label for="tenant"> Resource *</label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource">
                                     <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
@@ -78,7 +78,7 @@
 
                             {{-- <div class="form-group col-lg-6">
                                 <label for="tenant"> Module *</label>
-                                <select class="form-control" v-model="module_id" v-validate="'required'" name="Module"
+                                <select class="form-control" v-model="form.module_id" v-validate="'required'" name="Module"
                                     :class="{'input': true, 'border border-danger': errors.has('Module') }">
                                     <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{module.title}}</option>
                                 </select>
@@ -204,7 +204,6 @@
             data: {
                 form: {!! json_encode($data) !!},
                 assets: {!! json_encode($assets) !!},
-                module_id: '',
                 modules: {!! json_encode($modules) !!},
                 quizzes: {!! json_encode($quizzes) !!},
             },
@@ -218,6 +217,7 @@
                             let loader = Vue.$loading.show()
                             this.uploadImage()
                             .then(() => {
+                                // this.form.module_id = this.module_id
                                 axios.put(`${this.form.id}`, this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)

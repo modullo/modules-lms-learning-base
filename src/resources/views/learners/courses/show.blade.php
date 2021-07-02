@@ -6,7 +6,7 @@
 
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'learner'])
-    <div id="course">
+    <div id="course" class="mb-5">
         {{-- <breadcrumbs 
             :items="[
                 {url: '/tenant/dashboard', title: 'Home', active: false},
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <section class=" program-contain">
+        <section class="container-fluid program-contain">
             <div class="col-lg-8">
                 <div class="card what-you-will-learn">
                     <div class="card-body">
@@ -134,46 +134,11 @@
 
                 <h2>Description</h2>
                 <span v-if="!readMoreActivated">@{{ ToText(courseDetails . description . slice(0, 600)) }}</span>
-                <p class="see-more" v-if="!readMoreActivated" @click="activateReadMore" href="#">
+                {{-- <p class="see-more" v-if="!readMoreActivated" @click="activateReadMore" href="#">
                     See more
                     <i class="fa fa-angle-down"></i>
                 </p>
-                <span v-if="readMoreActivated" v-html="description"></span>
-
-                <div class="mt-5 mb-5 testimonial-container">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title">Testimonial</h2>
-
-                            <div class="user-details">
-                                <img class="img-fluid avatar"
-                                    src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
-                                    alt="avatar" />
-
-                                <div class="user">
-                                    <span class="username">@{{ username }}</span>
-
-                                    <span>131 course</span>
-                                    <span>23 reviews</span>
-                                </div>
-                            </div>
-
-                            <div class="mx-2 star-rating">
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-
-                                <span>1 month ago</span>
-                            </div>
-
-                            <div class="mt-4 testimonial">
-                                <p>@{{ testimonial }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <span v-if="readMoreActivated" v-html="description"></span> --}}
             </div>
         </section>
     </div>
