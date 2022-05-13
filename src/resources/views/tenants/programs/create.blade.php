@@ -106,7 +106,7 @@
                             fields with *  are required
                         </span>
 
-                            <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                            <button type="submit" class="btn btn-outline-secondary">Create Program</button>
                         </div>
                     </form>
                 </div>
@@ -203,7 +203,7 @@
                 async uploadImage() {
                     if (this.form.ProgramImage) { 
                         const formData = new FormData();
-                        formData.append("program_image", this.form.ProgramImage, this.form.ProgramImage.name);
+                        formData.append("asset", this.form.ProgramImage, this.form.ProgramImage.name);
                         await axios.post('/tenant/assets/custom/upload', formData)
                         .then( res => {
                             this.form.ProgramImage = res.data.file_url

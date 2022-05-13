@@ -2,7 +2,7 @@
 
 @section('head_css')
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";
@@ -39,7 +39,7 @@
                                 <p class="control has-icon has-icon-right">
                                     <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
-                                        placeholder="Enter Course title">
+                                        placeholder="Enter Course Title">
                                     <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Title')"
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
@@ -114,10 +114,10 @@
 
                             <div class="mt-5 mb-5 form-group col-lg-6">
                                 <label for="">Course Description</label>
-{{-- 
+ 
                                 <div id="courseDesc">
 
-                                </div> --}}
+                                </div> 
                                 <editor v-model="form.description" theme="snow"></editor>
 
 
@@ -125,7 +125,7 @@
 
 
                             <div class="mt-5 mb-5 form-group col-lg-6">
-                                <label for="">What you will learn</label>
+                                <label for="">What will be Learnt in the Course</label>
                                 <editor v-model="form.skills_to_be_gained" theme="snow"></editor>
 
                             </div>
@@ -134,8 +134,7 @@
                             <div class="mt-5 form-group col-6">
 
                                 <label for="">
-
-                                    Cover image
+                                    Course Cover image
                                 </label>
                                 <input v-on:change="accessImage" type="file" class="form-control-file" name="" id="" placeholder=""
                                     aria-describedby="fileHelpId">
@@ -285,7 +284,7 @@
                 async uploadImage() {
                     if (this.form.course_image) { 
                         const formData = new FormData();
-                        formData.append("file", this.form.course_image, this.form.course_image.name);
+                        formData.append("asset", this.form.course_image, this.form.course_image.name);
                         await axios.post('/tenant/assets/custom/upload', formData)
                         .then( res => {
                             this.form.course_image = res.data.file_url
@@ -296,6 +295,9 @@
                     }
                 },
             },
+            mounted: function() {
+                //console.log(this.programs)
+            }
 
         });
 

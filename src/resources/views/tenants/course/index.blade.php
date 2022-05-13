@@ -97,12 +97,12 @@
                                 </h6>
                                 <p class="card-text">@{{ cardinfo.details }} .</p>
 
-                                <a
+                                <!--<a
                                         class="btn btn-outline-secondary"
                                         :href="`/tenant/courses/show/${cardinfo.id}`"
                                         role="button"
                                 >View Course</a
-                                >
+                                >-->
 
                                 <a class="mx-2 btn btn-outline-secondary" :href="`/tenant/courses/${cardinfo.id}`" role="button"
                                 >Edit</a

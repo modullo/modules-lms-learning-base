@@ -60,7 +60,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('course_state',$request->course_state)
             ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
             ->addBodyParam('description',$request->description)
-            ->addBodyParam('program_id',$request->program['id']);
+            ->addBodyParam('program_id',$request->program);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -447,7 +447,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         // dd($request->file);
         $resource = $sdk->createAssetService();
-        $file = $request->file('program_image');
+        $file = $request->file('asset');
         $resource = $resource
             ->addMultipartParam('asset_file', file_get_contents($file->getRealPath(), false), 
             $file->getClientOriginalName());
