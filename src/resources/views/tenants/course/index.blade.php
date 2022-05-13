@@ -168,7 +168,8 @@
             methods: {},
             computed:{
                 searchCourses(){
-                    return this.cardinfos.filter(card => {return card.title.match(this.search)})
+                    return this.cardinfos.filter( card => { return card.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1 } )
+                    //return this.cardinfos.filter(card => {return card.title.match(this.search)})
                 }
             }
         });

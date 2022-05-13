@@ -6,7 +6,7 @@
 @endsection
 
 @section('head_css')
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
@@ -44,7 +44,7 @@
                                     class="help text-danger">@{{ errors . first('Tenant') }}</span>
                             </div> --}}
                             <div class="form-group col-lg-12">
-                                <label for="tenant"> Courses *</label>
+                                <label for="Course"> Course (under which the Module will be) *</label>
                                 <select class="form-control" v-model="form.course_id" name="Course" v-validate="'required'"
                                 :class="{'input': true, 'border border-danger': errors.has('Course') }" id="">
                                     {{-- <option selected>Select Courses</option> --}}
@@ -56,11 +56,11 @@
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for="title"> Title * </label>
+                                <label for="title"> Module Title * </label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
-                                        placeholder="Enter Course title">
+                                        placeholder="Enter Module Title">
                                     <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Title')"
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-lg-6">
-                                <label for="description"> Program description * </label>
+                                <label for="description"> Module Description * </label>
                                 <textarea
                                     v-model="form.description" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Description') }" 

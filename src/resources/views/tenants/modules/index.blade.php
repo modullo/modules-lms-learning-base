@@ -154,7 +154,7 @@
             computed: {
                 searchLessons() {
                     if (this.search) {
-                        return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
+                        return this.cardinfos.filter( card => card.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
                     }
                     return this.cardinfos
                 },

@@ -118,7 +118,7 @@
 
             computed: {
                 searchMajors() {
-                    return this.cardinfos.filter(card => card.title.match(this.search))
+                    return this.cardinfos.filter( card => card.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
                 }
             },
 
