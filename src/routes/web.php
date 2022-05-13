@@ -8,10 +8,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
     Route::middleware('auth')->group(function () {
         Route::group(['prefix' => 'learner'],function(){
-            
 
-            Route::get('/test','ModulesLmsLearningBaseController@test')->name('learner-test');
-            Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
+            //Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-settings');
 
 //        Courses

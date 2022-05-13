@@ -6,7 +6,7 @@
 @endsection
 
 @section('head_css')
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
@@ -21,69 +21,69 @@
         <breadcrumbs 
             :items="[
                 {url: '/tenant/dashboard', title: 'Home', active: false},
-                {url: '/tenant/programs', title: 'Program', active: false},
+                {url: '/tenant/programs', title: 'Programs', active: false},
                 {url: '', title: 'Create Program', active: true},
             ]">
         </breadcrumbs>
         <div class="container">
-            <h3 class="mt-5">Create Major</h3>
+            <h3 class="mt-5">Create Program</h3>
 
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="title">Title *</label>
+                                <label for="title">Program Title *</label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
-                                        placeholder="Enter Course title">
-                                    <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Title')"
-                                        class="help text-danger">@{{ errors . first('Title') }}</span>
+                                    <input name="ProgramTitle" class="form-control" v-model="form.ProgramTitle" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('ProgramTitle') }" type="text"
+                                        placeholder="Enter Program Title">
+                                    <i v-show="errors.has('ProgramTitle')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('ProgramTitle')"
+                                        class="help text-danger">@{{ errors . first('ProgramTitle') }}</span>
                                 </p>
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="visibilitytype"> Visibility type * </label>
+                                <label for="ProgramVisibility"> Visibility type * </label>
 
                                 <select
                                     v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Visibility Type') }"
+                                    :class="{'input': true, 'border border-danger': errors.has('ProgramVisibility') }"
                                     class="form-control"
                                     name="Visibility Type"
-                                    v-model="form.visiblityType"
-                                    id="visibilitytype"
+                                    v-model="form.ProgramVisibility"
+                                    id="ProgramVisibility"
 
                                 >
                                     <option disabled selected="selected">
-                                        Select Major Visibility *
+                                        Select Program Visibility *
                                     </option>
 
                                     <option value="public">Public </option>
                                     <option value="private">Private</option>
                                 </select>
-                                <i v-show="errors.has('Visibility Type')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Visibility Type')"
-                                        class="help text-danger">@{{ errors . first('Visibility Type') }}</span>
+                                <i v-show="errors.has('ProgramVisibility')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('ProgramVisibility')"
+                                        class="help text-danger">@{{ errors . first('ProgramVisibility') }}</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-lg-6 ">
-                                <label for="description"> Program Description * </label>
+                                <label for="ProgramDescription">Program Description * </label>
                                 <textarea
                                     v-validate="'required'"
-                                    :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
+                                    :class="{'input': true, 'border border-danger': errors.has('ProgramDescription') }"
                                     class="form-control"
-                                    name="Program Description"
-                                    id="description"
-                                    placeholder="Program Description"
+                                    name="ProgramDescription"
+                                    id="ProgramDescription"
+                                    placeholder="Enter Program Description"
                                     rows="3"
-                                    v-model="form.MajorDescription"
+                                    v-model="form.ProgramDescription"
                                 ></textarea>
-                                <i v-show="errors.has('Program Description')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Program Description')"
-                                    class="help text-danger">@{{ errors.first('Program Description') }}</span>
+                                <i v-show="errors.has('ProgramDescription')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('ProgramDescription')"
+                                    class="help text-danger">@{{ errors.first('ProgramDescription') }}</span>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="">
@@ -157,19 +157,19 @@
 
             data: {
                 form: {
-                    MajorTitle: null,
-                    subscriptionType: null,
-                    MajorDescription: null,
-                    visiblityType: null,
-                    subscriptioncost:null,
-                    overviewImageUrl: null,
-                    overviewVideo: null
+                    ProgramTitle: null,
+                    ProgramDescription: null,
+                    ProgramVisibility: null,
+                    ProgramImage: null,
+                    ProgramSubscriptionType: null,
+                    ProgramSubscriptionCost:null,
+                    ProgramVideo: null
                 },
             },
 
             methods: {
                 accessImage(e) {
-                    this.form.overviewImageUrl = e.target.files[0]
+                    this.form.ProgramImage = e.target.files[0]
                 },
                 validateBeforeSubmit(ev) {
                     this.$validator.validateAll().then((result) => {
@@ -201,12 +201,12 @@
                     });
                 },
                 async uploadImage() {
-                    if (this.form.overviewImageUrl) { 
+                    if (this.form.ProgramImage) { 
                         const formData = new FormData();
-                        formData.append("file", this.form.overviewImageUrl, this.form.overviewImageUrl.name);
+                        formData.append("program_image", this.form.ProgramImage, this.form.ProgramImage.name);
                         await axios.post('/tenant/assets/custom/upload', formData)
                         .then( res => {
-                            this.form.overviewImageUrl = res.data.file_url
+                            this.form.ProgramImage = res.data.file_url
                         })
                         .catch(e => {
                             console.log(e.response.data.error)

@@ -8,6 +8,7 @@ use Hostville\Modullo\Sdk;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ModulesLmsLearningBaseTenantController extends Controller
 {
@@ -346,10 +347,10 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         $resource = $sdk->createProgramService();
         $resource = $resource
-            ->addBodyParam('title',$request->title)
-            ->addBodyParam('description',$request->MajorDescription)
-            ->addBodyParam('image',$request->overviewImageUrl)
-            ->addBodyParam('visibility_type',$request->visiblityType);
+            ->addBodyParam('title',$request->ProgramTitle)
+            ->addBodyParam('description',$request->ProgramDescription)
+            ->addBodyParam('image',$request->ProgramImage)
+            ->addBodyParam('visibility_type',$request->ProgramVisibility);
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -358,7 +359,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
         }
 
-        return response()->json(['message' => 'creation successful blah blah'],200);
+        return response()->json(['message' => 'creation successful'],200);
     }
 
     /**
@@ -446,7 +447,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         // dd($request->file);
         $resource = $sdk->createAssetService();
-        $file = $request->file('file');
+        $file = $request->file('program_image');
         $resource = $resource
             ->addMultipartParam('asset_file', file_get_contents($file->getRealPath(), false), 
             $file->getClientOriginalName());

@@ -17,10 +17,10 @@ class ModulesLmsLearningBaseController extends Controller
         $this->sdk = $sdk;
     }
     
-    public function index()
-    {
-        return view('modules-lms-learning-base::learners.base.dashboard');
-    }
+    // public function index()
+    // {
+    //     return view('modules-lms-learning-base::learners.base.dashboard');
+    // }
 
     public function settings()
     {

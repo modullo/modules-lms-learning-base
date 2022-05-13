@@ -48,15 +48,11 @@
         <div class="container mt-5">
             <section class="container program-contain">
                 <h2 class="mb-5">
-
-                    Majors
+                    Programs
                 </h2>
                 <div class="add-course-contain">
                     <a style="background-color: #343a40; color:white" class="mt-5 mb-5 btn add-course" href="/tenant/programs/create">
-
-                        <i class="fa fa-plus"> </i>
-
-                        Add Major
+                        <i class="fa fa-plus"> </i> Add Program
                     </a>
                 </div>
 
@@ -69,7 +65,7 @@
                     <input v-model="search" type="text" class="form-control" placeholder="Search Major" />
                 </div>
 
-                <div class="row"    >
+                <div class="row" v-if="cardinfos.length>0">
                     <div class="mt-4 mb-5 col-lg-4 col-md-4 col-sm-6 col-xs-6" v-for="(cardinfo, index) in searchMajors"
                         :key="index">
                         <div class="card-course">
@@ -88,7 +84,7 @@
                                 <a class="mx-2 btn btn-outline-secondary" :href="`/tenant/programs/edit/${cardinfo.id}`"
                                     role="button">Edit</a>
 
-                                <a class="btn btn-outline-danger" href="/#" role="button">Delete</a>
+                                <a class="btn btn-outline-danger" href="#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -124,6 +120,10 @@
                 searchMajors() {
                     return this.cardinfos.filter(card => card.title.match(this.search))
                 }
+            },
+
+            mounted: function () {
+                //console.log(this.cardinfos.length);
             }
         });
 
