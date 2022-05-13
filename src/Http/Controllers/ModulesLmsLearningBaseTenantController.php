@@ -370,7 +370,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $sdk->createProgramService();
         $resource = $resource
             ->addBodyParam('title',$request->title)
-            ->addBodyParam('description',$request->MajorDescription)
+            ->addBodyParam('description',$request->description)
             ->addBodyParam('image',$request->image)
             ->addBodyParam('visibility_type',$request->visibility_type);
         $response = $resource->send('put',[$id]);

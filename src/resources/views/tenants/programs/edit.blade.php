@@ -6,7 +6,7 @@
 @endsection
 
 @section('head_css')
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
@@ -26,18 +26,18 @@
             ]">
         </breadcrumbs>
         <div class="container">
-            <h3 class="mt-5">Edit Major</h3>
+            <h3 class="mt-5">Edit Program</h3>
 
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="title">Title *</label>
+                                <label for="title">Program Title *</label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
-                                        placeholder="Enter Major title">
+                                        placeholder="Enter Program Title">
                                     <i v-show="errors.has('Title')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Title')"
                                         class="help text-danger">@{{ errors . first('Title') }}</span>
@@ -71,14 +71,14 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-lg-6 ">
-                                <label for="description"> Major Description * </label>
+                                <label for="description"> Program Description * </label>
                                 <textarea
                                     v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Program Description') }"
                                     class="form-control"
                                     name="Program Description"
                                     id="description"
-                                    placeholder="Major Description"
+                                    placeholder="Program Description"
                                     rows="3"
                                     v-model="form.description"
                                 ></textarea>
@@ -88,7 +88,6 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="">
-
                                     Program Cover image
                                 </label>
                                 <input
@@ -197,7 +196,7 @@
                 async uploadImage() {
                     if (typeof this.form.image.name !== 'undefined') { 
                         const formData = new FormData();
-                        formData.append("file", this.form.image, this.form.image.name);
+                        formData.append("program_image", this.form.image, this.form.image.name);
                         await axios.post('/tenant/assets/custom/upload', formData)
                         .then( res => {
                             this.form.image = res.data.file_url
