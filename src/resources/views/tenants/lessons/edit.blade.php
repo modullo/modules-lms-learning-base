@@ -51,16 +51,16 @@
                                     class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
-                                <label for="tenant"> Resource *</label>
+                                <label for="tenant"> Choose Quiz Asset *</label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource">
                                     <option v-for="(quiz, index) in quizzes" :value="quiz.id" :key="index">@{{quiz.title}}</option>
                                 </select>
                             </div>
 
-                            <div v-if="form.lesson_type !== 'quiz'" class="form-group col-lg-6">
-                                <label for="tenant"> Resource *</label>
+                            <div v-if="form.lesson_type == 'video'" class="form-group col-lg-6">
+                                <label for="tenant"> Choose Video Asset *</label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource">
-                                    <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
+                                    <option v-for="(asset, index) in assetTypes('video')" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
                                 </select>
                             </div>
                             
@@ -76,19 +76,19 @@
                                 </p>
                             </div>
 
-                            {{-- <div class="form-group col-lg-6">
-                                <label for="tenant"> Module *</label>
-                                <select class="form-control" v-model="form.module_id" v-validate="'required'" name="Module"
+                            <div class="form-group col-lg-6">
+                                <label for="tenant">Course &raquo; Module *</label>
+                                <select class="form-control" v-model="form.module_id" v-validate="'required'" name="Module" ref="ModuleID"
                                     :class="{'input': true, 'border border-danger': errors.has('Module') }">
-                                    <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{module.title}}</option>
+                                    <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{ module.course.title + ' &raquo; ' +  module.title }}</option>
                                 </select>
                                 <i v-show="errors.has('Module')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Module')"
                                     class="help text-danger">@{{ errors . first('Module') }}</span>
-                            </div> --}}
+                            </div>
 
                             <div class="form-group col-lg-6">
-                                <label for="title"> Title * </label>
+                                <label for="title"> Lesson Title * </label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Title" class="form-control" v-model="form.title" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Title') }" type="text"
@@ -101,7 +101,7 @@
                         </div>
                         <div class="mb-5 form-row">
                             <div class="form-group col-lg-6">
-                                <label for="description"> Lesson description * </label>
+                                <label for="description">Lesson Description * </label>
                                 <editor style="height: 100px" v-validate="'required'"
                                 name="Description"
                                 :class="{'input': true, 'border border-danger': errors.has('Description') }" v-model="form.description" theme="snow"></editor>
@@ -122,7 +122,7 @@
                             </div>
                             
                             <div class="mt-3 form-group col-lg-6">
-                                <label for="duration">Duration*</label>
+                                <label for="duration">Lesson Duration *</label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Duration" class="form-control" v-model="form.duration" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Duration') }" type="text"
@@ -206,8 +206,23 @@
                 assets: {!! json_encode($assets) !!},
                 modules: {!! json_encode($modules) !!},
                 quizzes: {!! json_encode($quizzes) !!},
+                resource_id: ''
+            },
+            mounted: function() {
+                //sconsole.log(this.form.module_id)
+                //console.log(this.modules)
+                // console.log(this.assets)
+                // console.log(resource.id)
+                // console.log(this.form)
+                let resource = this.assets.find(res => res.id == this.form.lesson_resource.id);
+                this.form.resource_id = resource.id;
+                this.resource_id = resource.id;
+                //console.log(this.form.resource_id)
             },
             methods: {
+                assetTypes(asset_type) {
+                    return this.assets.filter ( asset => asset.type != 'unknown' && asset.type != null && asset.type == "video" )
+                },
                 accessImage(e) {
                     this.form.lesson_image = e.target.files[0]
                 },
@@ -217,7 +232,9 @@
                             let loader = Vue.$loading.show()
                             this.uploadImage()
                             .then(() => {
-                                // this.form.module_id = this.module_id
+                                // replace UUID with (Serial) ID
+                                let modul = this.modules.find(mod => mod.id == this.form.module_id);
+                                this.form.module_id = modul.raw_id;
                                 axios.put(`${this.form.id}`, this.form).then(res => {
                                 loader.hide();
                                 toastr["success"](res.data.message)

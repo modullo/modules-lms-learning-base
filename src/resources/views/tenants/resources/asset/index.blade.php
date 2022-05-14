@@ -63,7 +63,7 @@
                                 <h5 class="card-title">@{{ cardinfo.asset_name }}</h5>
                                 <p>Asset Type : Image</p>
                                 <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
-                                <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
+                                <a class="ml-5 btn btn-outline-danger" href="#" role="button">Delete</a>
                             </div>
                         </div>
                         <div v-if="cardinfo.type !== 'image'" class="card-course">
@@ -75,7 +75,7 @@
                                 <h5 class="mt-2 card-title">@{{ cardinfo.asset_name }}</h5>
                                 <p>Asset Type : Video</p>
                                 <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
-                                <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
+                                <a class="ml-5 btn btn-outline-danger" href="#" role="button">Delete</a>
                             </div>
                         </div>
 

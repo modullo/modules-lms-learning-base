@@ -51,10 +51,10 @@
                                     class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
-                                <label for="tenant"> Resource *</label>
+                                <label for="tenant"> Choose Quiz Asset *</label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Resource') }">
-                                    <option v-for="(quiz, index) in quizzes" :value="quiz.id" :key="index">@{{quiz.title}}</option>
+                                    <option v-for="(quiz, index) in quizzes" :value="quiz.id" :key="index">@{{ quiz.title }}</option>
                                 </select>
                                 <i v-show="errors.has('Resource')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Resource')"
@@ -62,10 +62,10 @@
                             </div>
                             
                             <div v-if="form.lesson_type === 'video'" class="form-group col-lg-6">
-                                <label for="tenant"> Resource * </label>
+                                <label for="tenant"> Choose Video Asset * </label>
                                 <select class="form-control" v-model="form.resource_id" name="Resource" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Resource') }">
-                                    <option v-for="(asset, index) in assets" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
+                                    <option v-for="(asset, index) in assetTypes('video')" :value="asset.id" :key="index">@{{asset.asset_name}}</option>
                                 </select>
                                 <i v-show="errors.has('Resource')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Resource')"
@@ -73,10 +73,10 @@
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for="tenant"> Module *</label>
+                                <label for="tenant"> Course &raquo; Module *</label>
                                 <select class="form-control" v-model="module_id" name="Module" v-validate="'required'"
                                     :class="{'input': true, 'border border-danger': errors.has('Module') }">
-                                    <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{module.title}}</option>
+                                    <option v-for="(module, index) in modules" :value="module.id" :key="index">@{{ module.course.title + ' &raquo; ' +  module.title }}</option>
                                 </select>
                                 <i v-show="errors.has('Module')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Module')"
@@ -121,7 +121,7 @@
                             </div>
                             
                             <div class="mt-3 form-group col-lg-6">
-                                <label for="duration">Duration*</label>
+                                <label for="duration">Lesson Duration *</label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Duration" class="form-control" v-model="form.duration" v-validate="'required'"
                                         :class="{'input': true, 'border border-danger': errors.has('Duration') }" type="text"
@@ -231,6 +231,12 @@
                 quizzes: {!! json_encode($quizzes) !!},
             },
             methods: {
+                assetTypes(asset_type) {
+                    return this.assets.filter ( asset => asset.type != 'unknown' && asset.type != null && asset.type == "video" )
+                },
+                // modulesWOCourses(wo) {
+                //     return this.modules.filter ( module => wo ?   )
+                // },
                 accessImage(e) {
                     this.form.lesson_image = e.target.files[0]
                 },
@@ -275,6 +281,11 @@
                         })
                     }
                 },
+            },
+            mounted: function() {
+                //console.log(this.modules)
+                //console.log(this.assets)
+                //console.log(this.quizzes)
             }
         });
 

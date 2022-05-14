@@ -67,7 +67,7 @@
                         <label for="tenant"> Filter Lessons By Module </label>
                         <select @change="filterByModule" v-model="currentModule" class="form-control" name="" id="">
                             <option :selected="true">All Lessons</option>
-                            <option v-for="(module, index) in modules" :key="index" :value="module.id">@{{module.title}}</option>
+                            <option v-for="(module, index) in modules" :key="index" :value="module.id">@{{ module.course.title + ' &raquo; ' + module.title }}</option>
                         </select>
                     </div>
 
@@ -100,7 +100,7 @@
                                 <h4><span style="white-space: normal !important" class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h4>
                                 <p class="card-text" v-html="cardinfo.skills_gained"></p>
                                 <a class="mx-2 primary-backgroundColo btn btn-outline-secondary btn-rounded app-bt" :href="`/tenant/lessons/${cardinfo.id}`" role="button">Edit</a>
-                                <a class="btn app-btn btn-outline-danger" href="/#" role="button">Delete</a>
+                                <a class="btn app-btn btn-outline-danger" href="#" role="button">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -164,8 +164,8 @@
             },
 
             mounted: function() {
-                console.log(this.modules);
-                console.log(this.cardinfos);
+                //console.log(this.modules);
+                //console.log(this.cardinfos);
             }
         });
     </script>
