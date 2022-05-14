@@ -37,34 +37,34 @@
                                 </p>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for=""> Upload Type </label>
+                                <label for=""> Asset Type </label>
                                 <select 
                                     v-validate="'required'" 
-                                    :class="{'input': true, 'border border-danger': errors.has('Upload Type') }" 
+                                    :class="{'input': true, 'border border-danger': errors.has('UploadType') }" 
                                     class="form-control"
-                                    name="Upload Type"
+                                    name="Asset Type"
                                     @change="toggleAssetUpload" 
                                     v-model="form.asset_type">
-                                    {{-- <option :selected="true">Select Upload Type</option> --}}
+                                    {{-- <option :selected="true">Select Asset Type</option> --}}
                                     <option value="video">Video</option>
                                     <option value="image">Image</option>
                                 </select>
-                                <i v-show="errors.has('Upload Type')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Upload Type')"
-                                    class="help text-danger">@{{ errors.first('Upload Type') }}</span>
+                                <i v-show="errors.has('Asset Type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Asset Type')"
+                                    class="help text-danger">@{{ errors.first('Asset Type') }}</span>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div v-if="toggleAsset === true" class="form-group col-md-6">
-                                <label for="asset-name">Video Url</label>
+                                <label for="asset-name">Video URL</label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Video Url" class="form-control" v-model="form.asset_url" v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Video Url') }" type="url"
+                                    <input name="Video URL" class="form-control" v-model="form.asset_url" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Video URL') }" type="url"
                                         placeholder="https://video_url">
-                                    <i v-show="errors.has('Video Url')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Video Url')"
-                                        class="help text-danger">@{{ errors . first('Video Url') }}</span>
+                                    <i v-show="errors.has('Video URL')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Video URL')"
+                                        class="help text-danger">@{{ errors . first('Video URL') }}</span>
                                 </p>
                             </div>
                         </div>
@@ -150,8 +150,10 @@
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
+                            //this.form.asset_url = this.toggleAsset !== 'image' ?  this.form.asset_url : this.asset_url;
                             this.uploadImage()
                             .then(() => {
+                                //console.log(this.form)
                                 axios.post('create', this.transformToFormData(this.form)).then(res => {
                                 ev.target.reset()
                                 loader.hide();
@@ -177,7 +179,7 @@
                 async uploadImage() {
                     if (typeof this.form.asset_url.name !== 'undefined') { 
                         const formData = new FormData();
-                        formData.append("file", this.form.asset_url, this.form.asset_url.name);
+                        formData.append("asset", this.form.asset_url, this.form.asset_url.name);
                         await axios.post('/tenant/assets/custom/upload', formData)
                         .then( res => {
                             this.form.asset_url = res.data.file_url

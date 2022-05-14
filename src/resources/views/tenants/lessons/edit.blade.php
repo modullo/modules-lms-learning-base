@@ -7,7 +7,7 @@
 
 @section('head_css')
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";
@@ -27,28 +27,28 @@
     <div id="app">
         <breadcrumbs :items="[
                     {url: '/tenant/dashboard', title: 'Home', active: false},
-                    {url: '/tenant/lessons', title: 'Lesson', active: false},
+                    {url: '/tenant/lessons', title: 'Lessons', active: false},
                     {url: '', title: 'Edit Lesson', active: true},
                 ]">
         </breadcrumbs>
         <div class="container">
-            <h3 class="mt-5">Edit Track</h3>
+            <h3 class="mt-5">Edit Lesson</h3>
             <div class="mx-auto mt-5 card col">
                 <div class="card-body">
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
                                 <label for="lesson-type">
-                                    Track Type *
+                                    Lesson Type *
                                 </label>
-                                <select name="Track Type" v-model="form.lesson_type" v-validate="'required'"
-                                :class="{'input': true, 'border border-danger': errors.has('Track Type') }" class="form-control" id="">
+                                <select name="Lesson Type" v-model="form.lesson_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('Lesson Type') }" class="form-control" id="">
                                     <option value="video">Video</option>
                                     <option value="quiz">Quiz</option>
                                 </select>
-                                <i v-show="errors.has('Track Type')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Track Type')"
-                                    class="help text-danger">@{{ errors . first('Track Type') }}</span>
+                                <i v-show="errors.has('Lesson Type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Lesson Type')"
+                                    class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
                                 <label for="tenant"> Resource *</label>
@@ -65,14 +65,14 @@
                             </div>
                             
                             <div class="form-group col-lg-6">
-                                <label for="module No">Track Number *</label>
+                                <label for="module No">Lesson Number *</label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Track Number" class="form-control" v-model="form.lesson_number" v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Track Number') }" type="number"
+                                    <input name="Lesson Number" class="form-control" v-model="form.lesson_number" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Lesson Number') }" type="number"
                                         placeholder="1">
-                                    <i v-show="errors.has('Track Number')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Track Number')"
-                                        class="help text-danger">@{{ errors . first('Track Number') }}</span>
+                                    <i v-show="errors.has('Lesson Number')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Lesson Number')"
+                                        class="help text-danger">@{{ errors . first('Lesson Number') }}</span>
                                 </p>
                             </div>
 
@@ -101,7 +101,7 @@
                         </div>
                         <div class="mb-5 form-row">
                             <div class="form-group col-lg-6">
-                                <label for="description"> Track description * </label>
+                                <label for="description"> Lesson description * </label>
                                 <editor style="height: 100px" v-validate="'required'"
                                 name="Description"
                                 :class="{'input': true, 'border border-danger': errors.has('Description') }" v-model="form.description" theme="snow"></editor>
@@ -113,7 +113,7 @@
                         <div class="form-row">
                             <div class="mt-3 form-group col-lg-6">
                                 <label for="image">
-                                  Track  Image *
+                                  Lesson Cover Image *
                                 </label>
                                 <input type="file"
                                 v-on:change="accessImage"
@@ -147,7 +147,7 @@
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
                             <span class="muted text-danger font-weight-bold"> Fields with * are required </span>
                             <button type="submit" class="btn btn-outline-secondary">
-                                Edit Track
+                                Edit Lesson
                             </button>
                         </div>
                     </form>
@@ -244,7 +244,7 @@
                     if (this.form.lesson_image) {           
                         if (typeof this.form.lesson_image.name !== 'undefined') { 
                             const formData = new FormData();
-                            formData.append("file", this.form.lesson_image, this.form.lesson_image.name);
+                            formData.append("asset", this.form.lesson_image, this.form.lesson_image.name);
                             await axios.post('/tenant/assets/custom/upload', formData)
                             .then( res => {
                                 this.form.lesson_image = res.data.file_url

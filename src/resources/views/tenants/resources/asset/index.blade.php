@@ -7,7 +7,7 @@
 
 @section('head_css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
@@ -61,7 +61,7 @@
                             <img style="height: 180px; width:340px; object-fit: cover" :src="cardinfo.asset_url" alt="">
                             <div class="card-body">
                                 <h5 class="card-title">@{{ cardinfo.asset_name }}</h5>
-                                <p>Resources Type : Image</p>
+                                <p>Asset Type : Image</p>
                                 <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
                                 <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>
@@ -73,7 +73,7 @@
                                     {{-- <i class="fa fa-play" aria-hidden="true"></i> --}}
                                 </div>
                                 <h5 class="mt-2 card-title">@{{ cardinfo.asset_name }}</h5>
-                                <p>Resources Type : Video</p>
+                                <p>Asset Type : Video</p>
                                 <a :href="`/tenant/assets/${cardinfo.id}`" class="btn btn-outline-secondary" role="button">Edit</a>
                                 <a class="ml-5 btn btn-outline-danger" href="/#" role="button">Delete</a>
                             </div>

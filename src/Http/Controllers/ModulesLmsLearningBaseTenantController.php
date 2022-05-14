@@ -502,6 +502,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $resource = $sdk->createAssetService();
         $resource = $resource
             ->addBodyParam('asset_name',$request->asset_name)
+            ->addBodyParam('asset_type',$request->asset_type)
             ->addBodyParam('asset_url',$request->asset_url);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {

@@ -46,7 +46,7 @@
         <breadcrumbs 
             :items="[
                 {url: '/tenant/dashboard', title: 'Home', active: false},
-                {url: '', title: 'Tracks', active: true},
+                {url: '', title: 'Lessons', active: true},
             ]">
         </breadcrumbs>
         <div class="container mt-5">
@@ -54,21 +54,17 @@
 
             <section class="container program-contain">
                 <h2 class="mb-5">
-
-                    Tracks
+                    Lessons
                 </h2>
 
                 <div class="flex-row add-course-contain d-flex">
                     <div class="col-sm-12 col-md-6">
                         <a style="background-color: #343a40; color:white" class="mt-4 mb-4 btn add-course" href="/tenant/lessons/create">
-
-                            <i class="fa fa-plus"> </i>
-    
-                            Add Track
+                            <i class="fa fa-plus"> </i> Add Lesson
                         </a>
                     </div>
                     <div class="ml-auto col-md-6">
-                        <label for="tenant"> Filter Tracks By Module </label>
+                        <label for="tenant"> Filter Lessons By Module </label>
                         <select @change="filterByModule" v-model="currentModule" class="form-control" name="" id="">
                             <option :selected="true">All Lessons</option>
                             <option v-for="(module, index) in modules" :key="index" :value="module.id">@{{module.title}}</option>
@@ -87,7 +83,7 @@
                             v-model="search"
                             type="text"
                             class="form-control"
-                            placeholder="Search Tracks"
+                            placeholder="Search Lessons"
                     />
                 </div>
 
@@ -161,10 +157,15 @@
             computed:{
                 searchLessons(){
                     if (this.search) {
-                        return this.cardinfos.filter(card => card.title.toLowerCase().match(this.search.toLowerCase()))
+                        return this.cardinfos.filter( card => card.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
                     }
                     return this.cardinfos
                 }
+            },
+
+            mounted: function() {
+                console.log(this.modules);
+                console.log(this.cardinfos);
             }
         });
     </script>

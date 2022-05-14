@@ -72,7 +72,7 @@ return [
                 'dashboard' => 'all',
                 'title' => 'Lessons',
                 'route' => '',
-                'link' => 'tenant/lessons',
+                'link' => '/tenant/lessons',
                 'clickable' => true,
                 'navbar' => true,
                 'order' => 0,
