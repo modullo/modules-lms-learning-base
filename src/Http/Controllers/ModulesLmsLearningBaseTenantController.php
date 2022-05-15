@@ -153,10 +153,11 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
         ->addBodyParam('resource_id',$request->resource_id);
+        
         $response = $resource->send('post',['create', $id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''], $response['errors'][0]['status']);
             return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }

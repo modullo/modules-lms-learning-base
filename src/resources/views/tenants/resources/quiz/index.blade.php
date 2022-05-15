@@ -6,7 +6,7 @@
 @endsection
 
 @section('head_css')
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";
@@ -53,12 +53,11 @@
     </breadcrumbs>
         <div class="container mt-5">
             <section class="container program-contain">
-                <h2 class="mb-5">Quiz</h2>
+                <h2 class="mb-5">Quizzes & Case Studies</h2>
 
                 <div class="add-course-contain">
                     <a class="btn" style="background-color: #343a40; color:white" href="/tenant/quiz/create">
                         <i class="fa fa-plus"> </i>
-
                         Add Quiz
                     </a>
                 </div>
@@ -77,7 +76,7 @@
                     />
                 </div>
                 <div class="row">
-                    <div class="mb-5 col-lg-4 col-md-6" v-for="(cardinfo, index) in cardinfos" :key="index">
+                    <div class="mb-5 col-lg-4 col-md-6" v-for="(cardinfo, index) in searchQuiz" :key="index">
                         <div class="card-course">
                             <div class="card-body">
                                 <h2><span class="badge badge-pill primary-backgroundColor">@{{ cardinfo . title }}</span></h2>
@@ -145,7 +144,7 @@
             methods: {},
             computed:{
                 searchQuiz(){
-                    return this.cardinfos.filter(card => card.title.match(this.search))
+                    return this.cardinfos.filter( card => card.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
 
                 }
             }

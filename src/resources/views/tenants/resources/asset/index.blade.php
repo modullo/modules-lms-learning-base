@@ -105,7 +105,7 @@
 
             computed:{
                 searchAssets(){
-                    return this.cardinfos.filter(card => card.asset_name.match(this.search))
+                    return this.cardinfos.filter( card => card.asset_name.toLowerCase().indexOf(this.search.toLowerCase()) > -1 )
 
                 }
             }

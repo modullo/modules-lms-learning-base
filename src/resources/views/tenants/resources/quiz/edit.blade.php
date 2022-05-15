@@ -4,7 +4,7 @@
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-    {{-- <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}"> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
     <style>
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";

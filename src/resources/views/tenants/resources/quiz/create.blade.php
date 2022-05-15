@@ -3,7 +3,7 @@
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item+.breadcrumb-item::before {
             content: ">>";
@@ -28,31 +28,31 @@
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
-                                <label for=""> Quiz Name </label>
+                                <label for=""> Quiz Title </label>
                                 <p class="control has-icon has-icon-right">
-                                    <input name="Name" class="form-control" v-model="form.quiz_title" v-validate="'required'"
-                                        :class="{'input': true, 'border border-danger': errors.has('Name') }" type="text"
-                                        placeholder="Enter Quiz Name">
-                                    <i v-show="errors.has('Name')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Name')"
-                                        class="help text-danger">@{{ errors . first('Name') }}</span>
+                                    <input name="Quiz Title" class="form-control" v-model="form.quiz_title" v-validate="'required'"
+                                        :class="{'input': true, 'border border-danger': errors.has('Quiz Title') }" type="text"
+                                        placeholder="Enter Quiz Title">
+                                    <i v-show="errors.has('Quiz Title')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('Quiz Title')"
+                                        class="help text-danger">@{{ errors . first('Quiz Title') }}</span>
                                 </p>
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for=""> Quiz Timer </label>
+                                <label for=""> Quiz Time (in minutes) </label>
                                 <input v-model="form.quiz_timer" type="number" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="Time of Quiz" />
+                                    aria-describedby="helpId" placeholder="Quiz Time (in minutes)" />
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for=""> Total Quiz Mark </label>
+                                <label for=""> Quiz Score (Total) </label>
                                 <input type="number" v-model="form.total_quiz_mark" class="form-control" name="" id=""
                                     aria-describedby="helpId" placeholder="Reward points" />
                             </div>
 
                             <div class="form-group col-lg-12">
-                                <label> Disable Quiz on submit : </label>
+                                <label> Disable Quiz on Submit : </label>
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="customRadioInline1" v-model="form.disable_on_submit" value="true" name="customRadioInline1" class="custom-control-input">
                                     <label class="custom-control-label" for="customRadioInline1">True</label>
@@ -80,11 +80,11 @@
                         </div>
 
                         {{-- Questions Sections --}}
-                        <div v-for="(question, index) in form.questions" :key="index" class="mb-3">
+                        <div v-for="(question, index) in form.questions" :key="index" class="mb-3" style="border: #000 1px solid; border-radius: 15px; padding: 20px">
                             <div class="mb-5 form-row">
                                 <div class="mb-5 form-group col-lg-6">
-                                    <h2>Question</h2>
-                                    <editor style="height: 100px" v-model="question.question_text" theme="snow"></editor>
+                                    <h2>Question @{{ index + 1 }}</h2>
+                                    <editor style="height: 75px" v-model="question.question_text" theme="snow"></editor>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -126,8 +126,8 @@
                                 <a href="#" @click.prevent="addQuiz" class="btn btn-outline-secondary">
                                     Add Question
                                 </a>
-                                <a href="#" @click.prevent="removeQuiz(index)" class="ml-5 btn btn-outline-danger">
-                                    Remove Question
+                                <a v-show="form.questions.length > 1 && index > 0" href="#" @click.prevent="removeQuiz(index)" class="ml-5 btn btn-outline-danger">
+                                    Remove Question @{{ index + 1 }}
                                 </a>
                             </div>
                             <hr>
@@ -186,6 +186,7 @@
             el: "#app",
             data: {
                 index: 1,
+                qindex: 1,
                 form: {
                     quiz_title: '',
                     total_quiz_mark: '',
@@ -203,6 +204,10 @@
                         },
                     ],
                 }
+            },
+            mounted: function() {
+                console.log(this.form.questions.length)
+
             },
             methods: {
                 removeQuizOptionForUpdate (index, uindex) {
@@ -252,10 +257,11 @@
                 },
                 addQuiz() {
                     this.index ++
+                    this.qindex ++
                     this.form.questions.push(
                         {
                             question_text: '',
-                            question_number:  this.index,
+                            question_number:  this.qindex,
                             score: '',
                             answer: '',
                             question_type: '',
@@ -266,6 +272,7 @@
                 },
                 removeQuiz(quiz_id) {
                     this.index --
+                    this.qindex --
                     this.form.questions.splice(quiz_id, 1)
                 },
             },
