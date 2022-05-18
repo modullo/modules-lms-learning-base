@@ -15,6 +15,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-settings');
 
+
             // Routes for Courses
             Route::group(['prefix' => 'courses'],function() {
                 Route::get('', 'ModulesLmsLearningBaseController@courses')->name('learner-courses');
@@ -24,6 +25,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::post('completeCourse/{id}', 'ModulesLmsLearningBaseController@completeLesson');
                 Route::get('fetchQuiz/{id}', 'ModulesLmsLearningBaseController@fetchLessonQuiz');
                 Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
+                Route::get('{id}/lesson/{slug}', 'ModulesLmsLearningBaseController@showLesson');
             });
 
             // Routes for Program

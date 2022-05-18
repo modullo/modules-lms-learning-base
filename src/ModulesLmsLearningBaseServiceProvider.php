@@ -16,12 +16,16 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         ], 'modullo-modules');
 
         $this->publishes([
-            __DIR__.'/resources/js/app/' => public_path('/'),
+            __DIR__.'/resources/learning' => public_path('vendor/learning'),
         ], 'modullo-modules');
 
         $this->publishes([
-            __DIR__.'/resources/js/' => resource_path('js/vendor/modules-lms-learning-base')
-        ],'modullo-modules');
+            __DIR__.'/resources/js/app/' => public_path('/'),
+        ], 'modullo-modules');
+
+        // $this->publishes([
+        //     __DIR__.'/resources/js/' => resource_path('js/vendor/modules-lms-learning-base')
+        // ],'modullo-modules');
 
         $this->publishes([
             __DIR__.'/resources/js' => public_path('vendor/modules-lms-learning-base'),

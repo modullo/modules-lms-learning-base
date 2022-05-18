@@ -6,7 +6,7 @@
 @endsection
 
 @section('head_css')
-    <link rel="stylesheet" href="{{ asset('LearningBase/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         .breadcrumb-item + .breadcrumb-item::before {
             content: ">>";

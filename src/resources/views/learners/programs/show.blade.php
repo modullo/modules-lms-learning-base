@@ -54,7 +54,7 @@
                             <p class="card-text" v-html="cardinfo.description"></p>
 
                             <a class="btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id" role="button">View Details</a>
-                            <a class="mx-2 btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id+'/assessment/'+cardinfo.title" role="button">Start Course</a>
+                            <a class="mx-2 btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id+'/lesson/'+cardinfo.title" role="button">Start Course</a>
                         </div>
                     </div>
                 </div>

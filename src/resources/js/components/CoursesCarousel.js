@@ -8,7 +8,7 @@ Vue.component('courses-carousel', {
             <a href="#" class="search_icon"><i class="fa fa-search"></i></a>
             </div>
         </div>
-        <h2 class="pl-4 font-weight-bold" style="margin-top: 2em">Let's start learning, MusahMusah</h2>
+        <h2 class="pl-4 font-weight-bold" style="margin-top: 2em">Let's get learning, MusahMusah</h2>
         <div v-for="(item, index) in items">
             <h3 class="p-3 pl-4 font-weight-bold">Top courses in <a href="" style="color: blue">{{ item.category }} </a></h3>
             <div class="row visible-courses">
@@ -36,7 +36,7 @@ Vue.component('courses-carousel', {
                                             </div>
                                             <div class="mt-3 button-style">
                                                 <a :href="'/learner/courses/'+item.title" style="background-color: #495057; color: white;" class="float-left btn-style btn btn-s">View</a>
-                                                <a :href="'/learner/courses/'+item.title+'/assessment/'+item.author" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
+                                                <a :href="'/learner/courses/'+item.title+'/lesson/'+item.author" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
                                             </div>
                                         </div>
                                     </div>

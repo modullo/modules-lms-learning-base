@@ -116,6 +116,20 @@ class ModulesLmsLearningBaseController extends Controller
     }
 
     // Lessons
+
+    public function showLesson(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createCourseService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['course'];
+            return view('modules-lms-learning-base::learners.courses.single', compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::learners.courses.single', compact('data'));
+    }
+
     public function completeLesson(string $id, Sdk $sdk, Request $request) 
     {
         $sdkObject = $sdk->createLearnerLessonService();

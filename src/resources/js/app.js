@@ -17,7 +17,7 @@ Vue.component('courses-carousel', {
                         <span class="ml-3">{{course.title}}</span>
                         <span clas="d-flex justify-content-between">
                         <a :href="'/learner/courses/'+course.id" style="background-color: #495057; color: white;" class="float-right btn-style btn ml-3">View</a>
-                        <a :href="'/learner/courses/'+course.id+'/assessment/'+course.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
+                        <a :href="'/learner/courses/'+course.id+'/lesson/'+course.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
                         </span>
                     </div>
             </div>
@@ -38,6 +38,7 @@ Vue.component('courses-carousel', {
                                         <div class="card-body">
                                         <h6 style="font-size: .9em; font-weight: bold;">{{lesson.title}}</h6>
                                         <small v-html="lesson.description"></small>
+                                        <!--
                                         <div><span class="checked rating-value">{{lesson.star}} </span><span class="ratings fa fa-star checked"></span>
                                             <span class="ratings fa fa-star checked"></span>
                                             <span class="ratings fa fa-star checked"></span>
@@ -49,9 +50,10 @@ Vue.component('courses-carousel', {
                                             <div class="mt-1 rated">
                                                 <span>Highest Rated</span>
                                             </div>
+                                            -->
                                             <div class="mt-3 button-style">
                                                 <a :href="'/learner/courses/'+lesson.id" style="background-color: #495057; color: white;" class="float-left btn-style btn btn-s">View</a>
-                                                <a :href="'/learner/courses/'+lesson.id+'/assessment/'+lesson.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
+                                                <a :href="'/learner/courses/'+lesson.id+'/lesson/'+lesson.title" style="background-color: #495057; color: white;" class="float-right btn-style btn btn-s">Take Course</a>
                                             </div>
                                         </div>
                                     </div>
@@ -297,7 +299,7 @@ Vue.component('courses-carousel', {
         },
         filterAllCourses(){
             if (this.searchQuery) {
-                return this.allSearchableCourses.filter(card => card.title.toLowerCase().match(this.searchQuery.toLowerCase())).slice(0, 6)
+                return this.allSearchableCourses.filter(card => card.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) > -1).slice(0, 6)
                 // return this.allSearchableCourses.map((course) => {
                 //     return course.courses.filter(card => card.title.toLowerCase().match(this.searchQuery.toLowerCase()))
                 // })
