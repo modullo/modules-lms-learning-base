@@ -20,7 +20,7 @@
         <breadcrumbs 
             :items="[
                 {url: '/learner/dashboard', title: 'Home', active: false},
-                {url: '', title: 'Program', active: true},
+                {url: '', title: 'Programs', active: true},
             ]">
         </breadcrumbs>
         <div class="container" style="padding-top: 60px">
@@ -36,11 +36,11 @@
                     type="text"
                     v-model="search"
                     class="form-control"
-                    placeholder="Search Major"
+                    placeholder="Search Programs"
                 />
             </div>
 
-            <h1 class="mb-4">Majors</h1>
+            <h1 class="mb-4">Available Programs</h1>
 
             <div class="row">
                 <div
@@ -61,7 +61,7 @@
                                     @{{ cardinfo.title }}
                                 </a>
                             </h5>
-                            <p class="card-text">@{{ cardinfo.description }} .</p>
+                            <p class="card-text">@{{ cardinfo.description }}</p>
                         </div>
                     </div>
                 </div>

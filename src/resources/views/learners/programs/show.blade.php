@@ -18,26 +18,20 @@
 
                 <h4> @{{programData.description}}</h4>
 
-                <small class="rating">
-                    @{{rating}} @{{numberOfStudentEnrolled}} students </small
-                ><br />
-
+                <!-- <small class="rating">
+                    @{{rating}} @{{numberOfStudentEnrolled}} students
+                </small>
+                <br />
                 <span class="last__updated">
-            <span>
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
-                Last updated 3/2021 </span>
-
-            <span class="language">
-                <i class="fa fa-globe"></i>
-                English </span>
-
-            <span> <i class="fa fa-cc" aria-hidden="true"></i> English [Auto] </span>
-          </span>
+                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> Last updated 3/2021 </span>
+                    <span class="language"><i class="fa fa-globe"></i> English </span>
+                    <span> <i class="fa fa-cc" aria-hidden="true"></i> English [Auto] </span>
+                </span> -->
             </div>
         </div>
 
         <section class="container program-contain">
-            <h2 class="mb-5">Courses on @{{ programData.title }}</h2>
+            <h2 class="mb-5"><strong>Courses</strong> on @{{ programData.title }}</h2>
             <div class="row">
                 <div
                     class="mb-5 col-lg-4 col-md-4 col-sm-6 col-xs-6"
@@ -59,24 +53,14 @@
                             </h6>
                             <p class="card-text" v-html="cardinfo.description"></p>
 
-                            <a class="btn btn-outline-secondary" 
-                                :href="'/learner/courses/'+cardinfo.id" 
-                                role="button"
-                                >View Details</a
-                                >
-
-                            <a
-                                    class="mx-2 btn btn-outline-secondary"
-                                    :href="'/learner/courses/'+cardinfo.id+'/assessment/'+cardinfo.title"
-                                    role="button"
-                            >Start course</a
-                            >
+                            <a class="btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id" role="button">View Details</a>
+                            <a class="mx-2 btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id+'/assessment/'+cardinfo.title" role="button">Start Course</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </section>
+        </section> 
     </div>
 @endsection
 

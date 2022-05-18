@@ -21,6 +21,7 @@
 
                         <h4>@{{ToText(courseDetails.description)}}</h4>
 
+                        {{--
                         <p>Author by @{{ author }}</p>
                         <small class="rating">
                             <i class="fa fa-star star"></i>
@@ -45,10 +46,12 @@
                                 <i class="fa fa-cc" aria-hidden="true"></i> English [Auto]
                             </span>
                         </span>
+                        --}}
                     </div>
+                    
 
                     <div class="course-video col-lg-4">
-                        <video class="course-video" src="/What A Beautiful Name - Hillsong Worship.mp4" controls></video>
+                        <video class="course-video" src="" controls></video>
                     </div>
                 </div>
             </div>
@@ -127,9 +130,9 @@
                 <div class="mt-5 mb-5 requirement">
                     <h2>Requirements</h2>
 
-                    <ul class="requirement-list">
+                    <!-- <ul class="requirement-list">
                         <li>@{{ requirments }}</li>
-                    </ul>
+                    </ul> -->
                 </div>
 
                 <h2>Description</h2>
@@ -167,6 +170,10 @@
 
                 testimonial: "The instructor has perfect explaining skills. This course helped to clarify some things and prepare me (hopefully) to start playing around with postman. I will also be looking forward to see the Postman course from Valentin.",
                 requirments: "The possibility of installing new tools on your computer.",
+            },
+
+            mounted: function() {
+                //console.log(this.courseDetails.modules)
             },
 
             methods: {

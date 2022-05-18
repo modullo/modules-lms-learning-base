@@ -7,12 +7,15 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
 
     Route::middleware('auth')->group(function () {
+
+
+        // Routes for LEARNERS
         Route::group(['prefix' => 'learner'],function(){
 
-            //Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
+            Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-settings');
 
-//        Courses
+            // Routes for Courses
             Route::group(['prefix' => 'courses'],function() {
                 Route::get('', 'ModulesLmsLearningBaseController@courses')->name('learner-courses');
                 Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
@@ -23,7 +26,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
             });
 
-            //        Program
+            // Routes for Program
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('/', 'ModulesLmsLearningBaseController@programs');
                 Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
@@ -32,7 +35,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
         });
 
-        Route::group(['prefix' => 'tenant'],function(){
+        // Routes for TENANT (ADMINS)
+        Route::group(['prefix' => 'tenant'],function() {
 
             Route::get('dashboard','ModulesLmsLearningBaseTenantController@index')->name('tenant-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseTenantController@settings')->name('profile-settings');
@@ -47,8 +51,6 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editCourse');
                 Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateCourse');  
             });
-
-
 
 
             Route::group(['prefix' => 'grades'],function() {

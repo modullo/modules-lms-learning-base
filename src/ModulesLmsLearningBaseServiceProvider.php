@@ -11,9 +11,9 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         $this->loadViewsFrom(__DIR__.'/resources/views', 'modules-lms-learning-base');
 
-        // $this->publishes([
-        //     __DIR__.'/resources/carousel' => public_path('LearningBase'),
-        // ], 'modullo-modules');
+        $this->publishes([
+            __DIR__.'/resources/owl-carousel' => public_path('owl-carousel'),
+        ], 'modullo-modules');
 
         $this->publishes([
             __DIR__.'/resources/js/app/' => public_path('/'),
@@ -28,7 +28,7 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         ], 'modullo-modules');
 
         $this->publishes([
-            __DIR__.'/config/navigation-menu.php' => config_path('modules-lms-learning-base.php')
+            __DIR__.'/config/modules-lms-learning-base.php' => config_path('modules-lms-learning-base.php')
         ],'modullo-modules');
     }
 

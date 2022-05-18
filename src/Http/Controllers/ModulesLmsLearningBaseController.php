@@ -17,10 +17,10 @@ class ModulesLmsLearningBaseController extends Controller
         $this->sdk = $sdk;
     }
     
-    // public function index()
-    // {
-    //     return view('modules-lms-learning-base::learners.base.dashboard');
-    // }
+    public function index()
+    {
+        return view('modules-lms-learning-base::learners.base.dashboard');
+    }
 
     public function settings()
     {
@@ -32,7 +32,8 @@ class ModulesLmsLearningBaseController extends Controller
         $query = $this->sdk->createLearnerCourseService();
         $query = $query->addQueryArgument('limit',100);
         $path = [''];
-        return $query->send('get', $path);
+        $response = $query->send('get', $path);
+        return $response;
     }
 
     public function allCourses(Sdk $sdk)
