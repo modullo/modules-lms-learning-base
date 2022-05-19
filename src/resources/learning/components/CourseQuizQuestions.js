@@ -1,13 +1,13 @@
 Vue.component('course-quiz-questions', {
     props: {
         quiz: {
-            type: Array,
+            type: Object,
         },
         quizData: {
-            type: Array,
+            type: Object,
         },
         courseData: {
-            type: Array,
+            type: Object,
         }
         // @shown="getAllQuestions(quiz.lesson_resource.id)"
     },

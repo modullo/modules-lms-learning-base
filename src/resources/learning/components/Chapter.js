@@ -5,7 +5,7 @@ Vue.component("chapter", {
         required: true,
       },
       courseData: {
-        type: Array,
+        type: Object,
         required: true,
       },
       currentPlayingVideo: {

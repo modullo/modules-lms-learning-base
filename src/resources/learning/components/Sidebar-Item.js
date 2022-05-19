@@ -76,63 +76,7 @@ Vue.component('sidebar-item', {
                       title: "Quiz Section",
                     },
                 ]
-            },
-
-            {
-                id: 2,
-                name: "Theoratical Overview",
-                count: 3,
-                duration: 10,
-                videos: [
-                    {
-                      index: 0,
-                      title: "New Course Clip",
-                      duration: '4 hr',
-                      url: "https://www.youtube.com/embed/nzV1NmhC7ik"
-                    },
-                    {
-                      index: 1,
-                      title: "Aknowledgement",
-                      duration: '6 min',
-                      url: "https://www.youtube.com/embed/4m-l-QpqxOo"
-                    },
-                    {
-                      index: 2,
-                      title: "Quiz Section",
-                    },
-                ]
-            },
-            
-            {
-                id: 3,
-                name: "Implementation",
-                count: 4,
-                duration: 10,
-                videos: [
-                    {
-                      index: 0,
-                      title: "Abstraction Logic",
-                      duration: '30 sec',
-                      url: "https://www.youtube.com/embed/viHILXVY_eU"
-                    },
-                    {
-                      index: 1,
-                      title: "Data Status",
-                      duration: '17 min',
-                      url: "https://www.youtube.com/embed/4m-l-QpqxOo"
-                    },
-                    {
-                      index: 2,
-                      title: "Logic Control",
-                      duration: '18 min',
-                      url: "https://www.youtube.com/embed/zPuVjhBGPFE"
-                    },
-                    {
-                      index: 3,
-                      title: "Quiz Section",
-                    },
-                ]
-            },
+            }
           ],
         },
       }

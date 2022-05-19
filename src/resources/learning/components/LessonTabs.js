@@ -18,10 +18,7 @@ Vue.component("lesson-tabs", {
            <b-row>
               <b-col lg="8" offset-lg="2">
                   <h3 class="text-left">About This Lesson</h3>
-                  <div style="font-size:1.1em" class="overview-text" v-html="tabsData.description">
-                  Become a Fullstack Laravel Engineer by 
-                  developing a Dribbble Clone, Provisioning a server and Deploying with SSL
-                  </div>
+                  <div style="font-size:1.1em" class="overview-text" v-html="tabsData.description"></div>
                   <hr>
                   
               </b-col>
@@ -56,7 +53,7 @@ Vue.component("lesson-tabs", {
       `,
     data() {
       return {
-        tabsData: null,
+        tabsData: {},
         listener: {},
         note: '',
         view: "display:none",

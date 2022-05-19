@@ -25,9 +25,12 @@ Vue.component('open-course', {
         <div v-else class="video-section pl-1" style="position:relative">
             <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
             <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
-            <iframe class="w-100" height="558" :src="currentVideo.url" title="YouTube video player" 
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            
+            <iframe v-if="currentVideoType=='youtube'" class="w-100" height="558" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" title="Media Player" 
+            frameborder="0" allow="accelerometer; autoplay 'none'; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen></iframe>
+
+            <video v-else-if="currentVideoType=='mp4-normal'" class="video-cover" height="558" controlsList="nodownload" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" controls></video>
             <br>
         </div>
     </div>
@@ -60,73 +63,35 @@ Vue.component('open-course', {
                               title: "Quiz Section",
                             },
                         ]
-                    },
-      
-                    {
-                        id: 2,
-                        name: "Theoratical Overview",
-                        count: 3,
-                        duration: 10,
-                        videos: [
-                            {
-                              index: 0,
-                              title: "New Course Clip",
-                              duration: '4 hr',
-                              url: "https://www.youtube.com/embed/nzV1NmhC7ik"
-                            },
-                            {
-                              index: 1,
-                              title: "Aknowledgement",
-                              duration: '6 min',
-                              url: "https://www.youtube.com/embed/4m-l-QpqxOo"
-                            },
-                            {
-                              index: 2,
-                              title: "Quiz Section",
-                            },
-                        ]
-                    },
-                    
-                    {
-                        id: 3,
-                        name: "Implementation",
-                        count: 4,
-                        duration: 10,
-                        videos: [
-                            {
-                              index: 0,
-                              title: "Abstraction Logic",
-                              duration: '30 sec',
-                              url: "https://www.youtube.com/embed/viHILXVY_eU"
-                            },
-                            {
-                              index: 1,
-                              title: "Data Status",
-                              duration: '17 min',
-                              url: "https://www.youtube.com/embed/4m-l-QpqxOo"
-                            },
-                            {
-                              index: 2,
-                              title: "Logic Control",
-                              duration: '18 min',
-                              url: "https://www.youtube.com/embed/zPuVjhBGPFE"
-                            },
-                            {
-                              index: 3,
-                              title: "Quiz Section",
-                            },
-                        ]
-                    },
+                    }
                 ],
             },
             count: '',
             currentVideo: '',
+            currentVideoURL: '',
             videoLength: '',
             testView: '',
             quizData: [],
         }
     },
     methods: {
+        reformatAssetURL(asset_url) {
+            let url = asset_url.toString();
+            if (url.indexOf("youtube") > -1) {
+                return this.reformatVideoYoutubeURL(url);
+            }
+
+
+            return url;
+        },
+        reformatVideoYoutubeURL(video_url) {
+            let video = video_url.toString();
+            if (video.indexOf("watch?v=") > -1) {
+                let video_split = video.split("watch?v=");
+                video = "https://www.youtube.com/embed/" + video_split[1];
+            }
+            return video
+        },
         emitCompletedCourse(payload) {
             this.$emit('send-new-updated-content', payload)
         },
@@ -211,9 +176,22 @@ Vue.component('open-course', {
         // this.getAllVideo()
         this.filterAllVideo()
         this.videoLength = Object.keys(this.filterAllVideo()).length
+        this.currentVideoURL = this.currentVideo.lesson_resource.asset_url.toString();
     },
     mounted() {
         this.callFirstCourseContent()
+    },
+    computed: {
+        currentVideoType() {
+            let url = this.currentVideoURL;
+            if (url.indexOf("youtube") > -1) {
+                return "youtube";
+            }
+            // if (url.indexOf("mp4") > -1) {
+            //     return "mp4-normal";
+            // }
+            return "youtube";
+        }
     },
     // width="1030" height="360" <video class="video-cover" src="../assets/video/video1.mp4" controls></video>
 })

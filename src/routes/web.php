@@ -10,14 +10,14 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
 
         // Routes for LEARNERS
-        Route::group(['prefix' => 'learner'],function(){
+        Route::group(['prefix' => 'learner'], function(){
 
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-settings');
 
 
             // Routes for Courses
-            Route::group(['prefix' => 'courses'],function() {
+            Route::group(['prefix' => 'courses'], function() {
                 Route::get('', 'ModulesLmsLearningBaseController@courses')->name('learner-courses');
                 Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
@@ -29,7 +29,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             });
 
             // Routes for Program
-            Route::group(['prefix' => 'programs'],function() {
+            Route::group(['prefix' => 'programs'], function() {
                 Route::get('/', 'ModulesLmsLearningBaseController@programs');
                 Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
