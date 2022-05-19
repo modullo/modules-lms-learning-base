@@ -4,7 +4,6 @@ Vue.component('course-quiz-questions', {
             type: Object,
         },
         quizData: {
-            type: Object,
         },
         courseData: {
             type: Object,
@@ -15,7 +14,7 @@ Vue.component('course-quiz-questions', {
     `
     <div>
     <b-modal h-100 hide-footer hide-header-close no-close-on-backdrop no-close-on-esc :id="'modal-lg-new'+quiz.id" size="xl" :title="quizData.title">
-        <h6>Graded Quiz : 30mins | Total Points 6</h6>
+        <h6>Test Duration : 30mins | Total Points 6</h6>
         <h3 class="mt-3">Questions</h3>
         <b-form @submit.prevent="submitQuiz">
             <ol class="mt-2">
@@ -39,8 +38,8 @@ Vue.component('course-quiz-questions', {
             </ol>
             <hr>
             <div class="float-right">
-            <b-button class="btn btn-outline-danger m-r-2" @click="$bvModal.hide('modal-lg-new'+quiz.id)" v-b-modal.modal-footer-sm>cancel</b-button>
-            <b-button class="btn btn-outline-secondary" type="submit">submit</b-button>
+            <b-button class="btn btn-outline-danger m-r-2" @click="$bvModal.hide('modal-lg-new'+quiz.id)" v-b-modal.modal-footer-sm>Cancel</b-button>
+            <b-button v-if="!quiz.completed || ( quiz.completed && quiz.lesson_resource.retake_on_request)" class="btn btn-outline-secondary" type="submit">Submit Answers</b-button>
             </div>
         </b-form>
     </b-modal>
@@ -73,8 +72,12 @@ Vue.component('course-quiz-questions', {
     },
     watch: {
         quiz: function(newVal, oldVal) {
-            console.log(newVal)
+            //console.log(newVal)
         }
+    },
+    mounted: function() {
+        // console.log(this.courseData) - working well
+        // console.log(this.quiz)
     },
     methods: {
         getAllQuestions(quizId) {
@@ -94,22 +97,27 @@ Vue.component('course-quiz-questions', {
                 })
             }
         },
+        getCurrentQuizLesson() {
+            return this.quiz;
+        },
         submitQuiz() {
             this.quizData.questions.forEach(element => {
                 element.user_answer = this.userAnswers[element.id]
             });
             this.quizData.course_id = this.courseData.id
             let loader = Vue.$loading.show();
+            //console.log(this.quizData);
             axios
             .post(`/learner/courses/submitQuiz/${this.quizData.id}/${this.quiz.id}`, this.quizData)
             .then((res) => {
+                //console.log(res)
                 this.$bvModal.hide('modal-lg-new'+this.quiz.id)
                 this.$emit('send-new-completed-course', res.data.course)
                 loader.hide();
                 return
                 // console.log(this.$refs.quizRef)
             })
-            .catch(() => {
+            .catch((e) => {
                 loader.hide();
             })
         }
