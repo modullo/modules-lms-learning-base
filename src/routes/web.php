@@ -13,7 +13,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
         Route::group(['prefix' => 'learner'], function(){
 
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
-            Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-settings');
+            Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-leaner-settings');
 
 
             // Routes for Courses
