@@ -16,10 +16,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 <link href="{{ asset('Themes/tabler/css/dashboard.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('vendor/learning/assets/css/styles.css') }}">
-    <link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.carousel.css') }}">
-    <link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.carousel.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.theme.default.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.theme.green.css') }}">
+<link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.carousel.css') }}">
+<link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.carousel.min.css') }}">
+<link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.theme.default.min.css') }}">
+<link rel="stylesheet" href="{{ asset('owl-carousel/assets/owl.theme.green.css') }}">
     <style>
         .btn-style {
             border-radius: 12em !important;
@@ -249,7 +249,7 @@
         Vue.component('loading', VueLoading)
     </script>
     <script src="{{ asset('owl-carousel/owl.carousel.js') }}"></script>
-    {{-- <script src="{{ asset('vendor/modules-lms-learning-base/components/CoursesCarousel.js') }}"></script> --}}
+    {{--  <script src="{{ asset('vendor/modules-lms-learning-base/components/CoursesCarousel.js') }}"></script>  --}}
     <script src="{{ asset('vendor/modules-lms-learning-base/app.js') }}"></script>
 @endsection
 
