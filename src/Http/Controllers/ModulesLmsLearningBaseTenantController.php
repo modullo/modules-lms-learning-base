@@ -41,6 +41,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
     }
 
     public function allCourses(Sdk $sdk){
+        
         if ($this->getCourses()->isSuccessful()){
             $response = $this->getCourses()->getData();
             $data = $response['courses'];
