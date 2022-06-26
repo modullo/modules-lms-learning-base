@@ -67,173 +67,191 @@
         </div>
 
         <section class=" program-contain">
-            <div class="col-lg-8">
-                <div class="card what-you-will-learn">
-                    <div class="card-body">
-                        <h2>What you'll learn</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card what-you-will-learn">
+                            <div class="card-body">
+                                <h2>What you'll learn</h2>
 
-                        <div class="row">
-                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-6">
 
-                                <ul class="what-you-will-learn-list">
+                                        <ul class="what-you-will-learn-list">
 
-                                    <li>
+                                            <li>
 
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
+                                            <li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
+                                            <li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
 
 
-                                </ul>
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <ul class="what-you-will-learn-list">
+
+                                            <li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
+                                            <li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
+                                            <li>
+                                                Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="mt-5 course-content">
+
+                            <h2>
+
+                                Course content
+                            </h2>
+                            <div id="accordianId" role="tablist" class="mb-5" aria-multiselectable="true">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="section1HeaderId">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" data-parent="#accordianId" class="sectionheading" href="#section1ContentId" aria-expanded="true" aria-controls="section1ContentId">
+                                                Introduction
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
+                                        <div class="card-body d-flex justify-content-between">
+                                            <h6>
+                                                <i class="fa fa-play" aria-hidden="true"></i>
+                                                Section 1 content
+                                            </h6>
+
+
+                                            <p>
+                                                1:20:00
+                                            </p>
+                                        </div>
+
+                                        <div class="card-body d-flex justify-content-between">
+                                            <h6>
+                                                <i class="fa fa-play" aria-hidden="true"></i>
+                                                Section 1 content
+                                            </h6>
+
+
+                                            <p>
+                                                1:20:00
+                                            </p>
+                                        </div>
+
+
+                                        <div class="card-body d-flex justify-content-between">
+                                            <h6>
+                                                <i class="fa fa-play" aria-hidden="true"></i>
+                                                Section 1 content
+                                            </h6>
+
+
+                                            <p>
+                                                1:20:00
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
                             </div>
 
-                            <div class="col-lg-6">
-                                <ul class="what-you-will-learn-list">
 
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                    <li>
-                                        Build enterprise level React Native apps and deploy to Apple App Store and Google Play Store
-                                    </li>
-                                </ul>
+
+                            <div class="container">
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="mt-5 mb-5 requirement">
+                            <h2>Requirements</h2>
+
+                            <ul class="requirement-list">
+                                <li>@{{requirments}}</li>
+                            </ul>
+                        </div>
+
+                        <h2>Description</h2>
+                        <span v-if="!readMoreActivated">@{{ description.slice(0, 600) }}</span>
+                        <p
+                                class="see-more"
+                                v-if="!readMoreActivated"
+                                @click="activateReadMore"
+                                href="#"
+                        >
+                            See more
+                            <i class="fa fa-angle-down"></i>
+                        </p>
+                        <span v-if="readMoreActivated" v-html="description"></span>
+
+                        <div class="mt-5 mb-5 testimonial-container">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h2 class="card-title">Testimonial</h2>
+
+                                    <div class="user-details">
+                                        <img
+                                                class="img-fluid avatar"
+                                                src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
+                                                alt="avatar"
+                                        />
+
+                                        <div class="user">
+                                            <span class="username">@{{username}}</span>
+
+                                            <span>131 course</span>
+                                            <span>23 reviews</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mx-2 star-rating">
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+                                        <i class="fa fa-star star"></i>
+
+                                        <span>1 month ago</span>
+                                    </div>
+
+                                    <div class="mt-4 testimonial">
+                                        <p>@{{testimonial}}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-
-
-
-                <div class="mt-5 course-content">
-
-                    <h2>
-
-                        Course content
-                    </h2>
-                    <div id="accordianId" role="tablist" class="mb-5" aria-multiselectable="true">
-                        <div class="card">
-                            <div class="card-header" role="tab" id="section1HeaderId">
-                                <h5 class="mb-0">
-                                    <a data-toggle="collapse" data-parent="#accordianId" class="sectionheading" href="#section1ContentId" aria-expanded="true" aria-controls="section1ContentId">
-                                        Introduction
-                                    </a>
-                                </h5>
-                            </div>
-                            <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
+                    <div class="col-lg-4">
+                        <div class="card what-you-will-learn">
+                            <div class="card-body">
+                                <h3>Learners List</h3>
+                                <p class="text-center" v-if="learnersData.length < 1 ">No learner has taken this course</p>
+                                <div v-if="learnersData.length > 0 ">
+                                    <p>This course has @{{learnersData.length}} learner(s) out of which <span v-text="learnersCompleted"></span> have completed it.</p>
+                                    <ol>
+                                        <li v-for="(data,index) in learnersData" :key="index"><a href="#" v-text="fullName(data.learner)"></a></li>
+                                    </ol>
                                 </div>
-
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
-                                </div>
-
-
-                                <div class="card-body d-flex justify-content-between">
-                                    <h6>
-                                        <i class="fa fa-play" aria-hidden="true"></i>
-                                        Section 1 content
-                                    </h6>
-
-
-                                    <p>
-                                        1:20:00
-                                    </p>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="container">
-
-                    </div>
-
-
-                </div>
-
-                <div class="mt-5 mb-5 requirement">
-                    <h2>Requirements</h2>
-
-                    <ul class="requirement-list">
-                        <li>@{{requirments}}</li>
-                    </ul>
-                </div>
-
-                <h2>Description</h2>
-                <span v-if="!readMoreActivated">@{{ description.slice(0, 600) }}</span>
-                <p
-                        class="see-more"
-                        v-if="!readMoreActivated"
-                        @click="activateReadMore"
-                        href="#"
-                >
-                    See more
-                    <i class="fa fa-angle-down"></i>
-                </p>
-                <span v-if="readMoreActivated" v-html="description"></span>
-
-                <div class="mt-5 mb-5 testimonial-container">
-                    <div class="card">
-                        <div class="card-body">
-                            <h2 class="card-title">Testimonial</h2>
-
-                            <div class="user-details">
-                                <img
-                                        class="img-fluid avatar"
-                                        src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
-                                        alt="avatar"
-                                />
-
-                                <div class="user">
-                                    <span class="username">@{{username}}</span>
-
-                                    <span>131 course</span>
-                                    <span>23 reviews</span>
-                                </div>
-                            </div>
-
-                            <div class="mx-2 star-rating">
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-                                <i class="fa fa-star star"></i>
-
-                                <span>1 month ago</span>
-                            </div>
-
-                            <div class="mt-4 testimonial">
-                                <p>@{{testimonial}}</p>
                             </div>
                         </div>
                     </div>
@@ -252,6 +270,8 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         "use strict";
 
@@ -266,7 +286,7 @@
                 rating: "(86900 ratings)",
                 username: "John doe",
                 description:
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libero nihil id veniam illo voluptates non dicta debitis enim nam minim,Nesciunt voluptate sequi odit corporis laboriosam molestiae repellat labore, ducimus ad nulla voluptates reprehenderit quidem impedit. Debitis magnam quis voluptatum obcaecati, voluptates atque deleniti nobis. Illum quos laudantium nemo quo.",
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quo.",
                 readMoreActivated: false,
 
                 testimonial:
@@ -274,12 +294,36 @@
                 requirments:
                     "The possibility of installing new tools on your computer.",
                 courseData: {!! json_encode($data) !!},
+                learnersData: [],
+                learnersCompleted: 0
             },
-
+            created() {
+                this.fetchAllCourseLearners()
+            },
             methods: {
                 activateReadMore() {
                     this.readMoreActivated = true;
                 },
+                fetchAllCourseLearners() {
+                    axios.get(`/tenant/courses/${this.courseData.id}/learners`)
+                        .then( res => {
+                            // console.log(res.data.learnerCourses[0])
+                            let counter = this.learnersCompleted
+                            this.learnersData = res.data.learnerCourses
+                            this.learnersData.forEach(function (val,index) {
+                                if(val.completed === true){
+                                    counter += 1
+                                }
+                            })
+                            this.learnersCompleted = counter
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        })
+                },
+                fullName(learner){
+                    return learner.first_name+' '+learner.last_name
+                }
             },
 
         });

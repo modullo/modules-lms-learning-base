@@ -5,6 +5,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/learning/assets/css/styles.css') }}">
+    <link href="https://cdn.plyr.io/3.7.2/plyr.css" rel="stylesheet" />
 @endsection
 
 @section('head_js')
@@ -106,9 +107,19 @@
                     this.$refs.sideContents.listener = payload
                     this.$refs.mobileResponse.tabsData = payload
                     this.$refs.sideContents.mobileResponse = payload
+                },
+                markLessonComplete() {
+                    alert('Video just ended')
                 }
             }
         })
+    </script>
+    <script src="https://cdn.plyr.io/3.7.2/plyr.js"></script>
+    <script>
+        const player = new Plyr('#player');
+        player.on('ended', (event) => {
+            app.markLessonComplete()
+        });
     </script>
 @endsection
 
