@@ -71,6 +71,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@showProgram');
                 Route::get('edit/{id}', 'ModulesLmsLearningBaseTenantController@editProgram');
+                Route::get('{id}/learners', 'ModulesLmsLearningBaseTenantController@allLearnerPrograms');
             });
 
             Route::group(['prefix' => 'modules'],function() {

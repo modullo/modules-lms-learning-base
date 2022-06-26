@@ -679,6 +679,26 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.grades.show');
     }
 
+    public function allLearnerPrograms($id,Sdk $sdk){
+        $query = $this->sdk->createLearnersProgramsService();
+        $query = $query
+            ->addQueryArgument('limit',100)
+            ->addQueryArgument('program',$id);
+        $path = [''];
+        $response = $query->send('get', $path);
+
+        if ($response->isSuccessful()){
+            $response = $response->getData();
+            $data = [
+                'Message' => 'Learners programs successfully fetched',
+                'learnerPrograms' => $response['learners_programs']
+            ];
+            return response($data, 200);
+        }
+        $data = ['error' => 'unable to fetch the learners'];
+        return response(['Message' => $data, 'learnerPrograms' => null], 404);
+    }
+
     public function allLearnerCourses($id,Sdk $sdk){
         $query = $this->sdk->createLearnersCoursesService();
         $query = $query

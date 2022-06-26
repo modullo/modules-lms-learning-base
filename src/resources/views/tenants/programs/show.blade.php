@@ -72,25 +72,43 @@
         <section class="container program-contain">
             <h2 class="mb-5"><strong>Courses</strong> on @{{ programData.title }}</h2>
             <div class="row">
-                <div
-                        class="mb-5 col-lg-4 col-md-4 col-sm-6 col-xs-6"
-                        v-for="(cardinfo, index) in allProgramCourses"
-                        :key="index"
-                >
-                    <div class="card-course">
-                        <!-- <div class="card-image"> -->
-                        <img class="card-img-top" style="height: 180px; width:340px; object-fit: cover" :src="cardinfo.course_image" alt="" />
+                <div class="col-md-8">
+                    <div class="row">
+                        <div
+                                class="mb-5 col-md-6"
+                                v-for="(cardinfo, index) in allProgramCourses"
+                                :key="index"
+                        >
+                            <div class="card-course">
+                                <!-- <div class="card-image"> -->
+                                <img class="card-img-top" :src="cardinfo.course_image" alt="" style="height: 200px" />
 
-                        <!-- </div> -->
+                                <!-- </div> -->
+                                <div class="card-body">
+                                    <h5 class="card-title"> @{{ cardinfo.title }}</h5>
+                                    <h6 class="mb-2 card-subtitle text-muted">
+                                        @{{ cardinfo.author }}
+                                    </h6>
+                                    <p class="card-text" v-html="cardinfo.description"></p>
+
+                                    <a class="btn btn-outline-secondary" :href="'/tenant/courses/'+cardinfo.id" role="button">Edit</a>
+                                    <a class="mx-2 btn btn-primary" :href="'/tenant/courses/show/'+cardinfo.id" role="button">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"> @{{ cardinfo.title }}</h5>
-                            <h6 class="mb-2 card-subtitle text-muted">
-                                @{{ cardinfo.author }}
-                            </h6>
-                            <p class="card-text" v-html="cardinfo.description"></p>
-
-                            <a class="btn btn-outline-secondary" :href="'/tenant/courses/'+cardinfo.id" role="button">Edit</a>
-                            <a class="mx-2 btn btn-primary" :href="'/tenant/courses/show/'+cardinfo.id" role="button">View Details</a>
+                            <h3>Learners List</h3>
+                            <p class="text-center" v-if="learnersData.length < 1 ">No learner has taken this course</p>
+                            <div v-if="learnersData.length > 0 ">
+                                <p>This course has @{{learnersData.length}} learner(s) out of which <span v-text="learnersCompleted"></span> have completed it.</p>
+                                <ol>
+                                    <li v-for="(data,index) in learnersData" :key="index"><a href="#" v-text="fullName(data.learner)"></a></li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,9 +135,12 @@
                 rating: "(86900 ratings)",
                 aboutProgram:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quo.",
+                learnersData: [],
+                learnersCompleted: 0
             },
             created() {
                 this.fetchAllProgramCourses()
+                this.fetchAllProgramLearners()
             },
             methods: {
                 fetchAllProgramCourses() {
@@ -130,6 +151,26 @@
                         .catch(e => {
                             console.log(e)
                         })
+                },
+                fetchAllProgramLearners() {
+                    axios.get(`/tenant/programs/${this.programData.id}/learners`)
+                        .then( res => {
+                            // console.log(res.data.learnerCourses[0])
+                            let counter = this.learnersCompleted
+                            this.learnersData = res.data.learnerPrograms
+                            this.learnersData.forEach(function (val,index) {
+                                if(val.completed === true){
+                                    counter += 1
+                                }
+                            })
+                            this.learnersCompleted = counter
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        })
+                },
+                fullName(learner){
+                    return learner.first_name+' '+learner.last_name
                 }
             },
         });
