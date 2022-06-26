@@ -75,7 +75,9 @@
 
                             <!-- </div> -->
                             <div class="card-body">
-                                <h5 class="card-title">@{{ cardinfo . title }}</h5>
+                                <a :href="'/tenant/programs/'+cardinfo.id">
+                                    <h5 class="card-title">@{{ cardinfo . title }}</h5>
+                                </a>
                                 <h6 class="mb-2 card-subtitle text-muted">
                                     @{{ cardinfo . author }}
                                 </h6>

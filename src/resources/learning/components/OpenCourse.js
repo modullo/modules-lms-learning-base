@@ -27,14 +27,30 @@ Vue.component('open-course', {
             </b-card>
         </div>
         <div v-else class="video-section pl-1" style="position:relative">
-            <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
-            <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
+            <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute;z-index:1">Previous</b-icon>
+            <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute;z-index:1">Next</b-icon>
             
+            <div v-if="currentVideoType=='youtube'" class="plyr__video-embed" id="player">
+              <iframe
+                :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)"
+                allowfullscreen
+                allowtransparency
+                allow="autoplay"
+              ></iframe>
+            </div>                
+<!--            <div v-if="currentVideoType=='youtube'" id="player" data-plyr-provider="youtube" :data-plyr-embed-id="extractYoutubeVideoId(currentVideo.lesson_resource.asset_url)"></div>             -->
+<!--
             <iframe v-if="currentVideoType=='youtube'" class="w-100" height="558" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" title="Media Player" 
             frameborder="0" allow="accelerometer; autoplay 'none'; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen></iframe>
+-->
 
-            <video v-else-if="currentVideoType=='mp4-normal'" class="video-cover" height="558" controlsList="nodownload" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" controls></video>
+<!--
+            <video id="player" playsinline controls data-poster="#">
+                <source :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" type="video/mp4" />
+            </video>
+-->
+            <video id="player" v-else-if="currentVideoType=='mp4-normal'" class="video-cover" height="558" controlsList="nodownload" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" playsinline controls data-poster="#"></video>
             <br>
         </div>
     </div>
@@ -91,7 +107,15 @@ Vue.component('open-course', {
             let video = video_url.toString();
             if (video.indexOf("watch?v=") > -1) {
                 let video_split = video.split("watch?v=");
-                video = "https://www.youtube.com/embed/" + video_split[1];
+                video = "https://www.youtube.com/embed/" + video_split[1] + '?origin=https://plyr.io&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1';
+            }
+            return video
+        },
+        extractYoutubeVideoId(video_url) {
+            let video = video_url.toString();
+            if (video.indexOf("watch?v=") > -1) {
+                let video_split = video.split("watch?v=");
+                video = video_split[1];
             }
             return video
         },

@@ -26,6 +26,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('fetchQuiz/{id}', 'ModulesLmsLearningBaseController@fetchLessonQuiz');
                 Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
                 Route::get('{id}/lesson/{slug}', 'ModulesLmsLearningBaseController@showLesson');
+                Route::get('{id}/lesson/{slug}/complete', 'ModulesLmsLearningBaseController@completeLesson');
             });
 
             // Routes for Program
@@ -51,7 +52,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitCourse');
                 Route::get('show/{id}', 'ModulesLmsLearningBaseTenantController@show');
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editCourse');
-                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateCourse');  
+                Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateCourse');
+                Route::get('{id}/learners', 'ModulesLmsLearningBaseTenantController@allLearnerCourses');
             });
 
 
@@ -66,6 +68,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createProgram');
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitProgram');
                 Route::get('show', 'ModulesLmsLearningBaseTenantController@showCourse');
+                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@showProgram');
                 Route::get('edit/{id}', 'ModulesLmsLearningBaseTenantController@editProgram');
             });
 

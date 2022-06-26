@@ -418,6 +418,19 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     }
 
+    public function showProgram(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createProgramService();
+        $path = [$id];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['program'];
+            return view('modules-lms-learning-base::tenants.programs.show', compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::tenants.programs.show', compact('data'));
+    }
+
     public function submitCourse(Request $request, Sdk $sdk){
         $resource = $sdk->createCourseService();
         $resource = $resource
@@ -665,4 +678,25 @@ class ModulesLmsLearningBaseTenantController extends Controller
     public function showGrade(){
         return view('modules-lms-learning-base::tenants.grades.show');
     }
+
+    public function allLearnerCourses($id,Sdk $sdk){
+        $query = $this->sdk->createLearnersCoursesService();
+        $query = $query
+            ->addQueryArgument('limit',100)
+            ->addQueryArgument('course',$id);
+        $path = [''];
+        $response = $query->send('get', $path);
+
+        if ($response->isSuccessful()){
+            $response = $response->getData();
+            $data = [
+                'Message' => 'Learners courses successfully fetched',
+                'learnerCourses' => $response['learners_courses']
+            ];
+            return response($data, 200);
+        }
+        $data = ['error' => 'unable to fetch the learners'];
+        return response(['Message' => $data, 'learnerCourses' => null], 404);
+    }
+
 }
