@@ -65,6 +65,33 @@ class ModulesLmsLearningBaseController extends Controller
         return view('modules-lms-learning-base::learners.courses.show',compact('data'));
     }
 
+    //Learners courses
+    protected function getLearnersCourses($id=null){
+        $query = $this->sdk->createLearnersCoursesService();
+        $query = $query->addQueryArgument('limit',100);
+        if(!is_null($id)){
+            $query = $query->addQueryArgument('course',$id);
+        }
+        $path = [''];
+        return $query->send('get', $path);
+    }
+
+    public function allLearnerCourses($id,Sdk $sdk){
+        $response = $this->getLearnersCourses($id);
+
+        if ($response->isSuccessful()){
+            $response = $response->getData();
+            $data = [
+                'Message' => 'Learners courses successfully fetched',
+                'learnerCourses' => $response['learners_courses']
+            ];
+            return response($data, 200);
+        }
+        $data = ['error' => 'unable to fetch the learners'];
+        return response(['Message' => $data, 'learnerCourses' => null], 404);
+    }
+
+
     // Programs
     protected function getPrograms(){
         $query = $this->sdk->createLearnerProgramService();
@@ -78,10 +105,18 @@ class ModulesLmsLearningBaseController extends Controller
         if ($this->getPrograms()->isSuccessful()){
             $response = $this->getPrograms()->getData();
             $data = $response['programs'];
-            return response(['Message' => 'Programs Successfully fetched', 'programs' => $data], 200);
+
+            $learnersPrograms = [];
+            $glp = $this->getLearnersPrograms();
+            if ($glp->isSuccessful()){
+                $response = $glp->getData();
+                $learnersPrograms = $response['learners_programs'];
+            }
+
+            return response(['Message' => 'Programs Successfully fetched', 'programs' => $data, 'learnersPrograms' => $learnersPrograms], 200);
         }
         $data = ['error' => 'unable to fetch the requested resource'];
-        return response(['Message' => $data, 'programs' => null], 404);
+        return response(['Message' => $data, 'programs' => null, 'learnerPrograms' => null], 404);
     }
 
     public function programs()
@@ -113,6 +148,46 @@ class ModulesLmsLearningBaseController extends Controller
         }
         $data = ['error' => 'unable to fetch the requested resource'];
         return view('modules-lms-learning-base::learners.programs.show', compact('data'));
+    }
+
+    public function enrollToProgram(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createLearnerProgramService();
+        $path = [$id.'/enroll'];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['program'];
+            $data['enrolled'] = true;
+            return view('modules-lms-learning-base::learners.programs.show', compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::learners.programs.show', compact('data'));
+    }
+
+    //Programs courses
+    protected function getLearnersPrograms($id=null){
+        $query = $this->sdk->createLearnersProgramsService();
+        $query = $query->addQueryArgument('limit',100);
+        if(!is_null($id)){
+            $query = $query->addQueryArgument('program',$id);
+        }
+        $path = [''];
+        return $query->send('get', $path);
+    }
+
+    public function allLearnerPrograms($id,Sdk $sdk){
+        $response = $this->getLearnersPrograms($id);
+
+        if ($response->isSuccessful()){
+            $response = $response->getData();
+            $data = [
+                'Message' => 'Learners programs successfully fetched',
+                'learnerPrograms' => $response['learners_programs']
+            ];
+            return response($data, 200);
+        }
+        $data = ['error' => 'unable to fetch the learners'];
+        return response(['Message' => $data, 'learnerPrograms' => null], 404);
     }
 
     // Lessons

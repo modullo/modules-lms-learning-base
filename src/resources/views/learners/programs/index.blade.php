@@ -49,12 +49,8 @@
                         :key="index"
                 >
                     <div class="card-course">
-                        <img
-                            style="height: 180px; width:340px; object-fit: cover"
-                            :src="cardinfo.image"
-                            alt=""
-                        />
-                        <div class="card-body">
+                        <img class="card-img-top" :src="cardinfo.image" alt="" style="height: 200px" />
+                        <div class="card-body bg-white">
 
                             <h5 class="card-title">
                                 <a :href="'/learner/programs/'+cardinfo.id">
@@ -62,6 +58,9 @@
                                 </a>
                             </h5>
                             <p class="card-text">@{{ cardinfo.description }}</p>
+                            <a v-if="enrolledPrograms.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :class="{disabled: toEnroll === cardinfo.id}" :href="'/learner/programs/'+cardinfo.id+'/enroll'" @click="toEnroll = cardinfo.id" role="button">@{{ toEnroll === cardinfo.id ? 'Enrolling...' : 'Enroll' }}</a>
+                            <a v-if="enrolledPrograms.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary" :href="'/learner/programs/'+cardinfo.id" role="button">View</a>
+
                         </div>
                     </div>
                 </div>
@@ -87,8 +86,11 @@
 
             data: {
                 cardinfos: [],
+                learnersPrograms: [],
                 currentIdx: 0,
                 search: '',
+                toEnroll: '',
+                enrolledPrograms: [],
             },
             created() {
                 this.fetchAllPrograms()
@@ -100,6 +102,13 @@
                     .then( res => {
                         loader.hide();
                         this.cardinfos = res.data.programs
+                        this.learnersPrograms = res.data.learnersPrograms
+
+                        let collector = []
+                        this.learnersPrograms.forEach(function (val,index) {
+                            collector.push(val.program.id)
+                        })
+                        this.enrolledPrograms = collector
                     })
                     .catch(e => {
                         loader.hide();
@@ -115,12 +124,12 @@
                             )
                         }
                     })
-                }
+                },
             },
             computed:{
                 searchCourses(){
                     return this.cardinfos.filter(card => {return card.title.match(this.search)})
-                }
+                },
             }
         });
     </script>

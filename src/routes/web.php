@@ -34,6 +34,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('/', 'ModulesLmsLearningBaseController@programs');
                 Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
+                Route::get('{id}/enroll', 'ModulesLmsLearningBaseController@enrollToProgram');
             });
 
         });
