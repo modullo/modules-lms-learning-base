@@ -244,7 +244,7 @@
                     <div class="col-lg-4">
                         <div class="card what-you-will-learn">
                             <div class="card-body">
-                                <h3>Learners List</h3>
+                                <h3>List of Learners</h3>
                                 <p class="text-center" v-if="learnersData.length < 1 ">No learner has taken this course</p>
                                 <div v-if="learnersData.length > 0 ">
                                     <p>This course has @{{learnersData.length}} learner(s) out of which <span v-text="learnersCompleted"></span> have completed it.</p>
