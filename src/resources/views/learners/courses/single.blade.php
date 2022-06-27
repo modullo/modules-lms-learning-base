@@ -88,6 +88,11 @@
             mounted: function() {
                 //console.log(this.courseData)
             },
+            created() {
+                if(this.courseData.started){
+                    toastr["success"]('Course marked as started!')
+                }
+            },
             methods: {
                 setVideo(payload) {
                     // alert('videos' + payload)
