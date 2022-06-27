@@ -65,6 +65,20 @@ class ModulesLmsLearningBaseController extends Controller
         return view('modules-lms-learning-base::learners.courses.show',compact('data'));
     }
 
+    public function startCourse(string $id, Sdk $sdk)
+    {
+        $sdkObject = $sdk->createLearnerCourseService();
+        $path = [$id.'/start'];
+        $response = $sdkObject->send('get', $path);
+        if ($response->isSuccessful()){
+            $data = $response->data['course'];
+            $data['started'] = true;
+            return view('modules-lms-learning-base::learners.courses.single', compact('data'));
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return view('modules-lms-learning-base::learners.courses.single', compact('data'));
+    }
+
     //Learners courses
     protected function getLearnersCourses($id=null){
         $query = $this->sdk->createLearnersCoursesService();
@@ -131,10 +145,18 @@ class ModulesLmsLearningBaseController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['courses'];
-            return response(['Message' => 'Courses Successfully fetched', 'courses' => $data], 200);
+
+            $learnersCourses = [];
+            $glp = $this->getLearnersCourses();
+            if ($glp->isSuccessful()){
+                $response = $glp->getData();
+                $learnersCourses = $response['learners_courses'];
+            }
+
+            return response(['Message' => 'Courses Successfully fetched', 'courses' => $data,'learnersCourses'=>$learnersCourses], 200);
         }
         $data = ['error' => 'unable to fetch the requested resource'];
-        return response(['Message' => $data, 'courses' => null], 404);
+        return response(['Message' => $data, 'courses' => null,'learnersCourses'=>null], 404);
     }
 
     public function showProgram(string $id, Sdk $sdk)
