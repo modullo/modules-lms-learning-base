@@ -53,8 +53,9 @@
 
                             <a class="btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id" role="button">View Details</a>
                             <a v-if="coursesStarted.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :href="'/learner/courses/'+cardinfo.id+'/start-course'" role="button">Start Course</a>
-                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary disabled" :href="'#'" role="button">Started</a>
+                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary" :href="'/learner/courses/'+cardinfo.id+'/lesson/'+cardinfo.title" role="button">Continue</a>
 {{--
+                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary disabled" :href="'#'" role="button">Started</a>
                             <a class="mx-2 btn btn-primary" :href="'/learner/courses/'+cardinfo.id+'/lesson/'+cardinfo.title" role="button">Start Course</a>
 --}}
                         </div>

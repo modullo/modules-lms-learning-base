@@ -5,7 +5,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/learning/assets/css/styles.css') }}">
-    <link href="https://cdn.plyr.io/3.7.2/plyr.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/vue-plyr/dist/vue-plyr.css" />
 @endsection
 
 @section('head_js')
@@ -26,7 +26,7 @@
         <nav-bar :course-data="courseData"></nav-bar>
         <b-row>
             <b-col lg="9" class="col-remove-p main-section">
-                <open-course @send-new-updated-content="wrapperCollectNewContent" :course-data="courseData" @current-lesson="parentListenForLesson" ref="childRef"></open-course>
+                <open-course @send-new-updated-content="wrapperCollectNewContent" :course-data="courseData" @current-lesson="parentListenForLesson" @lesson-ended="markLessonComplete" ref="childRef" :key="componentKey"></open-course>
                 <lesson-tabs :course-data="courseData" ref="mobileResponse"></lesson-tabs>
             </b-col>
             <b-col lg="3" class="col-remove-p">
@@ -55,11 +55,14 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
     <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/vue-plyr"></script>
     <!-- Init the plugin and component-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         Vue.use(VueLoading);
+        Vue.use(VuePlyr);
         Vue.component('loading', VueLoading)
+        Vue.component('vue-plyr', VuePlyr)
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -83,7 +86,9 @@
             el: '#app',
             data: {
                 name: 'Musah Musah!',
-                courseData: {!! json_encode($data) !!}
+                courseData: {!! json_encode($data) !!},
+                activeLesson: [],
+                componentKey: 0
             },
             mounted: function() {
                 //console.log(this.courseData)
@@ -96,35 +101,56 @@
             methods: {
                 setVideo(payload) {
                     // alert('videos' + payload)
+                    this.activeLesson = payload
                     this.$refs.sideContents.listener = payload
                     this.$refs.mobileResponse.tabsData = payload
                     this.$refs.childRef.currentVideo = payload
+                    this.componentkey += 1
 
                     // this.$refs.sideContents.mobileResponse = payload
                 },
                 wrapperCollectNewContent(payload) {
+                    this.activeLesson = payload
                     this.$refs.sideContents.listener = payload
                     this.$refs.mobileResponse.tabsData = payload
                     this.$refs.sideContents.mobileResponse = payload
                     this.$root.$emit('bv::toggle::collapse', 'accordion-10')
+                    this.componentkey += 1
                 },
                 parentListenForLesson(payload) {
+                    this.activeLesson = payload
                     this.$refs.sideContents.listener = payload
                     this.$refs.mobileResponse.tabsData = payload
                     this.$refs.sideContents.mobileResponse = payload
+                    console.log(this.componentKey)
+                    this.componentkey += 1
                 },
                 markLessonComplete() {
-                    alert('Video just ended')
-                }
+                    console.log(this.activeLesson)
+                    console.log(this.courseData)
+                    this.completeCourse(this.activeLesson.id,this.courseData.id)
+                },
+                completeCourse(id, courseId) {
+                    let loader = Vue.$loading.show();
+                    axios
+                        .post(`/learner/courses/completeCourse/${id}`, {course_id: courseId})
+                        .then((res) => {
+                            // Emit event with course data
+                              console.log(res.data.course)
+                            this.$emit('send-new-updated-content', res.data.course)
+                            location.reload()
+                            this.componentkey += 1
+                            loader.hide();
+                            //   this.filteredData = res.data.data;
+                            // alert('Lesson Marked as COMPLETED')
+                        })
+                        .catch((e) => {
+                            loader.hide();
+                        });
+                },
+
             }
         })
-    </script>
-    <script src="https://cdn.plyr.io/3.7.2/plyr.js"></script>
-    <script>
-        const player = new Plyr('#player');
-        player.on('ended', (event) => {
-            app.markLessonComplete()
-        });
     </script>
 @endsection
 
