@@ -552,13 +552,20 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function createQuiz()
     {
-        return view('modules-lms-learning-base::tenants.resources.quiz.create');
+        $courses = [];
+        if ($this->getCourses()->isSuccessful()) {
+            $response = $this->getCourses()->getData();
+            $courses = $response['courses'];
+        }
+        return view('modules-lms-learning-base::tenants.resources.quiz.create', compact('courses'));
     }
 
     public function submitQuiz(Request $request, Sdk $sdk){
         $resource = $sdk->createQuizService();
         $resource = $resource
         ->addBodyParam('title',$request->quiz_title)
+        ->addBodyParam('quiz_type',$request->quiz_type)
+        ->addBodyParam('pq_course',$request->pq_course)
         ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
         ->addBodyParam('quiz_timer',$request->quiz_timer)
         ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)

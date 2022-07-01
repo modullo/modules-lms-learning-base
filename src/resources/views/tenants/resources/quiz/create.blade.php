@@ -28,6 +28,21 @@
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
+                                <label for=""> Quiz Type </label>
+                                <select v-model="form.quiz_type" id="quiz_type" class="form-control" @change="form.pq_course = ''">
+                                    <option value="">-- Choose--</option>
+                                    <option value="regular">Regular</option>
+                                    <option value="pre-qualifier">Pre-qualifier</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                <label for=""> Course to Pre-qualify for </label>
+                                <select v-model="form.pq_course" id="pq_course" class="form-control">
+                                    <option value="">-- Choose--</option>
+                                    <option v-for="(course,courseIndex) in courses" :value="course.id">@{{course.title}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6">
                                 <label for=""> Quiz Title </label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Quiz Title" class="form-control" v-model="form.quiz_title" v-validate="'required'"
@@ -187,8 +202,11 @@
             data: {
                 index: 1,
                 qindex: 1,
+                courses: {!! json_encode($courses) !!},
                 form: {
                     quiz_title: '',
+                    quiz_type: '',
+                    pq_course: '',
                     total_quiz_mark: '',
                     quiz_timer: '',
                     disable_on_submit: '',
@@ -203,7 +221,7 @@
                             options: [""],
                         },
                     ],
-                }
+                },
             },
             mounted: function() {
                 console.log(this.form.questions.length)
@@ -223,6 +241,8 @@
                             let loader = Vue.$loading.show()
                             const payload = {
                                 quiz_title: this.form.quiz_title,
+                                quiz_type: this.form.quiz_type,
+                                pq_course: this.form.pq_course,
                                 total_quiz_mark: this.form.total_quiz_mark,
                                 quiz_timer: this.form.quiz_timer,
                                 disable_on_submit: this.form.disable_on_submit,
@@ -230,9 +250,9 @@
                                 questions: JSON.stringify(this.form.questions)
                             }
                             axios.post('create', payload).then(res => {
-                            loader.hide();
-                            ev.target.reset()
-                            toastr["success"](res.data.message)
+                                loader.hide();
+                                ev.target.reset()
+                                toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
                                 const errors = e.response.data.error
