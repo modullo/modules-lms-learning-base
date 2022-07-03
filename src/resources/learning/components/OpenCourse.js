@@ -11,18 +11,24 @@ Vue.component('open-course', {
     <div>
         <div class="video-section pl-1" style="position:relative;" v-if="this.currentVideo.lesson_type === 'quiz'">
             <b-card class="" :style="{height: lessonViewHeight()}">
-                <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
-                <b-card-body style="font-size:1.1em" v-html="currentVideo.description"></b-card-body>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.description"></b-card-body>
+                        
+                            <course-quiz-questions @send-new-completed-course="emitCompletedCourse"  @quiz-ended="markLessonCompleted" 
+                            :course-data="courseData" :quiz-data="quizData"  
+                            :quiz="currentVideo" id="newguy"></course-quiz-questions>
+                            
+                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view BUT you can't re-take and re-submit it</em></div>
+                            <div v-if="currentVideo.completed && currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view, re-take and re-submit it</em></div>
+                        </div>
+                    </div>
+                </div>
                 <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
             
-                <course-quiz-questions @send-new-completed-course="emitCompletedCourse"  @quiz-ended="markLessonCompleted" 
-                :course-data="courseData" :quiz-data="quizData"  
-                :quiz="currentVideo" id="newguy"></course-quiz-questions>
-            
                 <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
-                
-                <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view BUT you can't re-take and re-submit it</em></div>
-                <div v-if="currentVideo.completed && currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view, re-take and re-submit it</em></div>
 <!--
                 <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
 -->

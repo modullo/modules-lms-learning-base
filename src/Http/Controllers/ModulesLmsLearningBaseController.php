@@ -258,6 +258,7 @@ class ModulesLmsLearningBaseController extends Controller
         $path = ['quiz', 'submit', $quiz_id, $lesson_id];
         $response = $resource->send('post', $path);
         if ($response->isSuccessful()){
+            $quizReport = $response->data['quiz-report'];
             // Complete the lesson
             $sdkObject = $sdk->createLearnerLessonService();
             $path = ['complete', $lesson_id];
@@ -272,7 +273,8 @@ class ModulesLmsLearningBaseController extends Controller
 
             return response([
                 'Message' => 'Lesson Completed', 
-                'course' => $courseData, 
+                'quizReport' => $quizReport, 
+                'course' => $courseData,
                 'lesson' => $lessonData
             ], 200);
         }
