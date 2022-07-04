@@ -45,6 +45,23 @@
                                 :class="{'input': true, 'border border-danger': errors.has('Lesson Type') }" class="form-control" id="">
                                     <option value="video">Video</option>
                                     <option value="quiz">Quiz</option>
+                                    <option value="scheduler">Scheduler</option>
+                                    <option value="project">Project</option>
+                                </select>
+                                <i v-show="errors.has('Lesson Type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Lesson Type')"
+                                    class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="scheduler_type">
+                                    Schedule for *
+                                </label>
+                                <select name="scheduler_type" v-model="form.scheduler_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('scheduler_type') }" class="form-control" id="">
+                                    <option value="online">Online event</option>
+                                    <option value="offline">Offline event</option>
+                                    <option value="equipment">Equipment use</option>
+                                    <option value="workspace">Workspace</option>
                                 </select>
                                 <i v-show="errors.has('Lesson Type')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Lesson Type')"
@@ -222,6 +239,7 @@
                     duration: '',
                     lesson_number: '',
                     lesson_type: 'quiz',
+                    scheduler_type: '',
                     lesson_image: '',
                     skills_gained: '',
                 },

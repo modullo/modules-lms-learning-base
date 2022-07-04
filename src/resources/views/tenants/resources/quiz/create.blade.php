@@ -66,6 +66,12 @@
                                     aria-describedby="helpId" placeholder="Reward points" />
                             </div>
 
+                            <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                <label for=""> Pass Mark </label>
+                                <input type="number" v-model="form.pass_mark" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="Enter qualifier minimum score" />
+                            </div>
+
                             <div class="form-group col-lg-12">
                                 <label> Disable Quiz on Submit : </label>
                                 <div class="custom-control custom-radio custom-control-inline">
@@ -208,6 +214,7 @@
                     quiz_type: '',
                     pq_course: '',
                     total_quiz_mark: '',
+                    pass_mark: '',
                     quiz_timer: '',
                     disable_on_submit: '',
                     retake_on_request: '',
@@ -244,6 +251,7 @@
                                 quiz_type: this.form.quiz_type,
                                 pq_course: this.form.pq_course,
                                 total_quiz_mark: this.form.total_quiz_mark,
+                                pass_mark: this.form.pass_mark,
                                 quiz_timer: this.form.quiz_timer,
                                 disable_on_submit: this.form.disable_on_submit,
                                 retake_on_request: this.form.retake_on_request,

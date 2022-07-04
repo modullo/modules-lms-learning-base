@@ -151,6 +151,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('duration',$request->duration)
         ->addBodyParam('lesson_number',$request->lesson_number)
         ->addBodyParam('lesson_type',$request->lesson_type)
+        ->addBodyParam('scheduler_type',$request->scheduler_type)
         ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
         ->addBodyParam('resource_id',$request->resource_id);
@@ -200,6 +201,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('duration',$request->duration)
             ->addBodyParam('lesson_number',$request->lesson_number)
             ->addBodyParam('lesson_type',$request->lesson_type)
+            ->addBodyParam('scheduler_type',$request->scheduler_type)
             ->addBodyParam('lesson_image',$request->lesson_image)
             ->addBodyParam('skills_gained',$request->skills_gained)
             ->addBodyParam('resource_id', !$request->resource_id ? $request->lesson_resource['id'] : $request->resource_id)
@@ -567,6 +569,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('quiz_type',$request->quiz_type)
         ->addBodyParam('pq_course',$request->pq_course)
         ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
+        ->addBodyParam('pass_mark',$request->pass_mark)
         ->addBodyParam('quiz_timer',$request->quiz_timer)
         ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
         ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
@@ -599,11 +602,14 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         $resource = $sdk->createQuizService();
         $resource = $resource
-        ->addBodyParam('title',$request->quiz_title)
-        ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
-        ->addBodyParam('quiz_timer',$request->quiz_timer)
-        ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
-        ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
+            ->addBodyParam('title',$request->quiz_title)
+            ->addBodyParam('quiz_type',$request->quiz_type)
+            ->addBodyParam('pq_course',$request->pq_course)
+            ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
+            ->addBodyParam('pass_mark',$request->pass_mark)
+            ->addBodyParam('quiz_timer',$request->quiz_timer)
+            ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
+            ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
