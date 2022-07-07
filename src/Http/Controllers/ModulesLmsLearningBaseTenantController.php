@@ -151,10 +151,20 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('duration',$request->duration)
         ->addBodyParam('lesson_number',$request->lesson_number)
         ->addBodyParam('lesson_type',$request->lesson_type)
-        ->addBodyParam('scheduler_type',$request->scheduler_type)
         ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
         ->addBodyParam('resource_id',$request->resource_id);
+
+        switch ($request->lesson_type){
+            case 'scheduler':
+                $resource = $resource
+                    ->addBodyParam('schedule_type',$request->schedule_type)
+                    ->addBodyParam('schedule_instruction',$request->schedule_instruction);
+                break;
+            case 'project':
+                $resource = $resource->addBodyParam('project_details',$request->project_details);
+                break;
+        }
         
         $response = $resource->send('post',['create', $id]);
         if (!$response->isSuccessful()) {

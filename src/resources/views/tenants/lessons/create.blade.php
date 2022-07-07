@@ -53,19 +53,19 @@
                                     class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
                             </div>
                             <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
-                                <label for="scheduler_type">
-                                    Schedule for *
+                                <label for="schedule_type">
+                                    Schedule Purpose *
                                 </label>
-                                <select name="scheduler_type" v-model="form.scheduler_type" v-validate="'required'"
-                                :class="{'input': true, 'border border-danger': errors.has('scheduler_type') }" class="form-control" id="">
+                                <select name="schedule_type" v-model="form.schedule_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('schedule_type') }" class="form-control" id="">
                                     <option value="online">Online event</option>
                                     <option value="offline">Offline event</option>
                                     <option value="equipment">Equipment use</option>
                                     <option value="workspace">Workspace</option>
                                 </select>
-                                <i v-show="errors.has('Lesson Type')" class="fa fa-warning text-danger"></i>
-                                <span v-show="errors.has('Lesson Type')"
-                                    class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
+                                <i v-show="errors.has('schedule_type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('schedule_type')"
+                                    class="help text-danger">@{{ errors . first('schedule_type') }}</span>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
                                 <label for="tenant"> Choose Quiz Asset *</label>
@@ -121,6 +121,18 @@
                                     <i v-show="errors.has('Description')" class="fa fa-warning text-danger"></i>
                                     <span v-show="errors.has('Description')"
                                         class="help text-danger">@{{ errors . first('Description') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="schedule_instruction"> Schedule Instruction * </label>
+                                <editor style="height: 100px" v-validate="'required'" name="schedule_instruction" :class="{'input': true, 'border border-danger': errors.has('schedule_instruction') }" v-model="form.schedule_instruction" theme="snow"></editor>
+                                    <i v-show="errors.has('schedule_instruction')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('schedule_instruction')" class="help text-danger">@{{ errors . first('schedule_instruction') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'project'">
+                                <label for="project_details"> Project Details * </label>
+                                <editor style="height: 100px" v-validate="'required'" name="project_details" :class="{'input': true, 'border border-danger': errors.has('project_details') }" v-model="form.project_details" theme="snow"></editor>
+                                    <i v-show="errors.has('project_details')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('project_details')" class="help text-danger">@{{ errors . first('project_details') }}</span>
                             </div>
                         </div>
                         <div class="form-row">
@@ -239,7 +251,9 @@
                     duration: '',
                     lesson_number: '',
                     lesson_type: 'quiz',
-                    scheduler_type: '',
+                    schedule_type: '',
+                    schedule_instruction: '',
+                    project_details: '',
                     lesson_image: '',
                     skills_gained: '',
                 },
@@ -259,6 +273,7 @@
                     this.form.lesson_image = e.target.files[0]
                 },
                 validateBeforeSubmit(ev) {
+                    console.log(ev)
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()

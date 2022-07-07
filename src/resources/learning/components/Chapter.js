@@ -20,38 +20,37 @@ Vue.component("chapter", {
             <p>No Lesson in this Module</p>
         </div>
         <div v-for="(video, index) in videos" :key="index" :class="{'chapter-select-video': true, selectedVideo: compute(video)}"  @click="emitVideo(video)">
-            <div v-if="video.lesson_type !== 'quiz'">
+            <div :class="{'chapter-select-video': true, selectedVideo: compute(video)}">
                 <div style="padding:5px;border-bottom: 1px solid #6c757d; !important;">
                     <div class="form-check">
-                    <input v-if="video.completed" style="cursor:pointer" class="form-check-input" 
-                        type="checkbox" onclick="return false;" :checked="video.completed" 
-                        id="defaultCheck1">
-                    <input v-else style="cursor:pointer" class="form-check-input" 
-                        type="checkbox" onclick="return false;" :checked="video.completed" 
-                        id="defaultCheck1">
-                    <label class="form-check-label">
-                        {{video.title}}
-                    </label>
+                      <input v-if="video.completed" style="cursor:pointer" class="form-check-input" 
+                          type="checkbox" onclick="return false;" :checked="video.completed" 
+                          id="defaultCheck1">
+                      <input v-else style="cursor:pointer" class="form-check-input" 
+                          type="checkbox" onclick="return false;" :checked="video.completed" 
+                          id="defaultCheck1">
+                      <label class="form-check-label">
+                          {{video.title}}
+                      </label>
                     </div>
-                    <b-icon class="pl-4" icon="play-circle-fill" aria-hidden="true"></b-icon> <span class="pl-3 small">{{video.duration}}</span>
+                    <div v-if="video.lesson_type === 'video'">
+                      <b-icon class="pl-4" icon="play-circle-fill" aria-hidden="true"></b-icon> <span class="pl-3 small">{{video.duration}}</span>
+                    </div>
+                    <div v-else-if="video.lesson_type === 'quiz'">
+                      <b-icon class="pl-4" icon="question-octagon-fill" aria-hidden="true"></b-icon> <span class="pl-3 small">Take Quiz - {{video.duration}}</span>
+                    </div>
+                    <div v-else-if="video.lesson_type === 'scheduler'">
+                      <b-icon class="pl-4" icon="calendar3" aria-hidden="true"></b-icon> <span class="pl-3 small">Schedule - {{video.duration}}</span>
+                    </div>
+                    <div v-else-if="video.lesson_type === 'project'">
+                      <b-icon class="pl-4" icon="briefcase" aria-hidden="true"></b-icon> <span class="pl-3 small">Project - {{video.duration}}</span>
+                    </div>
+                    <div v-else>
+                      <b-icon class="pl-4" icon="clock" aria-hidden="true"></b-icon> <span class="pl-3 small">Others - {{video.duration}}</span>
+                    </div>
                 </div>
             </div>
-            <div v-if="video.lesson_type === 'quiz'" :class="{'chapter-select-video': true, selectedVideo: compute(video)}"">
-                    <div style="padding:5px;border-bottom: 1px solid #6c757d; !important;">
-                       <div class="form-check">
-                        <input v-if="video.completed" style="cursor:pointer" class="form-check-input" 
-                            type="checkbox" onclick="return false;" :checked="video.completed" 
-                            id="defaultCheck1">
-                        <input v-else @click.once="completeCourse(video.id, courseData.id)" style="cursor:pointer" class="form-check-input" 
-                            type="checkbox" onclick="return false;" :checked="video.completed" 
-                            id="defaultCheck1">
-                        <label class="form-check-label">
-                            {{video.title}}
-                        </label>
-                    </div>
-                    <b-button @click="callModal(video.id,video.lesson_resource.id)" size="sm" class="m-2 small"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Questions</b-button>
-                </div>
-            </div>
+        </div>
         </div>
     </div>
     `,
@@ -85,7 +84,7 @@ Vue.component("chapter", {
       axios
           .post(`/learner/courses/completeCourse/${id}`, {course_id: courseId})
           .then((res) => {
-            // Emit event with course data 
+            // Emit event with course data
             loader.hide();
             //   console.log(res.data.course)
             this.$emit('send-new-updated-content', res.data.course)

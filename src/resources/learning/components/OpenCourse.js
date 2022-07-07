@@ -34,6 +34,54 @@ Vue.component('open-course', {
 -->
             </b-card>
         </div>
+        <div class="video-section pl-1" style="position:relative;" v-else-if="this.currentVideo.lesson_type === 'scheduler'">
+            <b-card class="" :style="{height: lessonViewHeight()}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.schedule_instruction"></b-card-body>
+                            <div>
+                                <button class="btn btn-primary">Launch Scheduler</button>
+                                <button class="btn btn-primary d-none">Manage Schedule</button>
+                            </div>
+                        
+                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
+                        </div>
+                    </div>
+                </div>
+                <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
+            
+                <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
+<!--
+                <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
+-->
+            </b-card>
+        </div>
+        <div class="video-section pl-1" style="position:relative;" v-else-if="this.currentVideo.lesson_type === 'project'">
+            <b-card class="" :style="{height: lessonViewHeight()}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ capitalize(currentVideo.lesson_type) }}: {{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.project_details"></b-card-body>
+                            <div>
+                                <button class="btn btn-primary">Start Project</button>
+                                <button class="btn btn-primary d-none">Manage Schedule</button>
+                            </div>
+                        
+                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
+                        </div>
+                    </div>
+                </div>
+                <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
+            
+                <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
+<!--
+                <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
+-->
+            </b-card>
+        </div>
         <div v-else class="video-section pl-1" style="position:relative">
             <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute;z-index:1">Previous</b-icon>
             <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute;z-index:1">Next</b-icon>
@@ -250,13 +298,15 @@ Vue.component('open-course', {
             this.$emit('lesson-ended', this.currentVideo)
         },
         lessonViewHeight(){
-            if(this.currentVideo.lesson_type === 'quiz'){
+            if(this.currentVideo.lesson_type !== 'video'){
                 return 'unset'
             }
 
             return '40vh'
+        },
+        capitalize(word){
+            return word[0].toUpperCase() + word.slice(1).toLowerCase();
         }
-
     },
     created() {
         // this.getAllVideo()
