@@ -117,7 +117,6 @@ class ModulesLmsLearningBaseController extends Controller
 
     public function allPrograms(Sdk $sdk)
     {
-        dd($this->getPrograms());
         if ($this->getPrograms()->isSuccessful()){
             $response = $this->getPrograms()->getData();
             $data = $response['programs'];
