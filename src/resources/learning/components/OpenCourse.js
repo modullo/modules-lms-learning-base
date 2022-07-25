@@ -42,11 +42,16 @@ Vue.component('open-course', {
                             <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
                             <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.schedule_instruction"></b-card-body>
                             <div>
-                                <button class="btn btn-primary">Launch Scheduler</button>
-                                <button class="btn btn-primary d-none">Manage Schedule</button>
+                                <a v-if="!currentVideo.completed" class="btn btn-primary text-white" @click.prevent="launchScheduler">Launch Scheduler</a>
+                                <a v-else class="btn btn-primary text-white" @click.prevent="launchScheduler">Manage Schedule</a>
+                                <a id="openScheduler" class="d-none" :href="scheduleUrl" target="_blank">Open Scheduler</a>
+                                
+    <b-modal h-100 hide-footer hide-header-close no-close-on-backdrop no-close-on-esc :id="'modal-lg-new'+currentVideo.id" size="xl" :title="'Schedule Manager'">
+    </b-modal>                                
+                                
                             </div>
                         
-                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
+                            <div v-if="currentVideo.completed"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
                         </div>
                     </div>
                 </div>
@@ -160,11 +165,14 @@ Vue.component('open-course', {
             currentVideoURL: '',
             videoLength: '',
             testView: '',
-            quizData: []
+            quizData: [],
+            scheduleData: [],
+            scheduleUrl: '',
         }
     },
     watch: {
         currentVideo: function(newVal, oldVal) {
+            console.log(newVal)
             if(newVal.lesson_type === 'quiz'){
                 this.processQuiz(newVal)
             }
@@ -212,6 +220,43 @@ Vue.component('open-course', {
                 .catch(() => {
                     loader.hide();
                 })
+        },
+        launchScheduler() {
+            let loader = Vue.$loading.show();
+            axios
+                .get(`/learner/courses/${this.courseData.id}/lesson/${this.currentVideo.id}/launch-scheduler`)
+                .then((res) => {
+                    this.scheduleData = res.data.schedules
+                    this.scheduleUrl = res.data.url
+                    // console.log(this.scheduleUrl)
+                    // window.open(res.data.url,'_blank')
+                    setTimeout(() => {
+                        document.getElementById("openScheduler").click();
+                    },300)
+                    loader.hide();
+                    setTimeout(() => {
+                        this.recordSchedule()
+                    },1000)
+                    // console.log(this.$refs.quizRef)
+                })
+                .catch(() => {
+                    loader.hide();
+                })
+        },
+        recordSchedule() {
+            let loader = Vue.$loading.show();
+            swal({
+                title: "Are you done scheduling?",
+                // text: "If you've completed your schedule",
+                icon: "question",
+                buttons: [true,"Yes"],
+            }).then((result) => {
+                if (result) {
+                    this.markLessonCompleted()
+                } else {
+                    loader.hide();
+                }
+            });
         },
         callModal(modalId, quizId) {
             // this.$bvModal.show('modal-lg-new'+modalId);

@@ -14,11 +14,17 @@ Vue.component('course-quiz-questions', {
         `
     <div>
         <div v-if="displayQuizResult === false">
-            <h6>Test Duration : {{quizData.quiz_timer}}mins | Total Points {{quizData.total_quiz_mark}}</h6>
             <div v-if="quizStarted === false">
+                <h6>Test Duration : {{quizData.quiz_timer}}mins | Total Points {{quizData.total_quiz_mark}}</h6>
                 <button class="btn btn-primary" type="button" @click="quizStarted = true"><span v-text="quiz.completed && !quiz.lesson_resource.retake_on_request ? 'View' : 'Start'"></span> Quiz</button>
             </div>
             <b-form v-if="quizStarted === true" @submit.prevent="submitQuiz" id="custom-step" class="mt-4">
+                <div v-show="quizData.time_per_question == false" class="text-right" :class="{'center-time-up': centerTimeUp == true}">
+                    <span v-show="timeUp == true">Time up!</span>
+                    <countdown :time="quizData.quiz_timer * 60 * 1000" :emit-events="true" @progress="checkProgress" v-show="timeUp == false">
+                      <template slot-scope="props">Time：{{ props.minutes }}m, {{ props.seconds }}s.</template>
+                    </countdown>
+                </div>
                 <nav>
                     <div class="nav nav-tabs d-none" id="nav-tab">
                         <a v-for="(question, questionIndex) in quizData.questions" class="nav-link" :class="{active: setActiveQuestion(question.id)}" :id="question.id+'-tab'" data-bs-toggle="tab" :href="'#tab-'+question.id" @click="setActiveQuestion(question.id)">.</a>
@@ -26,6 +32,11 @@ Vue.component('course-quiz-questions', {
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div v-for="(question, questionIndex) in quizData.questions" :id="'tab-'+question.id" class="tab-pane " :class="{active: setActiveQuestion(question.id)}">
+                        <div v-if="quizData.time_per_question == true" class="text-right">
+                            <countdown :time="question.question_time * 1000" :emit-events="true" @progress="checkProgress" v-show="timeUp == false">
+                              <template slot-scope="props">Time：{{ props.minutes }}m, {{ props.seconds }}s.</template>
+                            </countdown>
+                        </div>
                         <h3>Question {{questionIndex+1}} of {{quizData.questions.length}}</h3>
                         <span v-html="question.question_text"></span>
                         <b-list-group class="mb-3" v-if="question.question_type !== 'case_study'">
@@ -43,9 +54,9 @@ Vue.component('course-quiz-questions', {
                             </textarea>
                         </div>
                         <div class="">
-                            <button type="button" :id="'tab-'+question.id+'Prev'" class="btn float-start" :class="{'disabled': activeIsFirst(questionIndex),'btn-outline-secondary': activeIsFirst(questionIndex),'btn-secondary': !activeIsFirst(questionIndex)}" @click.stop="controlPrev(questionIndex,$event)">Previous</button>
-                            <button v-show="lastQuestionIndex != questionIndex" type="button" :id="'tab-'+question.id+'Next'" class="btn btn-primary float-end" @click.stop="controlNext(questionIndex,$event)">Next</button>
-                            <button v-show="lastQuestionIndex == questionIndex" type="submit" class="btn btn-success float-end">Submit</button>
+                            <button v-if="timeUp == false" type="button" :id="'tab-'+question.id+'Prev'" class="btn float-start" :class="{'disabled': activeIsFirst(questionIndex),'btn-outline-secondary': activeIsFirst(questionIndex),'btn-secondary': !activeIsFirst(questionIndex)}" @click.stop="controlPrev(questionIndex,$event)">Previous</button>
+                            <button v-if="timeUp == false" v-show="lastQuestionIndex != questionIndex" type="button" :id="'tab-'+question.id+'Next'" class="btn btn-primary float-end" @click.stop="controlNext(questionIndex,$event)">Next</button>
+                            <button v-show="lastQuestionIndex == questionIndex || timeUp == true" type="submit" class="btn btn-success float-end" id="submitQuiz">Submit</button>
                         </div>                                        
                     </div>
     <!--
@@ -283,6 +294,7 @@ Vue.component('course-quiz-questions', {
     -->
                 </div>
             </b-form>
+            <div class="time-up-cover"></div>
         </div>
         <div v-else-if="displayQuizResult === true">
             <h3>Quiz Result</h3>
@@ -312,6 +324,8 @@ Vue.component('course-quiz-questions', {
             quizStarted: false,
             displayQuizResult: false,
             quizReport: [],
+            timeUp: false,
+            centerTimeUp: false,
         }
     },
     watch: {
@@ -334,6 +348,7 @@ Vue.component('course-quiz-questions', {
     mounted: function() {
         // console.log(this.courseData) - working well
         // console.log(this.quiz)
+
     },
     methods: {
         getAllQuestions(quizId) {
@@ -363,6 +378,8 @@ Vue.component('course-quiz-questions', {
             this.quizData.course_id = this.courseData.id
             let loader = Vue.$loading.show();
             //console.log(this.quizData);
+            // console.log('Submitted');
+            // return
             axios
                 .post(`/learner/courses/submitQuiz/${this.quizData.id}/${this.quiz.id}`, this.quizData)
                 .then((res) => {
@@ -407,6 +424,15 @@ Vue.component('course-quiz-questions', {
             }
             return this.quizReport.score >= this.quizData.pass_mark;
 
+        },
+        checkProgress(data){
+            if(data.totalSeconds === 60){
+                this.centerTimeUp = true
+            }
+            if(data.totalSeconds === 1){
+                this.timeUp = true
+                document.getElementById("submitQuiz").click();
+            }
         }
     },
 })

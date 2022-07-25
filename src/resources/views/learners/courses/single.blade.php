@@ -6,6 +6,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/learning/assets/css/styles.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/vue-plyr/dist/vue-plyr.css" />
+    <style>
+        .time-up-cover{
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .center-time-up{
+            text-align: center !important;
+            font-size: 26px;
+            font-weight: 700;
+            color: red;
+        }
+    </style>
 @endsection
 
 @section('head_js')
@@ -53,16 +64,19 @@
     <script src="https://unpkg.com/@morioh/v-quill-editor/dist/editor.min.js" type="text/javascript"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
     <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/vue-plyr"></script>
     <!-- Init the plugin and component-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/@chenfengyuan/vue-countdown@1"></script>
     <script>
         Vue.use(VueLoading);
         Vue.use(VuePlyr);
         Vue.component('loading', VueLoading)
         Vue.component('vue-plyr', VuePlyr)
+        Vue.component(VueCountdown.name, VueCountdown)
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -126,14 +140,18 @@
                     this.componentkey += 1
                 },
                 markLessonComplete() {
-                    console.log(this.activeLesson)
-                    console.log(this.courseData)
+                    // console.log(this.activeLesson)
+                    // console.log(this.courseData)
                     this.completeCourse(this.activeLesson.id,this.courseData.id)
                 },
                 completeCourse(id, courseId) {
                     let loader = Vue.$loading.show();
+                    let completeUrl = `/learner/courses/completeCourse/${id}`
+                    if(this.activeLesson.lesson_type === 'scheduler'){
+                        completeUrl = `/learner/courses/completeCourse/${id}?scheduler=true`
+                    }
                     axios
-                        .post(`/learner/courses/completeCourse/${id}`, {course_id: courseId})
+                        .post(completeUrl, {course_id: courseId})
                         .then((res) => {
                             // Emit event with course data
                               console.log(res.data.course)

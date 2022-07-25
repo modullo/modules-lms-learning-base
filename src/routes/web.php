@@ -28,6 +28,9 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('{id}/lesson/{slug}', 'ModulesLmsLearningBaseController@showLesson');
                 Route::get('{id}/lesson/{slug}/complete', 'ModulesLmsLearningBaseController@completeLesson');
                 Route::get('{id}/start-course', 'ModulesLmsLearningBaseController@startCourse');
+
+
+                Route::get('{id}/lesson/{lessonId}/launch-scheduler', 'ModulesLmsLearningBaseController@launchScheduler');
             });
 
             // Routes for Program

@@ -575,15 +575,19 @@ class ModulesLmsLearningBaseTenantController extends Controller
     public function submitQuiz(Request $request, Sdk $sdk){
         $resource = $sdk->createQuizService();
         $resource = $resource
-        ->addBodyParam('title',$request->quiz_title)
-        ->addBodyParam('quiz_type',$request->quiz_type)
-        ->addBodyParam('pq_course',$request->pq_course)
-        ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
-        ->addBodyParam('pass_mark',$request->pass_mark)
-        ->addBodyParam('quiz_timer',$request->quiz_timer)
-        ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
-        ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
-        ->addBodyParam('questions', json_decode($request->questions, true));
+            ->addBodyParam('title',$request->quiz_title)
+            ->addBodyParam('quiz_type',$request->quiz_type)
+            ->addBodyParam('pq_course',$request->pq_course)
+            ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
+            ->addBodyParam('pass_mark',$request->pass_mark)
+            ->addBodyParam('timing_mode',$request->timing_mode)
+            ->addBodyParam('time_per_question',$request->time_per_question === 'yes' ? true : false)
+            ->addBodyParam('quiz_timer',$request->quiz_timer)
+            ->addBodyParam('randomize_questions',$request->randomize_questions === 'yes' ? true : false)
+            ->addBodyParam('randomize_options',$request->randomize_options === 'yes' ? true : false)
+            ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
+            ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
+            ->addBodyParam('questions', json_decode($request->questions, true));
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
