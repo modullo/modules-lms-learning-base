@@ -38,6 +38,10 @@ class ModulesLmsLearningBaseServiceProvider  extends ServiceProvider
         $this->publishes([
             __DIR__.'/config/scheduler.php' => config_path('scheduler.php')
         ],'modullo-modules');
+
+        $this->publishes([
+            __DIR__.'/config/code-editor.php' => config_path('code-editor.php')
+        ],'modullo-modules');
     }
 
     public function register()

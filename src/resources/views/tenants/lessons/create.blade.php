@@ -122,6 +122,15 @@
                                     <span v-show="errors.has('Description')"
                                         class="help text-danger">@{{ errors . first('Description') }}</span>
                             </div>
+                            <div class="form-group col-lg-6">
+                                <label for="description"> Skills Gained * </label>
+                                <editor style="height: 100px" v-validate="'required'"
+                                        name="Skills Gained"
+                                        :class="{'input': true, 'border border-danger': errors.has('Skills Gained') }" v-model="form.skills_gained" theme="snow"></editor>
+                                <i v-show="errors.has('Skills Gained')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Skills Gained')"
+                                      class="help text-danger">@{{ errors . first('Skills Gained') }}</span>
+                            </div>
                             <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
                                 <label for="schedule_instruction"> Schedule Instruction * </label>
                                 <editor style="height: 100px" v-validate="'required'" name="schedule_instruction" :class="{'input': true, 'border border-danger': errors.has('schedule_instruction') }" v-model="form.schedule_instruction" theme="snow"></editor>
@@ -174,16 +183,26 @@
                                         class="help text-danger">@{{ errors . first('Track Number') }}</span>
                                 </p>
                             </div>
-                        </div>
-                        <div class="mb-5 form-row">
                             <div class="form-group col-lg-6">
-                                <label for="description"> Skills Gained * </label>
-                                <editor style="height: 100px" v-validate="'required'"
-                                name="Skills Gained"
-                                :class="{'input': true, 'border border-danger': errors.has('Skills Gained') }" v-model="form.skills_gained" theme="snow"></editor>
-                                    <i v-show="errors.has('Skills Gained')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Skills Gained')"
-                                        class="help text-danger">@{{ errors . first('Skills Gained') }}</span>
+                                <label> Activate Code Editor </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="has_code_editor_yes" v-model="form.has_code_editor" value="yes" name="has_code_editor" class="custom-control-input">
+                                        <label class="custom-control-label" for="has_code_editor_yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="has_code_editor_no" v-model="form.has_code_editor" value="no" name="has_code_editor" class="custom-control-input">
+                                        <label class="custom-control-label" for="has_code_editor_no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.has_code_editor === 'yes'">
+                                <label for="code_language">Code Language *</label>
+                                <select name="code_language" v-model="form.code_language" v-validate="'required'" :class="{'input': true, 'border border-danger': errors.has('code_language') }" class="form-control" id="">
+                                    <option v-for="(language,name) in languages" :value="name">@{{ language.title }}</option>
+                                </select>
+                                <i v-show="errors.has('code_language')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('code_language')" class="help text-danger">@{{ errors . first('code_language') }}</span>
                             </div>
                         </div>
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
@@ -256,11 +275,14 @@
                     project_details: '',
                     lesson_image: '',
                     skills_gained: '',
+                    has_code_editor: 'no',
+                    code_language: '',
                 },
                 module_id: '',
                 assets: {!! json_encode($assets) !!},
                 modules: {!! json_encode($modules) !!},
                 quizzes: {!! json_encode($quizzes) !!},
+                languages: {!! json_encode(config('code-editor.languages')) !!}
             },
             methods: {
                 assetTypes(asset_type) {

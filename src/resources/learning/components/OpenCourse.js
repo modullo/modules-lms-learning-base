@@ -172,7 +172,7 @@ Vue.component('open-course', {
     },
     watch: {
         currentVideo: function(newVal, oldVal) {
-            console.log(newVal)
+            // console.log(newVal)
             if(newVal.lesson_type === 'quiz'){
                 this.processQuiz(newVal)
             }

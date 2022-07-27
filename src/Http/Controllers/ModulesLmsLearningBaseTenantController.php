@@ -153,6 +153,8 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('lesson_type',$request->lesson_type)
         ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
+        ->addBodyParam('has_code_editor',$request->has_code_editor === 'yes' ? true : false)
+        ->addBodyParam('code_language',$request->code_language)
         ->addBodyParam('resource_id',$request->resource_id);
 
         switch ($request->lesson_type){

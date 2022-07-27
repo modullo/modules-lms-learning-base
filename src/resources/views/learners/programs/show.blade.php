@@ -13,7 +13,7 @@
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'learner'])
     <div id="program">
-        <div class="jumbotron jumbotron-fluid program-jumbotron" style="background-image: url(programData.image)">
+        <div class="jumbotron jumbotron-fluid program-jumbotron" :style="'background-image: url('+programData.image+')'">
             <div class="container">
                 <h1> @{{ programData.title }}</h1>
 
