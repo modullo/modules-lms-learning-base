@@ -9,13 +9,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Modullo\ModulesLmsLearningBase\Services\SchedulerService;
 
 class ModulesLmsLearningBaseController extends Controller
 {
     protected Sdk $sdk;
+    private SchedulerService $schedulerService;
     public function __construct(Sdk $sdk)
     {
         $this->sdk = $sdk;
+        $this->schedulerService = new SchedulerService;
     }
     
     public function index()
@@ -307,10 +310,10 @@ class ModulesLmsLearningBaseController extends Controller
     }
 
     public function launchScheduler(string $id,string $lessonId,Sdk $sdk){
-        $schedulerToken = $this->getSchedulerToken($sdk);
+        $schedulerToken = $this->schedulerService->getSchedulerToken($sdk);
 
 //        $schedulerUserDetails = $this->schedulerUser($schedulerToken);
-        $schedules = $this->schedulerSchedules($schedulerToken);
+        $schedules = $this->schedulerService->schedulerSchedules($schedulerToken);
         return response([
             'Message' => 'Schedule record fetched',
 //            'user' => $schedulerUserDetails,

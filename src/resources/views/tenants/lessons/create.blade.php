@@ -1,11 +1,7 @@
 @extends('layouts.themes.tabler.tabler')
 
-@section('head_js')
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-@endsection
-
 @section('head_css')
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
@@ -19,6 +15,11 @@
             }
         }
     </style>
+@endsection
+
+@section('head_js')
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 @endsection
 
 
@@ -66,6 +67,22 @@
                                 <i v-show="errors.has('schedule_type')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('schedule_type')"
                                     class="help text-danger">@{{ errors . first('schedule_type') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="schedule_item">
+                                    Attach Schedule Item *
+                                </label>
+                                <select name="schedule_item" v-model="form.schedule_item" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('schedule_item') }" class="form-control" id="">
+                                    <option v-for="(schedule,scheduleKey) in schedule_items" :value="schedule.uuid">@{{ schedule.name }}</option>
+                                </select>
+                                <small><span class="text-danger">@{{ schedule_items.length == 0 ? 'You have no schedule items. ' : '' }}</span><a class="text-primary" @click.prevent="" v-b-modal.new-schedule-modal>Create New Schedule</a></small>
+                                <i v-show="errors.has('schedule_type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('schedule_item')" class="help text-danger">@{{ errors . first('schedule_item') }}</span>
+
+                                <b-modal id="new-schedule-modal" size="lg" scrollable title="Create New Schedule" no-close-on-backdrop hide-footer>
+                                    <schedule-form :schedule-items="schedule_items" ref="createSchedule" @update-schedule-items="addScheduleItem"></schedule-form>
+                                </b-modal>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
                                 <label for="tenant"> Choose Quiz Asset *</label>
@@ -221,6 +238,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
     <!-- jsdelivr cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
     <link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
@@ -255,6 +273,7 @@
         </script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('vendor/learning/components/tenant/CreateScheduleForm.js') }}"></script>
 
     <script>
         "use strict";
@@ -277,11 +296,13 @@
                     skills_gained: '',
                     has_code_editor: 'no',
                     code_language: '',
+                    schedule_item: '',
                 },
                 module_id: '',
                 assets: {!! json_encode($assets) !!},
                 modules: {!! json_encode($modules) !!},
                 quizzes: {!! json_encode($quizzes) !!},
+                schedule_items: {!! json_encode($schedules) !!},
                 languages: {!! json_encode(config('code-editor.languages')) !!}
             },
             methods: {
@@ -336,9 +357,13 @@
                         })
                     }
                 },
+                addScheduleItem(schedule){
+                    console.log(schedule)
+                    this.schedule_items.push(schedule)
+                }
             },
             mounted: function() {
-                //console.log(this.modules)
+                // console.log(this.schedule_items)
                 //console.log(this.assets)
                 //console.log(this.quizzes)
             }

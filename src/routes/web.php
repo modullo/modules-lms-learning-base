@@ -13,7 +13,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
         Route::group(['prefix' => 'learner'], function(){
 
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
-            Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-leaner-settings');
+            Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-learner-settings');
 
 
             // Routes for Courses
@@ -48,6 +48,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
             Route::get('dashboard','ModulesLmsLearningBaseTenantController@index')->name('tenant-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseTenantController@settings')->name('profile-settings');
+            Route::put('/profile-settings/{id}','ModulesLmsLearningBaseTenantController@updateSettings')->name('update-profile-settings');
             Route::get('/learner-management','ModulesLmsLearningBaseTenantController@management')->name('tenant-learner-management');
 
 
@@ -116,6 +117,10 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createAsset');
                 Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateAsset');
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editAsset');
+            });
+
+            Route::group(['prefix' => 'schedule'],function() {
+                Route::post('create', 'ModulesLmsLearningBaseTenantController@submitSchedule');
             });
 
         });
