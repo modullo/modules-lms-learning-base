@@ -7,42 +7,303 @@ Vue.component('course-quiz-questions', {
         },
         courseData: {
             type: Object,
-        }
+        },
         // @shown="getAllQuestions(quiz.lesson_resource.id)"
     },
-    template: 
-    `
+    template:
+        `
     <div>
-    <b-modal h-100 hide-footer hide-header-close no-close-on-backdrop no-close-on-esc :id="'modal-lg-new'+quiz.id" size="xl" :title="quizData.title">
-        <h6>Test Duration : 30mins | Total Points 6</h6>
-        <h3 class="mt-3">Questions</h3>
-        <b-form @submit.prevent="submitQuiz">
-            <ol class="mt-2">
-                <li v-for="(question, questionIndex) in quizData.questions" :key="questionIndex">
-                    <span v-html="question.question_text"></span>
-                    <b-list-group class="mb-3" v-if="question.question_type !== 'case_study'">
-                        <b-list-group-item v-for="(option, optionIndex) in question.options" :key="optionIndex">
-                            <input type="radio" 
-                            :name="'question'+questionIndex" 
-                            :id="'question'+question.id+optionIndex"
-                            :value="option"  
-                            v-model="userAnswers[question.id]"/>
-                            <label :for="'question'+question.id+optionIndex">{{option}}</label>
-                        </b-list-group-item>
-                    </b-list-group>
-                    <div v-else>
-                        <textarea :id="'question'+question.id+optionIndex" v-model="userAnswers[question.id]" cols="5" rows="4" class="form-control">
-                        </textarea>
-                    </div>
-                </li>
-            </ol>
-            <hr>
-            <div class="float-right">
-            <b-button class="btn btn-outline-danger m-r-2" @click="$bvModal.hide('modal-lg-new'+quiz.id)" v-b-modal.modal-footer-sm>Cancel</b-button>
-            <b-button v-if="!quiz.completed || ( quiz.completed && quiz.lesson_resource.retake_on_request)" class="btn btn-outline-secondary" type="submit">Submit Answers</b-button>
+        <div v-if="displayQuizResult === false">
+            <div v-if="quizStarted === false">
+                <h6>Test Duration : {{quizData.quiz_timer}}mins | Total Points {{quizData.total_quiz_mark}}</h6>
+                <button class="btn btn-primary" type="button" @click="quizStarted = true"><span v-text="quiz.completed && !quiz.lesson_resource.retake_on_request ? 'View' : 'Start'"></span> Quiz</button>
             </div>
-        </b-form>
-    </b-modal>
+            <b-form v-if="quizStarted === true" @submit.prevent="submitQuiz" id="custom-step" class="mt-4">
+                <div v-show="quizData.time_per_question == false" class="text-right" :class="{'center-time-up': centerTimeUp == true}">
+                    <span v-show="timeUp == true">Time up!</span>
+                    <countdown :time="quizData.quiz_timer * 60 * 1000" :emit-events="true" @progress="checkProgress" v-show="timeUp == false">
+                      <template slot-scope="props">Time：{{ props.minutes }}m, {{ props.seconds }}s.</template>
+                    </countdown>
+                </div>
+                <nav>
+                    <div class="nav nav-tabs d-none" id="nav-tab">
+                        <a v-for="(question, questionIndex) in quizData.questions" class="nav-link" :class="{active: setActiveQuestion(question.id)}" :id="question.id+'-tab'" data-bs-toggle="tab" :href="'#tab-'+question.id" @click="setActiveQuestion(question.id)">.</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div v-for="(question, questionIndex) in quizData.questions" :id="'tab-'+question.id" class="tab-pane " :class="{active: setActiveQuestion(question.id)}">
+                        <div v-if="quizData.time_per_question == true" class="text-right">
+                            <countdown :time="question.question_time * 1000" :emit-events="true" @progress="checkProgress" v-show="timeUp == false">
+                              <template slot-scope="props">Time：{{ props.minutes }}m, {{ props.seconds }}s.</template>
+                            </countdown>
+                        </div>
+                        <h3>Question {{questionIndex+1}} of {{quizData.questions.length}}</h3>
+                        <span v-html="question.question_text"></span>
+                        <b-list-group class="mb-3" v-if="question.question_type !== 'case_study'">
+                            <b-list-group-item v-for="(option, optionIndex) in question.options" :key="optionIndex">
+                                <input type="radio" 
+                                :name="'question'+questionIndex" 
+                                :id="'question'+question.id+optionIndex"
+                                :value="option"  
+                                v-model="userAnswers[question.id]"/>
+                                <label :for="'question'+question.id+optionIndex">{{option}}</label>
+                            </b-list-group-item>
+                        </b-list-group>
+                        <div v-else>
+                            <textarea :id="'question'+question.id+optionIndex" v-model="userAnswers[question.id]" cols="5" rows="4" class="form-control">
+                            </textarea>
+                        </div>
+                        <div class="">
+                            <button v-if="timeUp == false" type="button" :id="'tab-'+question.id+'Prev'" class="btn float-start" :class="{'disabled': activeIsFirst(questionIndex),'btn-outline-secondary': activeIsFirst(questionIndex),'btn-secondary': !activeIsFirst(questionIndex)}" @click.stop="controlPrev(questionIndex,$event)">Previous</button>
+                            <button v-if="timeUp == false" v-show="lastQuestionIndex != questionIndex" type="button" :id="'tab-'+question.id+'Next'" class="btn btn-primary float-end" @click.stop="controlNext(questionIndex,$event)">Next</button>
+                            <button v-show="lastQuestionIndex == questionIndex || timeUp == true" type="submit" class="btn btn-success float-end" id="submitQuiz">Submit</button>
+                        </div>                                        
+                    </div>
+    <!--
+                    <div class="tab-pane active" id="step1">
+                        <h4 class="card-title mt-3 mb-1">Seller Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtFirstNameBilling" class="col-lg-3 col-form-label text-end">Contact Person</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtFirstNameBilling" name="txtFirstNameBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtLastNameBilling" class="col-lg-3 col-form-label text-end">Mobile No.</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtLastNameBilling" name="txtLastNameBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCompanyBilling" class="col-lg-3 col-form-label text-end">Landline No.</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCompanyBilling" name="txtCompanyBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtEmailAddressBilling" class="col-lg-3 col-form-label text-end">Email Address</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtEmailAddressBilling" name="txtEmailAddressBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtAddress1Billing" class="col-lg-3 col-form-label text-end">Address 1</label>
+                                    <div class="col-lg-9">
+                                        <textarea id="txtAddress1Billing" name="txtAddress1Billing" rows="4" class="form-control"></textarea>
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtAddress2Billing" class="col-lg-3 col-form-label text-end">Warehouse Address</label>
+                                    <div class="col-lg-9">
+                                        <textarea id="txtAddress2Billing" name="txtAddress2Billing" rows="4" class="form-control"></textarea>
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCityBilling" class="col-lg-3 col-form-label text-end">Company Type</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCityBilling" name="txtCityBilling" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtStateProvinceBilling" class="col-lg-3 col-form-label text-end">Live Market A/C</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtStateProvinceBilling" name="txtStateProvinceBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtTelephoneBilling" class="col-lg-3 col-form-label text-end">Product Category</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtTelephoneBilling" name="txtTelephoneBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtFaxBilling" class="col-lg-3 col-form-label text-end">Product Sub Category</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtFaxBilling" name="txtFaxBilling" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="">
+                            <button type="button" id="step1Next" class="btn btn-primary float-end">Next</button>
+                        </div>                                        
+                    </div>
+                    <div class="tab-pane" id="step2">
+                        <h4 class="card-title mt-3 mb-1">Company Document</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtFirstNameShipping" class="col-lg-3 col-form-label text-end">PAN Card</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtFirstNameShipping" name="txtFirstNameShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtLastNameShipping" class="col-lg-3 col-form-label text-end">VAT/TIN No.</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtLastNameShipping" name="txtLastNameShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCompanyShipping" class="col-lg-3 col-form-label text-end">CST No.</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCompanyShipping" name="txtCompanyShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtEmailAddressShipping" class="col-lg-3 col-form-label text-end">Service Tax No.</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtEmailAddressShipping" name="txtEmailAddressShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCityShipping" class="col-lg-3 col-form-label text-end">Company UIN</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCityShipping" name="txtCityShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtStateProvinceShipping" class="col-lg-3 col-form-label text-end">Declaration</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtStateProvinceShipping" name="txtStateProvinceShipping" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div>
+                            <button type="button" id="step2Prev" class="btn btn-secondary float-start">Previous</button>
+                            <button type="button" id="step2Next" class="btn btn-primary float-end">Next</button>
+                        </div> 
+                    </div>
+                    <div class="tab-pane" id="step3">
+                        <h4 class="card-title mt-3 mb-1">Bank Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtNameCard" class="col-lg-3 col-form-label text-end">Name on Card</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtNameCard" name="txtNameCard" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="ddlCreditCardType" class="col-lg-3 col-form-label text-end">Credit Card Type</label>
+                                    <div class="col-lg-9">
+                                        <select id="ddlCreditCardType" name="ddlCreditCardType" class="form-select">
+                                            <option value="">&#45;&#45;Please Select&#45;&#45;</option>
+                                            <option value="AE">American Express</option>
+                                            <option value="VI">Visa</option>
+                                            <option value="MC">MasterCard</option>
+                                            <option value="DI">Discover</option>
+                                        </select>
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCreditCardNumber" class="col-lg-3 col-form-label text-end">Credit Card Number</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCreditCardNumber" name="txtCreditCardNumber" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtCardVerificationNumber" class="col-lg-3 col-form-label text-end">Card Verification Number</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtCardVerificationNumber" name="txtCardVerificationNumber" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row mb-2">
+                                    <label for="txtExpirationDate" class="col-lg-3 col-form-label text-end">Expiration Date</label>
+                                    <div class="col-lg-9">
+                                        <input id="txtExpirationDate" name="txtExpirationDate" type="text" class="form-control">
+                                    </div>
+                                </div>&lt;!&ndash;end form-group&ndash;&gt;
+                            </div>&lt;!&ndash;end col&ndash;&gt;
+                        </div>&lt;!&ndash;end row&ndash;&gt;
+                        <div>
+                            <button type="button" id="step3Prev" class="btn btn-secondary float-start">Previous</button>
+                            <button type="button" id="step3Next" class="btn btn-primary float-end">Next</button>                                         
+                        </div> 
+                    </div>
+                    <div class="tab-pane" id="step4">
+                        <h4 class="card-title mt-3">Confirm Detail</h4>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                I agree with the Terms and Conditions.
+                            </label>                                           
+                        </div> 
+                        <div>
+                            <button type="button" id="step4Prev" class="btn btn-secondary float-start">Previous</button>
+                            <button type="button" id="step4Finish" class="btn btn-danger float-end">Finish</button>                                         
+                        </div> 
+                    </div>
+    -->
+                </div>
+            </b-form>
+            <div class="time-up-cover"></div>
+        </div>
+        <div v-else-if="displayQuizResult === true">
+            <h3>Quiz Result</h3>
+            <p>You scored {{quizReport.score}} out of {{quizData.total_quiz_mark}} points.</p>
+            <div v-if="alertQualified">
+                <div class="alert alert-success">Since you scored above required pass mark of {{quizData.pass_mark}}, you have been granted access to lessons/courses having this quiz as a prerequisite.</div>
+            </div>
+            <p class="font-italic text-gray">You will be taken to the next lesson/course in ~7s</p>
+        </div>
     </div>
     `,
     data() {
@@ -57,6 +318,20 @@ Vue.component('course-quiz-questions', {
             selected2: '',
             quizQuestions: 'Mudah',
             userAnswers: [],
+            tabIndex: 1,
+            activeQuestion: '',
+            lastQuestionIndex: 0,
+            quizStarted: false,
+            displayQuizResult: false,
+            quizReport: [],
+            timeUp: false,
+            centerTimeUp: false,
+        }
+    },
+    watch: {
+        quizData: function(newVal, oldVal) {
+            this.activeQuestion = newVal.questions[0].id
+            this.lastQuestionIndex = newVal.questions.length - 1
         }
     },
     computed: {
@@ -70,31 +345,27 @@ Vue.component('course-quiz-questions', {
             return questionOptions
         }
     },
-    watch: {
-        quiz: function(newVal, oldVal) {
-            //console.log(newVal)
-        }
-    },
     mounted: function() {
         // console.log(this.courseData) - working well
         // console.log(this.quiz)
+
     },
     methods: {
         getAllQuestions(quizId) {
             if (!this.quizData.length > 0) {
-                
+
                 let loader = Vue.$loading.show();
                 axios
-                .get(`/learner/courses/fetchQuiz/${quizId}`)
-                .then((res) => {
-                    loader.hide();
-                    this.quizData = res.data.quiz
-                    return
-                    // console.log(this.$refs.quizRef)
-                })
-                .catch(() => {
-                    loader.hide();
-                })
+                    .get(`/learner/courses/fetchQuiz/${quizId}`)
+                    .then((res) => {
+                        loader.hide();
+                        this.quizData = res.data.quiz
+                        return
+                        // console.log(this.$refs.quizRef)
+                    })
+                    .catch(() => {
+                        loader.hide();
+                    })
             }
         },
         getCurrentQuizLesson() {
@@ -107,19 +378,61 @@ Vue.component('course-quiz-questions', {
             this.quizData.course_id = this.courseData.id
             let loader = Vue.$loading.show();
             //console.log(this.quizData);
+            // console.log('Submitted');
+            // return
             axios
-            .post(`/learner/courses/submitQuiz/${this.quizData.id}/${this.quiz.id}`, this.quizData)
-            .then((res) => {
-                //console.log(res)
-                this.$bvModal.hide('modal-lg-new'+this.quiz.id)
-                this.$emit('send-new-completed-course', res.data.course)
-                loader.hide();
-                return
-                // console.log(this.$refs.quizRef)
-            })
-            .catch((e) => {
-                loader.hide();
-            })
+                .post(`/learner/courses/submitQuiz/${this.quizData.id}/${this.quiz.id}`, this.quizData)
+                .then((res) => {
+                    console.log(res)
+                    this.quizReport = res.data.quizReport
+                    this.displayQuizResult = true
+
+                    // if (this.quizData.quiz_type === 'pre-qualifier'){
+                    // }
+                    setTimeout(function () {
+                        this.$emit('quiz-ended')
+                    }.bind(this),7000)
+                    // this.$emit('send-new-completed-course', res.data.course)
+                    loader.hide();
+                    return
+                    // console.log(this.$refs.quizRef)
+                })
+                .catch((e) => {
+                    loader.hide();
+                })
+        },
+        setActiveQuestion(questionId){
+            return this.activeQuestion === questionId
+        },
+        controlPrev(index,event){
+            if(this.activeIsFirst(index)){
+                event.stopPropagation()
+            }
+            else{
+                this.activeQuestion = this.quizData.questions[index-1].id
+            }
+        },
+        controlNext(index,event){
+            this.activeQuestion = this.quizData.questions[index+1].id
+        },
+        activeIsFirst(index){
+            return index === 0
+        },
+        alertQualified(){
+            if(this.quizData.quiz_type !== 'pre-qualifier'){
+                return false
+            }
+            return this.quizReport.score >= this.quizData.pass_mark;
+
+        },
+        checkProgress(data){
+            if(data.totalSeconds === 60){
+                this.centerTimeUp = true
+            }
+            if(data.totalSeconds === 1){
+                this.timeUp = true
+                document.getElementById("submitQuiz").click();
+            }
         }
     },
 })

@@ -9,8 +9,7 @@ Vue.component('sidebar', {
   `
   <div clas="sidebar" :class="{ fixed: fixedOrderPanel, sidebar: true }" style="height: 100vh">
       <div class="sidebar-header">Course Content</div>
-      <sidebar-item @send-new-content-to-sidebar="collectNewContent" 
-      :course-data="courseData" :currentPlayingVideo="listener" @send-video-to-sidebar="collectVideoFromSideBar"></sidebar-item>
+      <sidebar-item @send-new-content-to-sidebar="collectNewContent" :course-data="courseData" :currentPlayingVideo="listener" @send-video-to-sidebar="collectVideoFromSideBar"></sidebar-item>
   </div>
   `,
   data() {

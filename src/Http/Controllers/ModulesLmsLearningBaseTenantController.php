@@ -9,13 +9,16 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modullo\ModulesLmsLearningBase\Services\SchedulerService;
 
 class ModulesLmsLearningBaseTenantController extends Controller
 {
     protected Sdk $sdk;
+    private SchedulerService $schedulerService;
     public function __construct(Sdk $sdk)
     {
         $this->sdk = $sdk;
+        $this->schedulerService = new SchedulerService;
     }
 
     public function index()
@@ -25,7 +28,38 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function settings()
     {
-        return view('modules-lms-learning-base::tenants.base.settings');
+        $data = \auth()->user();
+        return view('modules-lms-learning-base::tenants.base.settings',compact('data'));
+    }
+
+    public function updateSettings(Request $request, string $id, Sdk $sdk): JsonResponse
+    {
+        $user = \auth()->user();
+        if ($request->filled('update_type') && $request->update_type === 'organization'){
+            $resource = $sdk->createTenantsService();
+            $resource = $resource
+                ->addBodyParam('company_name',$request->company_name)
+                ->addBodyParam('country',$request->country)
+                ->addBodyParam('logo',$request->logo);
+            $response = $resource->send('put',[$id]);
+            if (!$response->isSuccessful()) {
+                $response = $response->getData();
+                if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+                return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+            }
+            $data = $response->getData()['tenant'];
+            $user->organization_details = $data['tenant'];
+            $user->save();
+        }
+        else{
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone_number' => $request->phone_number,
+            ]);
+        }
+        return response()->json(['message' => 'Updated Successfully'],200);
     }
 
     public function management()
@@ -125,11 +159,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return $query->send('get', $path);
     }
 
-    public function createLesson()
+    public function createLesson(Sdk $sdk)
     {
         $assets = [];
         $modules = [];
         $quizzes = [];
+        $schedules = [];
         if ($this->getAssets()->isSuccessful()) {
             $assetSdk = $this->getAssets()->getData();
             $modulesSdk = $this->getModules()->getData();
@@ -137,9 +172,13 @@ class ModulesLmsLearningBaseTenantController extends Controller
             $assets = $assetSdk['assets'];
             $modules = $modulesSdk['modules'];
             $quizzes = $quizzesSdk['quizzes'];
-            return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules'));
+
+            $schedulerToken = $this->schedulerService->getSchedulerToken($sdk,$this->tenantDetails());
+            $schedules = $this->schedulerService->schedulerSchedules($schedulerToken);
+//            dd($schedules);
+            return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules','schedules'));
         }
-        return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules'));
+        return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules','schedules'));
     }
 
     public function submitLesson(string $id, Request $request, Sdk $sdk) : JsonResponse
@@ -153,7 +192,20 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('lesson_type',$request->lesson_type)
         ->addBodyParam('lesson_image',  $request->lesson_image)
         ->addBodyParam('skills_gained',$request->skills_gained)
+        ->addBodyParam('has_code_editor',$request->has_code_editor === 'yes' ? true : false)
+        ->addBodyParam('code_language',$request->code_language)
         ->addBodyParam('resource_id',$request->resource_id);
+
+        switch ($request->lesson_type){
+            case 'scheduler':
+                $resource = $resource
+                    ->addBodyParam('schedule_type',$request->schedule_type)
+                    ->addBodyParam('schedule_instruction',$request->schedule_instruction);
+                break;
+            case 'project':
+                $resource = $resource->addBodyParam('project_details',$request->project_details);
+                break;
+        }
         
         $response = $resource->send('post',['create', $id]);
         if (!$response->isSuccessful()) {
@@ -200,6 +252,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('duration',$request->duration)
             ->addBodyParam('lesson_number',$request->lesson_number)
             ->addBodyParam('lesson_type',$request->lesson_type)
+            ->addBodyParam('scheduler_type',$request->scheduler_type)
             ->addBodyParam('lesson_image',$request->lesson_image)
             ->addBodyParam('skills_gained',$request->skills_gained)
             ->addBodyParam('resource_id', !$request->resource_id ? $request->lesson_resource['id'] : $request->resource_id)
@@ -552,18 +605,30 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function createQuiz()
     {
-        return view('modules-lms-learning-base::tenants.resources.quiz.create');
+        $courses = [];
+        if ($this->getCourses()->isSuccessful()) {
+            $response = $this->getCourses()->getData();
+            $courses = $response['courses'];
+        }
+        return view('modules-lms-learning-base::tenants.resources.quiz.create', compact('courses'));
     }
 
     public function submitQuiz(Request $request, Sdk $sdk){
         $resource = $sdk->createQuizService();
         $resource = $resource
-        ->addBodyParam('title',$request->quiz_title)
-        ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
-        ->addBodyParam('quiz_timer',$request->quiz_timer)
-        ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
-        ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
-        ->addBodyParam('questions', json_decode($request->questions, true));
+            ->addBodyParam('title',$request->quiz_title)
+            ->addBodyParam('quiz_type',$request->quiz_type)
+            ->addBodyParam('pq_course',$request->pq_course)
+            ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
+            ->addBodyParam('pass_mark',$request->pass_mark)
+            ->addBodyParam('timing_mode',$request->timing_mode)
+            ->addBodyParam('time_per_question',$request->time_per_question === 'yes' ? true : false)
+            ->addBodyParam('quiz_timer',$request->quiz_timer)
+            ->addBodyParam('randomize_questions',$request->randomize_questions === 'yes' ? true : false)
+            ->addBodyParam('randomize_options',$request->randomize_options === 'yes' ? true : false)
+            ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
+            ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
+            ->addBodyParam('questions', json_decode($request->questions, true));
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -592,11 +657,14 @@ class ModulesLmsLearningBaseTenantController extends Controller
     {
         $resource = $sdk->createQuizService();
         $resource = $resource
-        ->addBodyParam('title',$request->quiz_title)
-        ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
-        ->addBodyParam('quiz_timer',$request->quiz_timer)
-        ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
-        ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
+            ->addBodyParam('title',$request->quiz_title)
+            ->addBodyParam('quiz_type',$request->quiz_type)
+            ->addBodyParam('pq_course',$request->pq_course)
+            ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
+            ->addBodyParam('pass_mark',$request->pass_mark)
+            ->addBodyParam('quiz_timer',$request->quiz_timer)
+            ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
+            ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
         $response = $resource->send('put',[$id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -719,4 +787,49 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return response(['Message' => $data, 'learnerCourses' => null], 404);
     }
 
+    private function tenantDetails():array{
+        return  [
+            'firstname' => auth()->user()->first_name,
+            'lastname' => \auth()->user()->last_name,
+            'email' => \auth()->user()->email,
+            'phone' => \auth()->user()->phone_number,
+            'password' => \auth()->user()->email,
+            'password_confirmation' => \auth()->user()->email,
+            'business_id' => config('scheduler.business_id')
+        ];
+
+    }
+
+    public function submitSchedule(Request $request, Sdk $sdk){
+        $data = [
+            'source' => 'external',
+            'action' => 'create_class',
+            'name' => $request->name,
+            'type' => 0,
+            'short_description' => $request->short_description,
+            'description' => $request->description,
+            'currency' => 'NGN',
+            'amount' => $request->price,
+            'sitting_capacity' => $request->capacity,
+            'is_free' => $request->is_free === 'yes' ? true : false,
+            'auto_confirm' => $request->auto_confirm === 'yes' ? true : false,
+            'extra_json' => [],
+            'schedule_type' => $request->schedule_type,
+            'schedule_frequency' => $request->schedule_frequency,
+            'schedule_access_type' => $request->schedule_access_type,
+            'schedule_seats_per_frequency' => (int)$request->seats_per_frequency,
+            'schedule_choose_datetime' => 'none',
+            'schedule_datetime' => null,
+            'schedule_logo_url' => null
+        ];
+        $schedulerToken = $this->schedulerService->getSchedulerToken($sdk,$this->tenantDetails());
+//        $schedule = $this->schedulerService->createSchedule($data,$schedulerToken);
+//        dd($schedule);
+        $data['business_id'] = 3;
+        return response()->json([
+            'message' => 'Schedule item successfully created!',
+            'schedule' => $data
+//            'schedule' => $schedule
+        ], 200);
+    }
 }

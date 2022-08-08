@@ -1,11 +1,7 @@
 @extends('layouts.themes.tabler.tabler')
 
-@section('head_js')
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-@endsection
-
 @section('head_css')
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
@@ -19,6 +15,11 @@
             }
         }
     </style>
+@endsection
+
+@section('head_js')
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 @endsection
 
 
@@ -45,10 +46,43 @@
                                 :class="{'input': true, 'border border-danger': errors.has('Lesson Type') }" class="form-control" id="">
                                     <option value="video">Video</option>
                                     <option value="quiz">Quiz</option>
+                                    <option value="scheduler">Scheduler</option>
+                                    <option value="project">Project</option>
                                 </select>
                                 <i v-show="errors.has('Lesson Type')" class="fa fa-warning text-danger"></i>
                                 <span v-show="errors.has('Lesson Type')"
                                     class="help text-danger">@{{ errors . first('Lesson Type') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="schedule_type">
+                                    Schedule Purpose *
+                                </label>
+                                <select name="schedule_type" v-model="form.schedule_type" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('schedule_type') }" class="form-control" id="">
+                                    <option value="online">Online event</option>
+                                    <option value="offline">Offline event</option>
+                                    <option value="equipment">Equipment use</option>
+                                    <option value="workspace">Workspace</option>
+                                </select>
+                                <i v-show="errors.has('schedule_type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('schedule_type')"
+                                    class="help text-danger">@{{ errors . first('schedule_type') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="schedule_item">
+                                    Attach Schedule Item *
+                                </label>
+                                <select name="schedule_item" v-model="form.schedule_item" v-validate="'required'"
+                                :class="{'input': true, 'border border-danger': errors.has('schedule_item') }" class="form-control" id="">
+                                    <option v-for="(schedule,scheduleKey) in schedule_items" :value="schedule.uuid">@{{ schedule.name }}</option>
+                                </select>
+                                <small><span class="text-danger">@{{ schedule_items.length == 0 ? 'You have no schedule items. ' : '' }}</span><a class="text-primary" @click.prevent="" v-b-modal.new-schedule-modal>Create New Schedule</a></small>
+                                <i v-show="errors.has('schedule_type')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('schedule_item')" class="help text-danger">@{{ errors . first('schedule_item') }}</span>
+
+                                <b-modal id="new-schedule-modal" size="lg" scrollable title="Create New Schedule" no-close-on-backdrop hide-footer>
+                                    <schedule-form :schedule-items="schedule_items" ref="createSchedule" @update-schedule-items="addScheduleItem"></schedule-form>
+                                </b-modal>
                             </div>
                             <div v-if="form.lesson_type === 'quiz'" class="form-group col-lg-6">
                                 <label for="tenant"> Choose Quiz Asset *</label>
@@ -105,6 +139,27 @@
                                     <span v-show="errors.has('Description')"
                                         class="help text-danger">@{{ errors . first('Description') }}</span>
                             </div>
+                            <div class="form-group col-lg-6">
+                                <label for="description"> Skills Gained * </label>
+                                <editor style="height: 100px" v-validate="'required'"
+                                        name="Skills Gained"
+                                        :class="{'input': true, 'border border-danger': errors.has('Skills Gained') }" v-model="form.skills_gained" theme="snow"></editor>
+                                <i v-show="errors.has('Skills Gained')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('Skills Gained')"
+                                      class="help text-danger">@{{ errors . first('Skills Gained') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'scheduler'">
+                                <label for="schedule_instruction"> Schedule Instruction * </label>
+                                <editor style="height: 100px" v-validate="'required'" name="schedule_instruction" :class="{'input': true, 'border border-danger': errors.has('schedule_instruction') }" v-model="form.schedule_instruction" theme="snow"></editor>
+                                    <i v-show="errors.has('schedule_instruction')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('schedule_instruction')" class="help text-danger">@{{ errors . first('schedule_instruction') }}</span>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.lesson_type === 'project'">
+                                <label for="project_details"> Project Details * </label>
+                                <editor style="height: 100px" v-validate="'required'" name="project_details" :class="{'input': true, 'border border-danger': errors.has('project_details') }" v-model="form.project_details" theme="snow"></editor>
+                                    <i v-show="errors.has('project_details')" class="fa fa-warning text-danger"></i>
+                                    <span v-show="errors.has('project_details')" class="help text-danger">@{{ errors . first('project_details') }}</span>
+                            </div>
                         </div>
                         <div class="form-row">
                             <div class="mt-3 form-group col-lg-6">
@@ -145,16 +200,26 @@
                                         class="help text-danger">@{{ errors . first('Track Number') }}</span>
                                 </p>
                             </div>
-                        </div>
-                        <div class="mb-5 form-row">
                             <div class="form-group col-lg-6">
-                                <label for="description"> Skills Gained * </label>
-                                <editor style="height: 100px" v-validate="'required'"
-                                name="Skills Gained"
-                                :class="{'input': true, 'border border-danger': errors.has('Skills Gained') }" v-model="form.skills_gained" theme="snow"></editor>
-                                    <i v-show="errors.has('Skills Gained')" class="fa fa-warning text-danger"></i>
-                                    <span v-show="errors.has('Skills Gained')"
-                                        class="help text-danger">@{{ errors . first('Skills Gained') }}</span>
+                                <label> Activate Code Editor </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="has_code_editor_yes" v-model="form.has_code_editor" value="yes" name="has_code_editor" class="custom-control-input">
+                                        <label class="custom-control-label" for="has_code_editor_yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="has_code_editor_no" v-model="form.has_code_editor" value="no" name="has_code_editor" class="custom-control-input">
+                                        <label class="custom-control-label" for="has_code_editor_no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.has_code_editor === 'yes'">
+                                <label for="code_language">Code Language *</label>
+                                <select name="code_language" v-model="form.code_language" v-validate="'required'" :class="{'input': true, 'border border-danger': errors.has('code_language') }" class="form-control" id="">
+                                    <option v-for="(language,name) in languages" :value="name">@{{ language.title }}</option>
+                                </select>
+                                <i v-show="errors.has('code_language')" class="fa fa-warning text-danger"></i>
+                                <span v-show="errors.has('code_language')" class="help text-danger">@{{ errors . first('code_language') }}</span>
                             </div>
                         </div>
                         <div class=" submit-btn d-flex justify-content-between align-items-center">
@@ -173,6 +238,7 @@
 
 @section('body_js')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
     <!-- jsdelivr cdn -->
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@<3.0.0/dist/vee-validate.js"></script>
     <link href="https://unpkg.com/@morioh/v-quill-editor/dist/editor.css" rel="stylesheet">
@@ -207,6 +273,7 @@
         </script>
     <script src="{{ asset('vendor/breadcrumbs/BreadCrumbs.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('vendor/learning/components/tenant/CreateScheduleForm.js') }}"></script>
 
     <script>
         "use strict";
@@ -222,13 +289,21 @@
                     duration: '',
                     lesson_number: '',
                     lesson_type: 'quiz',
+                    schedule_type: '',
+                    schedule_instruction: '',
+                    project_details: '',
                     lesson_image: '',
                     skills_gained: '',
+                    has_code_editor: 'no',
+                    code_language: '',
+                    schedule_item: '',
                 },
                 module_id: '',
                 assets: {!! json_encode($assets) !!},
                 modules: {!! json_encode($modules) !!},
                 quizzes: {!! json_encode($quizzes) !!},
+                schedule_items: {!! json_encode($schedules) !!},
+                languages: {!! json_encode(config('code-editor.languages')) !!}
             },
             methods: {
                 assetTypes(asset_type) {
@@ -241,6 +316,7 @@
                     this.form.lesson_image = e.target.files[0]
                 },
                 validateBeforeSubmit(ev) {
+                    console.log(ev)
                     this.$validator.validateAll().then((result) => {
                         if (result) {
                             let loader = Vue.$loading.show()
@@ -281,9 +357,13 @@
                         })
                     }
                 },
+                addScheduleItem(schedule){
+                    console.log(schedule)
+                    this.schedule_items.push(schedule)
+                }
             },
             mounted: function() {
-                //console.log(this.modules)
+                // console.log(this.schedule_items)
                 //console.log(this.assets)
                 //console.log(this.quizzes)
             }

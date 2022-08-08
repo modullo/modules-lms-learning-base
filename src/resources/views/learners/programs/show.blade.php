@@ -13,7 +13,7 @@
 @section('body_content_main')
     @include('modules-lms-base::navigation',['type' => 'learner'])
     <div id="program">
-        <div class="jumbotron jumbotron-fluid program-jumbotron" style="background-image: url(programData.image)">
+        <div class="jumbotron jumbotron-fluid program-jumbotron" :style="'background-image: url('+programData.image+')'">
             <div class="container">
                 <h1> @{{ programData.title }}</h1>
 
@@ -49,12 +49,13 @@
                             <h6 class="mb-2 card-subtitle text-muted">
                                 @{{ cardinfo.author }}
                             </h6>
-                            <p class="card-text" v-html="cardinfo.description"></p>
+                            <p class="card-text" v-html="cardinfo.description.substring(0,100)"></p>
 
                             <a class="btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id" role="button">View Details</a>
-                            <a v-if="coursesStarted.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :href="'/learner/courses/'+cardinfo.id+'/start-course'" role="button">Start Course</a>
-                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary disabled" :href="'#'" role="button">Started</a>
+                            <a v-if="coursesStarted.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :class="{disabled: checkingCourseState === true}" :href="'/learner/courses/'+cardinfo.id+'/start-course'" role="button">Start Course</a>
+                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary" :class="{disabled: checkingCourseState === true}" :href="'/learner/courses/'+cardinfo.id+'/lesson/'+cardinfo.title" role="button">Continue</a>
 {{--
+                            <a v-if="coursesStarted.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary disabled" :href="'#'" role="button">Started</a>
                             <a class="mx-2 btn btn-primary" :href="'/learner/courses/'+cardinfo.id+'/lesson/'+cardinfo.title" role="button">Start Course</a>
 --}}
                         </div>
@@ -100,9 +101,13 @@
                 allProgramCourses: {!! json_encode($data['courses']) !!},
                 learnersCourses: [],
                 coursesStarted: [],
+                checkingCourseState: true,
                 rating: "(86900 ratings)",
                 aboutProgram:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, architecto!architecto!architecto! Sed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque, nemo aspernatur libSed amet eos quos quae eaque.",
+            },
+            mounted() {
+                // this.fetchAllProgramCourses()
             },
             created() {
                 this.fetchAllProgramCourses()
@@ -122,6 +127,7 @@
                             collector.push(val.course.id)
                         })
                         this.coursesStarted = collector
+                        this.checkingCourseState = false
                     })
                     .catch(e => {
                         console.log(e)

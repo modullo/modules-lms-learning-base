@@ -8,13 +8,17 @@ use Hostville\Modullo\Sdk;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Modullo\ModulesLmsLearningBase\Services\SchedulerService;
 
 class ModulesLmsLearningBaseController extends Controller
 {
     protected Sdk $sdk;
+    private SchedulerService $schedulerService;
     public function __construct(Sdk $sdk)
     {
         $this->sdk = $sdk;
+        $this->schedulerService = new SchedulerService;
     }
     
     public function index()
@@ -22,9 +26,39 @@ class ModulesLmsLearningBaseController extends Controller
         return view('modules-lms-learning-base::learners.base.dashboard');
     }
 
-    public function settings()
+    public function settings(Sdk $sdk)
     {
-        return view('modules-lms-learning-base::learners.base.settings');
+        $data = auth()->user()->learner_details;
+        $data['uuid'] = auth()->user()->uuid;
+        return view('modules-lms-learning-base::learners.base.settings',compact('data'));
+    }
+
+    public function updateSettings(Request $request, string $id, Sdk $sdk): JsonResponse
+    {
+        $user = \auth()->user();
+        $resource = $sdk->createLearnersService();
+        $resource = $resource
+            ->addBodyParam('first_name',$request->first_name)
+            ->addBodyParam('last_name',$request->last_name)
+            ->addBodyParam('phone_number',$request->phone_number)
+            ->addBodyParam('gender',$request->gender)
+            ->addBodyParam('location',$request->location)
+            ->addBodyParam('image',$request->image);
+        $response = $resource->send('put',[$user->learner_details['id']]);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        $data = $response->getData();
+        $user->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone_number' => $request->phone_number,
+            'learner_details' => $data['learner'],
+        ]);
+        return response()->json(['message' => 'Updated Successfully'],200);
     }
 
     // Courses
@@ -229,9 +263,16 @@ class ModulesLmsLearningBaseController extends Controller
 
     public function completeLesson(string $id, Sdk $sdk, Request $request) 
     {
-        $sdkObject = $sdk->createLearnerLessonService();
+
+        $resource = $sdk->createLearnerLessonService();
+        if($request->filled('scheduler')){
+            $schedulerToken = $this->getSchedulerToken($sdk);
+            $schedules = json_encode($this->schedulerSchedules($schedulerToken));
+            $resource = $resource
+                ->addBodyParam('schedule', $schedules);
+        }
         $path = ['complete', $id];
-        $response = $sdkObject->send('post', $path);
+        $response = $resource->send('post', $path);
         if ($response->isSuccessful()){
             $sdkObject = $sdk->createCourseService();
             $path = [$request->course_id];
@@ -258,6 +299,7 @@ class ModulesLmsLearningBaseController extends Controller
         $path = ['quiz', 'submit', $quiz_id, $lesson_id];
         $response = $resource->send('post', $path);
         if ($response->isSuccessful()){
+            $quizReport = $response->data['quiz-report'];
             // Complete the lesson
             $sdkObject = $sdk->createLearnerLessonService();
             $path = ['complete', $lesson_id];
@@ -272,7 +314,8 @@ class ModulesLmsLearningBaseController extends Controller
 
             return response([
                 'Message' => 'Lesson Completed', 
-                'course' => $courseData, 
+                'quizReport' => $quizReport, 
+                'course' => $courseData,
                 'lesson' => $lessonData
             ], 200);
         }
@@ -295,4 +338,139 @@ class ModulesLmsLearningBaseController extends Controller
         $data = ['error' => 'unable to fetch the requested resource'];
         return response(['Message' => $data, 'quiz' => null], 404);
     }
+
+    public function launchScheduler(string $id,string $lessonId,Sdk $sdk){
+        $schedulerToken = $this->schedulerService->getSchedulerToken($sdk);
+
+//        $schedulerUserDetails = $this->schedulerUser($schedulerToken);
+        $schedules = $this->schedulerService->schedulerSchedules($schedulerToken);
+        return response([
+            'Message' => 'Schedule record fetched',
+//            'user' => $schedulerUserDetails,
+            'schedules' => $schedules,
+            'url' => config('scheduler.domain').'/schedules/'.$schedules[0]['slug'].'/?member_token='.$schedulerToken
+        ], 200);
+
+    }
+
+    public function getSchedulerToken($sdk){
+        $schedulerToken = auth()->user()->scheduler_token;
+        if(empty($schedulerToken)){
+            $sdkObject = $sdk->createProfileService();
+            $path = [];
+            $response = $sdkObject->send('get', $path);
+            if (!$response->isSuccessful()){
+                return response(['Message' => 'Unable to get user profile. Please try again.'], 404);
+//            return response(['Message' => 'Unable to get user profile. Please try again.', 'courses' => $data,'learnersCourses'=>$learnersCourses], 200);
+            }
+
+            $details = $response->data['user'];
+            $data = [
+                'firstname' => $details['learner']['first_name'],
+                'lastname' => $details['learner']['last_name'],
+                'email' => $details['email'],
+                'phone' => $details['learner']['phone_number'],
+                'password' => $details['email'],
+                'password_confirmation' => $details['email'],
+                'business_id' => config('scheduler.business_id')
+            ];
+            /*            $data = [
+                            'firstname' => 'test-fname15',
+                            'lastname' => 'test-lname15',
+                            'email' => 'test15@email.com',
+                            'phone' => '08111111115',
+                            'password' => 'test15@email.com',
+                            'password_confirmation' => 'test15@email.com',
+                            'business_id' => config('scheduler.business_id')
+                        ];*/
+
+            $url = config('scheduler.domain').'/api/auth/register';
+            $response = Http::post($url,$data);
+            if(!$response->successful()){
+                $response = $response->collect()->toArray();
+                $error = $response['errors'][0]['title'];
+                return response(['Message' => $error], 400);
+//            return response(['Message' => 'Error establishing connection with scheduler. Please try again.'], 400);
+            }
+            $response = $response->object();
+            $schedulerUser = $response->user;
+            $schedulerToken = encrypt($response->token);
+            auth()->user()->update(['scheduler_token'=>$schedulerToken]);
+        }
+
+        return decrypt($schedulerToken);
+    }
+
+    public function schedulerUser($token = null){
+        if(is_null($token)){
+            $token = decrypt(auth()->user()->scheduler_token);
+        }
+
+        $url = config('scheduler.domain').'/api/auth/me';
+        $response = Http::withToken($token)->get($url);
+        if(!$response->successful()){
+            $response = $response->collect()->toArray();
+            $error = $response['errors'][0]['title'];
+            return response(['Message' => $error], 400);
+        }
+        $response = $response->collect();
+        return $response['user'];
+    }
+
+    public function schedulerSchedules($token = null){
+        if(is_null($token)){
+            $token = decrypt(auth()->user()->scheduler_token);
+        }
+
+        $url = config('scheduler.domain').'/api/auth/schedules';
+        $response = Http::withToken($token)->get($url);
+        if(!$response->successful()){
+            $response = $response->collect()->toArray();
+            $error = $response['errors'][0]['title'];
+            return response(['Message' => $error], 400);
+        }
+        $response = $response->collect();
+        return $response['schedules'];
+
+    }
+
+    public function schedulerUI($slug,$token = null){
+        if(is_null($token)){
+            $token = decrypt(auth()->user()->scheduler_token);
+        }
+
+        $url = config('scheduler.domain').'/schedules/'.$slug.'/?member_token='.urlencode($token);
+        $response = Http::get($url);
+        if(!$response->successful()){
+            $response = $response->collect()->toArray();
+            $error = $response['errors'][0]['title'];
+            return response(['Message' => $error], 400);
+        }
+        $response = $response->body();
+        dd($response);
+        return $response['schedules'];
+
+    }
+
+    public function updateSchedule(string $id, Sdk $sdk, Request $request)
+    {
+        $schedulerToken = $this->getSchedulerToken($sdk);
+        $schedules = json_encode($this->schedulerSchedules($schedulerToken));
+
+        $resource = $sdk->createLearnerLessonService();
+        $resource = $resource
+        ->addBodyParam('schedule', $schedules);
+        $path = ['complete', $id];
+        $response = $resource->send('post', $path);
+        if ($response->isSuccessful()){
+            return response([
+                'Message' => 'Lesson Completed',
+                'course' => $courseData,
+                'lesson' => $lessonData
+            ], 200);
+        }
+        $data = ['error' => 'unable to fetch the requested resource'];
+        return response(['Message' => $data, 'courses' => null], 404);
+    }
+
 }

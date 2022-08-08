@@ -41,6 +41,21 @@
                     <div class="tab-pane active" id="tabs-1" role="tabpanel">
                         <div class="card-body">
                             <form class="form" @submit.prevent="validateBeforeSubmit">
+                                <div class="form-group col-lg-6">
+                                    <label for=""> Quiz Type </label>
+                                    <select v-model="form.quiz_type" id="quiz_type" class="form-control" @change="form.pq_course = ''">
+                                        <option value="">-- Choose--</option>
+                                        <option value="regular">Regular</option>
+                                        <option value="pre-qualifier">Pre-qualifier</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                    <label for=""> Course to Pre-qualify for </label>
+                                    <select v-model="form.pq_course" id="pq_course" class="form-control">
+                                        <option value="">-- Choose--</option>
+                                        <option v-for="(course,courseIndex) in courses" :value="course.id">@{{course.title}}</option>
+                                    </select>
+                                </div>
                                 <div class="form-row">
                                     <div class="form-group col-lg-6">
                                         <label for=""> Quiz Name </label>
@@ -65,6 +80,12 @@
                                         <label for=""> Total Quiz Mark </label>
                                         <input type="number" v-model="form.total_quiz_mark" class="form-control" name=""
                                             id="" aria-describedby="helpId" placeholder="Reward points" />
+                                    </div>
+
+                                    <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                        <label for=""> Pass Mark </label>
+                                        <input type="number" v-model="form.pass_mark" class="form-control" name="" id=""
+                                               aria-describedby="helpId" placeholder="Enter qualifier minimum score" />
                                     </div>
 
                                     <div class="form-group col-lg-12">
@@ -292,7 +313,10 @@
                             let loader = Vue.$loading.show()
                             const payload = {
                                 quiz_title: this.form.title,
+                                quiz_type: this.form.quiz_type,
+                                pq_course: this.form.pq_course,
                                 total_quiz_mark: this.form.total_quiz_mark,
+                                pass_mark: this.form.pass_mark,
                                 quiz_timer: this.form.quiz_timer,
                                 disable_on_submit: this.form.disable_on_submit,
                                 retake_on_request: this.form.retake_on_request,

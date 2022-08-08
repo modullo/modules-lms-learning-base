@@ -89,7 +89,7 @@
                                     <h6 class="mb-2 card-subtitle text-muted">
                                         @{{ cardinfo.author }}
                                     </h6>
-                                    <p class="card-text" v-html="cardinfo.description"></p>
+                                    <p class="card-text" v-html="cardinfo.description.substring(0,100)"></p>
 
                                     <a class="btn btn-outline-secondary" :href="'/tenant/courses/'+cardinfo.id" role="button">Edit</a>
                                     <a class="mx-2 btn btn-primary" :href="'/tenant/courses/show/'+cardinfo.id" role="button">View Details</a>
@@ -101,7 +101,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h3>Learners List</h3>
+                            <h3>List of Learners</h3>
                             <p class="text-center" v-if="learnersData.length < 1 ">No learner has taken this course</p>
                             <div v-if="learnersData.length > 0 ">
                                 <p>This course has @{{learnersData.length}} learner(s) out of which <span v-text="learnersCompleted"></span> have completed it.</p>

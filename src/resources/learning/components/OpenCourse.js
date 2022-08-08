@@ -6,30 +6,92 @@ Vue.component('open-course', {
         },
 
     },
-    template: 
-    `
+    template:
+        `
     <div>
         <div class="video-section pl-1" style="position:relative;" v-if="this.currentVideo.lesson_type === 'quiz'">
-            <b-card class="text-center" style="height: 40vh;">
-                <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
-                <b-card-body style="font-size:1.1em" v-html="currentVideo.description"></b-card-body>
+            <b-card class="" :style="{height: lessonViewHeight()}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.description"></b-card-body>
+                        
+                            <course-quiz-questions @send-new-completed-course="emitCompletedCourse"  @quiz-ended="markLessonCompleted" 
+                            :course-data="courseData" :quiz-data="quizData"  
+                            :quiz="currentVideo" id="newguy"></course-quiz-questions>
+                            
+                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view BUT you can't re-take and re-submit it</em></div>
+                            <div v-if="currentVideo.completed && currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view, re-take and re-submit it</em></div>
+                        </div>
+                    </div>
+                </div>
                 <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
             
-                <course-quiz-questions @send-new-completed-course="emitCompletedCourse" 
-                :course-data="courseData" :quiz-data="quizData"  
-                :quiz="currentVideo" id="newguy"></course-quiz-questions>
+                <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
+<!--
+                <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
+-->
+            </b-card>
+        </div>
+        <div class="video-section pl-1" style="position:relative;" v-else-if="this.currentVideo.lesson_type === 'scheduler'">
+            <b-card class="" :style="{height: lessonViewHeight()}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.schedule_instruction"></b-card-body>
+                            <div>
+                                <a v-if="!currentVideo.completed" class="btn btn-primary text-white" @click.prevent="launchScheduler">Launch Scheduler</a>
+                                <a v-else class="btn btn-primary text-white" @click.prevent="launchScheduler">Manage Schedule</a>
+                                <a id="openScheduler" class="d-none" :href="scheduleUrl" target="_blank">Open Scheduler</a>
+                                
+    <b-modal h-100 hide-footer hide-header-close no-close-on-backdrop no-close-on-esc :id="'modal-lg-new'+currentVideo.id" size="xl" :title="'Schedule Manager'">
+    </b-modal>                                
+                                
+                            </div>
+                        
+                            <div v-if="currentVideo.completed"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
+                        </div>
+                    </div>
+                </div>
+                <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
             
                 <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
-                
-                <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view BUT you can't re-take and re-submit it</em></div>
-                <div v-if="currentVideo.completed && currentVideo.lesson_resource.retake_on_request"><strong>This Assessment has already been taken</strong>. <em>You can view, re-take and re-submit it</em></div>
+<!--
                 <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
+-->
+            </b-card>
+        </div>
+        <div class="video-section pl-1" style="position:relative;" v-else-if="this.currentVideo.lesson_type === 'project'">
+            <b-card class="" :style="{height: lessonViewHeight()}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2 text-left">
+                            <h3 class="mt-2">{{ capitalize(currentVideo.lesson_type) }}: {{ currentVideo.moduleTitle }} ({{currentVideo.title}})</h3>
+                            <b-card-body class="px-0" style="font-size:1.1em" v-html="currentVideo.project_details"></b-card-body>
+                            <div>
+                                <button class="btn btn-primary">Start Project</button>
+                                <button class="btn btn-primary d-none">Manage Schedule</button>
+                            </div>
+                        
+                            <div v-if="currentVideo.completed && !currentVideo.lesson_resource.retake_on_request"><strong>You have already scheduled a time for this activity.</strong>. <em>.</em></div>
+                        </div>
+                    </div>
+                </div>
+                <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute">Previous</b-icon>
+            
+                <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute">Next</b-icon>
+<!--
+                <b-button @click="callModal(currentVideo.id,currentVideo.lesson_resource.id)"><b-icon icon="question-octagon-fill" aria-hidden="true"></b-icon> Open Assessment Questions</b-button>
+-->
             </b-card>
         </div>
         <div v-else class="video-section pl-1" style="position:relative">
             <b-icon v-if="currentVideo.index !== 0" class="ml-3 chevron-style" @click="togglePreviousVideo(currentVideo.index)" title="Go to Previous Course" icon="chevron-left" style="top:40%;left:0; position:absolute;z-index:1">Previous</b-icon>
             <b-icon v-if="(currentVideo.index + 1) !== videoLength" class="chevron-style chevron-next" @click="toggleNextVideo(currentVideo.index)" title="Go to Next Course" icon="chevron-right" style="top:40%;right:0;position:absolute;z-index:1">Next</b-icon>
             
+<!--
             <div v-if="currentVideoType=='youtube'" class="plyr__video-embed" id="player">
               <iframe
                 :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)"
@@ -37,7 +99,19 @@ Vue.component('open-course', {
                 allowtransparency
                 allow="autoplay"
               ></iframe>
-            </div>                
+            </div>     
+-->
+            <vue-plyr ref="plyr" v-if="currentVideoType=='youtube'">
+              <div class="plyr__video-embed">
+                <iframe
+                    :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)"
+                  allowfullscreen
+                  allowtransparency
+                  allow="autoplay"
+                ></iframe>
+              </div>
+            </vue-plyr>
+                       
 <!--            <div v-if="currentVideoType=='youtube'" id="player" data-plyr-provider="youtube" :data-plyr-embed-id="extractYoutubeVideoId(currentVideo.lesson_resource.asset_url)"></div>             -->
 <!--
             <iframe v-if="currentVideoType=='youtube'" class="w-100" height="558" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" title="Media Player" 
@@ -55,7 +129,7 @@ Vue.component('open-course', {
         </div>
     </div>
         `,
-            // <span class="ml-5">{{currentVideo.url}} / {{currentVideo.title}}</span>
+    // <span class="ml-5">{{currentVideo.url}} / {{currentVideo.title}}</span>
     data() {
         return{
             videos: {
@@ -67,20 +141,20 @@ Vue.component('open-course', {
                         duration: 27,
                         videos: [
                             {
-                              index: 0,
-                              title: "Introduction",
-                              duration: '1 hr',
-                              url: "https://www.youtube.com/embed/viHILXVY_eU"
+                                index: 0,
+                                title: "Introduction",
+                                duration: '1 hr',
+                                url: "https://www.youtube.com/embed/viHILXVY_eU"
                             },
                             {
-                              index: 1,
-                              title: "Diving Deeper",
-                              duration: '5 min',
-                              url: "https://www.youtube.com/embed/3BDIwBAL1iI"
+                                index: 1,
+                                title: "Diving Deeper",
+                                duration: '5 min',
+                                url: "https://www.youtube.com/embed/3BDIwBAL1iI"
                             },
                             {
-                              index: 2,
-                              title: "Quiz Section",
+                                index: 2,
+                                title: "Quiz Section",
                             },
                         ]
                     }
@@ -91,7 +165,17 @@ Vue.component('open-course', {
             currentVideoURL: '',
             videoLength: '',
             testView: '',
-            quizData: []
+            quizData: [],
+            scheduleData: [],
+            scheduleUrl: '',
+        }
+    },
+    watch: {
+        currentVideo: function(newVal, oldVal) {
+            // console.log(newVal)
+            if(newVal.lesson_type === 'quiz'){
+                this.processQuiz(newVal)
+            }
         }
     },
     methods: {
@@ -122,19 +206,71 @@ Vue.component('open-course', {
         emitCompletedCourse(payload) {
             this.$emit('send-new-updated-content', payload)
         },
-        callModal(modalId, quizId) {
-            this.$bvModal.show('modal-lg-new'+modalId);
+        processQuiz(payload) {
+            // this.$bvModal.show('modal-lg-new'+modalId);
+            let loader = Vue.$loading.show();
+            let quizId = payload.lesson_resource.id
+            axios
+                .get(`/learner/courses/fetchQuiz/${quizId}`)
+                .then((res) => {
+                    this.quizData = res.data.quiz
+                    loader.hide();
+                    // console.log(this.$refs.quizRef)
+                })
+                .catch(() => {
+                    loader.hide();
+                })
+        },
+        launchScheduler() {
             let loader = Vue.$loading.show();
             axios
-            .get(`/learner/courses/fetchQuiz/${quizId}`)
-            .then((res) => {
-                this.quizData = res.data.quiz
-                loader.hide();
-            // console.log(this.$refs.quizRef)
-            })
-            .catch(() => {
-            loader.hide();
-            })
+                .get(`/learner/courses/${this.courseData.id}/lesson/${this.currentVideo.id}/launch-scheduler`)
+                .then((res) => {
+                    this.scheduleData = res.data.schedules
+                    this.scheduleUrl = res.data.url
+                    // console.log(this.scheduleUrl)
+                    // window.open(res.data.url,'_blank')
+                    setTimeout(() => {
+                        document.getElementById("openScheduler").click();
+                    },300)
+                    loader.hide();
+                    setTimeout(() => {
+                        this.recordSchedule()
+                    },1000)
+                    // console.log(this.$refs.quizRef)
+                })
+                .catch(() => {
+                    loader.hide();
+                })
+        },
+        recordSchedule() {
+            let loader = Vue.$loading.show();
+            swal({
+                title: "Are you done scheduling?",
+                // text: "If you've completed your schedule",
+                icon: "question",
+                buttons: [true,"Yes"],
+            }).then((result) => {
+                if (result) {
+                    this.markLessonCompleted()
+                } else {
+                    loader.hide();
+                }
+            });
+        },
+        callModal(modalId, quizId) {
+            // this.$bvModal.show('modal-lg-new'+modalId);
+            let loader = Vue.$loading.show();
+            axios
+                .get(`/learner/courses/fetchQuiz/${quizId}`)
+                .then((res) => {
+                    this.quizData = res.data.quiz
+                    loader.hide();
+                    // console.log(this.$refs.quizRef)
+                })
+                .catch(() => {
+                    loader.hide();
+                })
         },
         getAllVideo(single = null) {
             this.count = 0
@@ -163,6 +299,12 @@ Vue.component('open-course', {
                 })
             }).flat();
             if (single === null) {
+                for (let i = 0; i < pagination.length; i++) {
+                    if(pagination[i].completed == false){
+                        this.currentVideo = pagination[i]
+                        return pagination
+                    }
+                }
                 this.currentVideo = pagination[0]
                 return pagination
             }
@@ -197,7 +339,19 @@ Vue.component('open-course', {
         callFirstCourseContent() {
             this.$emit('current-lesson', this.currentVideo)
         },
+        markLessonCompleted() {
+            this.$emit('lesson-ended', this.currentVideo)
+        },
+        lessonViewHeight(){
+            if(this.currentVideo.lesson_type !== 'video'){
+                return 'unset'
+            }
 
+            return '40vh'
+        },
+        capitalize(word){
+            return word[0].toUpperCase() + word.slice(1).toLowerCase();
+        }
     },
     created() {
         // this.getAllVideo()
@@ -207,6 +361,10 @@ Vue.component('open-course', {
     },
     mounted() {
         this.callFirstCourseContent()
+        this.$refs.plyr.player.on('ended', (event) => {
+            this.markLessonCompleted()
+        });
+
     },
     computed: {
         currentVideoType() {

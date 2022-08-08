@@ -28,6 +28,21 @@
                     <form class="form" @submit.prevent="validateBeforeSubmit">
                         <div class="form-row">
                             <div class="form-group col-lg-6">
+                                <label for=""> Quiz Type </label>
+                                <select v-model="form.quiz_type" id="quiz_type" class="form-control" @change="form.pq_course = ''">
+                                    <option value="">-- Choose--</option>
+                                    <option value="regular">Regular</option>
+                                    <option value="pre-qualifier">Pre-qualifier</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                <label for=""> Course to Pre-qualify for </label>
+                                <select v-model="form.pq_course" id="pq_course" class="form-control">
+                                    <option value="">-- Choose--</option>
+                                    <option v-for="(course,courseIndex) in courses" :value="course.id">@{{course.title}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6">
                                 <label for=""> Quiz Title </label>
                                 <p class="control has-icon has-icon-right">
                                     <input name="Quiz Title" class="form-control" v-model="form.quiz_title" v-validate="'required'"
@@ -40,41 +55,99 @@
                             </div>
 
                             <div class="form-group col-lg-6">
-                                <label for=""> Quiz Time (in minutes) </label>
-                                <input v-model="form.quiz_timer" type="number" class="form-control" name="" id=""
-                                    aria-describedby="helpId" placeholder="Quiz Time (in minutes)" />
-                            </div>
-
-                            <div class="form-group col-lg-6">
                                 <label for=""> Quiz Score (Total) </label>
                                 <input type="number" v-model="form.total_quiz_mark" class="form-control" name="" id=""
                                     aria-describedby="helpId" placeholder="Reward points" />
                             </div>
 
-                            <div class="form-group col-lg-12">
-                                <label> Disable Quiz on Submit : </label>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline1" v-model="form.disable_on_submit" value="true" name="customRadioInline1" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline1">True</label>
-                                  </div>
-                                  <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="customRadioInline2" v-model="form.disable_on_submit" value="false" name="customRadioInline1" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline2">False</label>
+                            <div class="form-group col-lg-6">
+                                <label for="timing_mode"> Timing Mode </label>
+                                <select v-model="form.timing_mode" id="timing_mode" name="timing_mode" class="form-control">
+                                    <option value="">-- Choose--</option>
+                                    <option value="self-paced">Self paced</option>
+                                    <option value="timed">Timed</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6" v-if="form.timing_mode === 'timed'">
+                                <label> Set Time per Question </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="time_per_question_yes" v-model="form.time_per_question" value="yes" name="time_per_question" class="custom-control-input">
+                                        <label class="custom-control-label" for="time_per_question_yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="time_per_question_no" v-model="form.time_per_question" value="no" name="time_per_question" class="custom-control-input">
+                                        <label class="custom-control-label" for="time_per_question_no">No</label>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="form-group col-lg-6" v-if="form.time_per_question !== 'yes'">
+                                <label for=""> Total Quiz Time (in minutes) </label>
+                                <input v-model="form.quiz_timer" type="number" class="form-control" name="" id=""
+                                       aria-describedby="helpId" placeholder="Quiz Time (in minutes)" />
+                            </div>
 
-                            <br />
+                            <div class="form-group col-lg-6" v-if="form.quiz_type === 'pre-qualifier'">
+                                <label for=""> Pass Mark </label>
+                                <input type="number" v-model="form.pass_mark" class="form-control" name="" id=""
+                                    aria-describedby="helpId" placeholder="Enter qualifier minimum score" />
+                            </div>
 
-                            <div class="form-group col-lg-12">
-                                <label for="">Retake Quiz On Request : </label>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" value="true" v-model="form.retake_on_request" id="customRadioInline3" name="customRadioInline2" 
-                                    class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline3">True</label>
-                                  </div>
-                                  <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" value="false" v-model="form.retake_on_request" id="customRadioInline4" name="customRadioInline2" class="custom-control-input">
-                                    <label class="custom-control-label" for="customRadioInline4">False</label>
+                            <div class="form-group col-lg-6">
+                                <label> Randomize Questions </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="randomize_questions_yes" v-model="form.randomize_questions" value="yes" name="randomize_questions" class="custom-control-input">
+                                        <label class="custom-control-label" for="randomize_questions_yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="randomize_questions_no" v-model="form.randomize_questions" value="no" name="randomize_questions" class="custom-control-input">
+                                        <label class="custom-control-label" for="randomize_questions_no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label> Randomize Options </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="randomize_options_yes" v-model="form.randomize_options" value="yes" name="randomize_options" class="custom-control-input">
+                                        <label class="custom-control-label" for="randomize_options_yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="randomize_options_no" v-model="form.randomize_options" value="no" name="randomize_options" class="custom-control-input">
+                                        <label class="custom-control-label" for="randomize_options_no">No</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline d-none">
+                                        <input type="radio" id="randomize_options_choose" v-model="form.randomize_options" value="per_question" name="randomize_options" class="custom-control-input">
+                                        <label class="custom-control-label" for="randomize_options_choose">Choose per question</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label> Disable Quiz on Submit </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="customRadioInline1" v-model="form.disable_on_submit" value="true" name="customRadioInline1" class="custom-control-input">
+                                        <label class="custom-control-label" for="customRadioInline1">True</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="customRadioInline2" v-model="form.disable_on_submit" value="false" name="customRadioInline1" class="custom-control-input">
+                                        <label class="custom-control-label" for="customRadioInline2">False</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Retake Quiz On Request </label>
+                                <div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" value="true" v-model="form.retake_on_request" id="customRadioInline3" name="customRadioInline2"
+                                               class="custom-control-input">
+                                        <label class="custom-control-label" for="customRadioInline3">True</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" value="false" v-model="form.retake_on_request" id="customRadioInline4" name="customRadioInline2" class="custom-control-input">
+                                        <label class="custom-control-label" for="customRadioInline4">False</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -100,10 +173,15 @@
                                     <input type="text" class="form-control" v-model="question.answer" aria-describedby="helpId"
                                         placeholder="" />
                                 </div>
+                                <div class="form-group col-6" v-if="form.time_per_question === 'yes'">
+                                    <label for=""> Question Time (in seconds) </label>
+                                    <input type="number" class="form-control" v-model="question.question_time" aria-describedby="helpId"
+                                        placeholder="e.g 15" min="1" />
+                                </div>
                                 <div class="form-group col-6">
-                                    <label for=""> Quiz Score </label>
+                                    <label for=""> Question Score </label>
                                     <input type="number" class="form-control" v-model="question.score" aria-describedby="helpId"
-                                        placeholder="" />
+                                        placeholder="" min="0" />
                                 </div>
                             </div>
                             <div v-if="question.question_type === 'options'">
@@ -187,23 +265,32 @@
             data: {
                 index: 1,
                 qindex: 1,
+                courses: {!! json_encode($courses) !!},
                 form: {
+                    quiz_type: '',
+                    timing_mode: '',
+                    time_per_question: '',
                     quiz_title: '',
+                    pq_course: '',
                     total_quiz_mark: '',
+                    pass_mark: '',
                     quiz_timer: '',
                     disable_on_submit: '',
                     retake_on_request: '',
+                    randomize_questions: '',
+                    randomize_options: '',
                     questions: [
                         {
                             question_text: '',
                             question_number: 1,
+                            question_time: '',
                             score: '',
                             answer: '',
                             question_type: '',
                             options: [""],
                         },
                     ],
-                }
+                },
             },
             mounted: function() {
                 console.log(this.form.questions.length)
@@ -223,16 +310,23 @@
                             let loader = Vue.$loading.show()
                             const payload = {
                                 quiz_title: this.form.quiz_title,
+                                quiz_type: this.form.quiz_type,
+                                pq_course: this.form.pq_course,
                                 total_quiz_mark: this.form.total_quiz_mark,
+                                pass_mark: this.form.pass_mark,
+                                timing_mode: this.form.timing_mode,
+                                time_per_question: this.form.time_per_question,
                                 quiz_timer: this.form.quiz_timer,
                                 disable_on_submit: this.form.disable_on_submit,
                                 retake_on_request: this.form.retake_on_request,
+                                randomize_questions: this.form.randomize_questions,
+                                randomize_options: this.form.randomize_options,
                                 questions: JSON.stringify(this.form.questions)
                             }
                             axios.post('create', payload).then(res => {
-                            loader.hide();
-                            ev.target.reset()
-                            toastr["success"](res.data.message)
+                                loader.hide();
+                                ev.target.reset()
+                                toastr["success"](res.data.message)
                             }).catch(e => {
                                 loader.hide();
                                 const errors = e.response.data.error
@@ -262,6 +356,7 @@
                         {
                             question_text: '',
                             question_number:  this.qindex,
+                            question_time: '',
                             score: '',
                             answer: '',
                             question_type: '',
