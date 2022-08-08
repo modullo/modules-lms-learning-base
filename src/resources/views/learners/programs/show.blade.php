@@ -49,7 +49,7 @@
                             <h6 class="mb-2 card-subtitle text-muted">
                                 @{{ cardinfo.author }}
                             </h6>
-                            <p class="card-text" v-html="cardinfo.description"></p>
+                            <p class="card-text" v-html="cardinfo.description.substring(0,100)"></p>
 
                             <a class="btn btn-outline-secondary" :href="'/learner/courses/'+cardinfo.id" role="button">View Details</a>
                             <a v-if="coursesStarted.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :class="{disabled: checkingCourseState === true}" :href="'/learner/courses/'+cardinfo.id+'/start-course'" role="button">Start Course</a>

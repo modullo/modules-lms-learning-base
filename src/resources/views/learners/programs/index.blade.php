@@ -57,7 +57,7 @@
                                     @{{ cardinfo.title }}
                                 </a>
                             </h5>
-                            <p class="card-text">@{{ cardinfo.description }}</p>
+                            <p class="card-text">@{{ cardinfo.description.substring(0,100) }}</p>
                             <a v-if="enrolledPrograms.includes(cardinfo.id) == false" class="mx-2 btn btn-primary" :class="{disabled: toEnroll === cardinfo.id}" :href="'/learner/programs/'+cardinfo.id+'/enroll'" @click="toEnroll = cardinfo.id" role="button">@{{ toEnroll === cardinfo.id ? 'Enrolling...' : 'Enroll' }}</a>
                             <a v-if="enrolledPrograms.includes(cardinfo.id) == true" class="mx-2 btn btn-outline-primary" :href="'/learner/programs/'+cardinfo.id" role="button">View</a>
 

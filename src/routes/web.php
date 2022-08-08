@@ -14,6 +14,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
             Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-learner-settings');
+            Route::put('/profile-settingss/{id}','ModulesLmsLearningBaseController@updateSettings')->name('update-profile-learner-settings');
 
 
             // Routes for Courses

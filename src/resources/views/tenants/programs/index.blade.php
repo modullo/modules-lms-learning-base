@@ -81,7 +81,7 @@
                                 <h6 class="mb-2 card-subtitle text-muted">
                                     @{{ cardinfo . author }}
                                 </h6>
-                                <p class="card-text">@{{ cardinfo . description }}</p>
+                                <p class="card-text">@{{ cardinfo.description.substring(0,100) }}</p>
 
                                 <a class="mx-2 btn btn-outline-secondary" :href="`/tenant/programs/edit/${cardinfo.id}`"
                                     role="button">Edit</a>
