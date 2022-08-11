@@ -101,7 +101,8 @@ class SchedulerService
         }
 
         $url = config('scheduler.domain').'/api/auth/schedules';
-        $response = Http::withToken($token)->get($url);
+        $response = Http::withToken($token)->withHeaders(['accept'=>'application/json'])->get($url);
+        dd($response);
         if(!$response->successful()){
             $response = $response->collect()->toArray();
             $error = $response['errors'][0]['title'];
