@@ -255,6 +255,8 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('scheduler_type',$request->scheduler_type)
             ->addBodyParam('lesson_image',$request->lesson_image)
             ->addBodyParam('skills_gained',$request->skills_gained)
+            ->addBodyParam('has_code_editor',$request->has_code_editor === 'yes' ? true : false)
+            ->addBodyParam('code_language',$request->code_language)
             ->addBodyParam('resource_id', !$request->resource_id ? $request->lesson_resource['id'] : $request->resource_id)
             ->addBodyParam('module_id',$request->module_id);
         $response = $resource->send('put',[$id]);
