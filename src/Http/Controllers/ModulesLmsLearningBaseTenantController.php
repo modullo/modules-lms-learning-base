@@ -173,10 +173,9 @@ class ModulesLmsLearningBaseTenantController extends Controller
             $modules = $modulesSdk['modules'];
             $quizzes = $quizzesSdk['quizzes'];
 
-            dd('here');
             $schedulerToken = $this->schedulerService->getSchedulerToken($sdk,$this->tenantDetails());
             $schedules = $this->schedulerService->schedulerSchedules($schedulerToken);
-//            dd($schedules);
+            dd($schedules);
             return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules','schedules'));
         }
         return view('modules-lms-learning-base::tenants.lessons.create', compact('assets','quizzes', 'modules','schedules'));
