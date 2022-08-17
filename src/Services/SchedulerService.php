@@ -6,6 +6,7 @@ use Hostville\Modullo\Sdk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SchedulerService
 {
@@ -101,14 +102,19 @@ class SchedulerService
         }
 
         $url = config('scheduler.domain').'/api/auth/schedules';
-        $response = Http::withToken($token)->get($url);
-        if(!$response->successful()){
-            $response = $response->collect()->toArray();
-            $error = $response['errors'][0]['title'];
-            return response(['Message' => $error], 400);
+        try {
+            $response = Http::withToken($token)->withHeaders(['accept'=>'application/json'])->get($url);
+            if(!$response->successful()){
+                $response = $response->collect()->toArray();
+                $error = $response['errors'][0]['title'];
+                return response(['Message' => $error], 400);
+            }
+            $response = $response->collect();
+            return $response['schedules'];
+        }catch (\Throwable $e){
+            Log::error($e->getMessage());
         }
-        $response = $response->collect();
-        return $response['schedules'];
+        return [];
 
     }
 
