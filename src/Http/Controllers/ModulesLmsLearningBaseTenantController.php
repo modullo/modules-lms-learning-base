@@ -23,7 +23,23 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
     public function index()
     {
-        return view('modules-lms-learning-base::tenants.base.dashboard');
+        $query = $this->sdk->createHomeService();
+        $path = ['tenant','dashboard'];
+        $response = $query->send('get',$path);
+
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005'){
+                $data = ['validation_error' => $response['errors'][0]['source'] ?? ''];
+            }
+            else{
+                $data = ['error' => $response['errors'][0]['title'] ?? ''];
+            }
+            return view('modules-lms-base::welcome',compact('data'));
+        }
+
+        $data = $response->getData()['dashboardData'];
+        return view('modules-lms-learning-base::tenants.base.dashboard',compact('data'));
     }
 
     public function settings()
@@ -664,7 +680,11 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('pq_course',$request->pq_course)
             ->addBodyParam('total_quiz_mark',$request->total_quiz_mark)
             ->addBodyParam('pass_mark',$request->pass_mark)
+            ->addBodyParam('timing_mode',$request->timing_mode)
+            ->addBodyParam('time_per_question',$request->time_per_question === 'yes' ? true : false)
             ->addBodyParam('quiz_timer',$request->quiz_timer)
+            ->addBodyParam('randomize_questions',$request->randomize_questions === 'yes' ? true : false)
+            ->addBodyParam('randomize_options',$request->randomize_options === 'yes' ? true : false)
             ->addBodyParam('disable_on_submit',$request->disable_on_submit === 'true' ? true : false)
             ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false);
         $response = $resource->send('put',[$id]);
