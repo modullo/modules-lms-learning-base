@@ -23,7 +23,13 @@ class ModulesLmsLearningBaseController extends Controller
     
     public function index()
     {
-        return view('modules-lms-learning-base::learners.base.dashboard');
+        $programs = [];
+        $glp = $this->getLearnersPrograms();
+        if ($glp->isSuccessful()){
+            $response = $glp->getData();
+            $programs = $response['learners_programs'];
+        }
+        return view('modules-lms-learning-base::learners.base.dashboard',compact('programs'));
     }
 
     public function settings(Sdk $sdk)
