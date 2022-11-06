@@ -13,8 +13,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
         Route::group(['prefix' => 'learner'], function(){
 
             Route::get('/dashboard','ModulesLmsLearningBaseController@index')->name('learner-dashboard');
-            Route::get('/profile-settings','ModulesLmsLearningBaseController@settings')->name('profile-learner-settings');
-            Route::put('/profile-settingss/{id}','ModulesLmsLearningBaseController@updateSettings')->name('update-profile-learner-settings');
+            Route::get('/profile-settings','Learner\SettingsController@index')->name('profile-learner-settings');
+            Route::put('/profile-settingss/{id}','Learner\SettingsController@update')->name('update-profile-learner-settings');
 
 
             // Routes for Courses
@@ -48,8 +48,9 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
         Route::group(['prefix' => 'tenant'],function() {
 
             Route::get('dashboard','ModulesLmsLearningBaseTenantController@index')->name('tenant-dashboard');
-            Route::get('/profile-settings','ModulesLmsLearningBaseTenantController@settings')->name('profile-settings');
-            Route::put('/profile-settings/{id}','ModulesLmsLearningBaseTenantController@updateSettings')->name('update-profile-settings');
+            Route::get('/profile-settings','SettingsController@index')->name('profile-settings');
+            Route::put('/profile-settings/{id}','SettingsController@update')->name('update-profile-settings');
+            Route::get('/profile-settings/generate-token','SettingsController@generateToken')->name('generate-token');
             Route::get('/learner-management','ModulesLmsLearningBaseTenantController@management')->name('tenant-learner-management');
 
 

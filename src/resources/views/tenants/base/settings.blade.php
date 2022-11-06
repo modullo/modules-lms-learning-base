@@ -87,6 +87,60 @@
                         </form>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">API Details</div>
+                        <p>Generate API credentials</p>
+                        <form class="form" @submit.prevent="validateBeforeSubmit">
+                            <div class="flex items-center justify-center h-16 w-16 mx-auto bg-white border-2 border-yellow rounded-full">
+                                <i class="ri-user-line text-h3 ri-fw text-black"></i>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-12 m-0">
+                                    <label class="font-weight-bold" for="api_token">Token</label>
+                                    <input type="text" class="form-control-plaintext" id="api_token" v-model="api.token" value="" readonly>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="button" @click="generateToken">Regenerate</button>
+                            <div><i>The generated token will only be displayed once, so make sure to copy it.</i></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">Webhook Details</div>
+                        <p>Update your learning platform using external sources</p>
+                        <form class="form" @submit.prevent="validateBeforeSubmit">
+                            <div class="flex items-center justify-center h-16 w-16 mx-auto bg-white border-2 border-yellow rounded-full">
+                                <i class="ri-user-line text-h3 ri-fw text-black"></i>
+                            </div>
+                            <div class="form-row">
+                                <label class="col-auto col-form-label font-weight-bold" for="webhook_users">Users:</label>
+                                <div class="form-group col-md-8 m-0">
+                                    <input type="text" class="form-control-plaintext" id="webhook_users" value="{{config('app.url')}}/webhook/users" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="col-auto col-form-label font-weight-bold" for="webhook_courses">Courses:</label>
+                                <div class="form-group col-md-8 m-0">
+                                    <input type="text" class="form-control-plaintext" id="webhook_courses" value="{{config('app.url')}}/webhook/courses" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="col-auto col-form-label font-weight-bold" for="webhook_modules">Modules:</label>
+                                <div class="form-group col-md-8 m-0">
+                                    <input type="text" class="form-control-plaintext" id="webhook_modules" value="{{config('app.url')}}/webhook/modules" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label class="col-auto col-form-label font-weight-bold" for="webhook_lessons">Lessons:</label>
+                                <div class="form-group col-md-8 m-0">
+                                    <input type="text" class="form-control-plaintext" id="webhook_lessons" value="{{config('app.url')}}/webhook/lessons" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="col-12"></div>
         </div>
@@ -136,6 +190,9 @@
             data: {
                 user: {!! json_encode($data) !!},
                 organization: {!! json_encode($data['organization_details']) !!},
+                api: {
+                    token: '***********************'
+                },
                 update_type: '',
             },
             methods: {
@@ -188,6 +245,19 @@
                 addScheduleItem(schedule){
                     console.log(schedule)
                     this.schedule_items.push(schedule)
+                },
+                generateToken(){
+                    let loader = Vue.$loading.show()
+                    axios.get(`profile-settings/generate-token`).then(res => {
+                        loader.hide();
+                        this.api.token = res.data.token
+                    }).catch(e => {
+                        loader.hide();
+                        const errors = e.response.data.error
+                        if(e.response.data.error){
+                            toastr["error"](e.response.data.error)
+                        }
+                    })
                 }
             },
             mounted: function() {
