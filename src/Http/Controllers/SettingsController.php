@@ -3,12 +3,14 @@
 namespace Modullo\ModulesLmsLearningBase\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use GuzzleHttp\Exception\GuzzleException;
 use Hostville\Modullo\Sdk;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modullo\ModulesAuth\Http\Controllers\ModulesAuthController;
 use Modullo\ModulesLmsApiMapper\Http\Requests\StoreModulesLmsApiMapperRequest;
 use Modullo\ModulesLmsApiMapper\Http\Requests\UpdateModulesLmsApiMapperRequest;
 use Modullo\ModulesLmsApiMapper\Services\ModulesLmsApiMapperService;
@@ -62,6 +64,18 @@ class SettingsController extends Controller
 
     public function generateToken(Request $request){
         $user = $request->user();
+        $user->tokens()->delete();
+        $user->refresh();
+        $token = $user->createToken('General Token');
+        return response()->json(['token' => $token->plainTextToken],200);
+    }
+
+    public function generateUserToken(Request $request){
+//        $auth = app(ModulesAuthController::class)->
+        $user = User::where('email',$request->email)->first();
+        if(is_null($user)){
+            return response()->json(['error' => 'User not found'],404);
+        }
         $user->tokens()->delete();
         $user->refresh();
         $token = $user->createToken('General Token');
