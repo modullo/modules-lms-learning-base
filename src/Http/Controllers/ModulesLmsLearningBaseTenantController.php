@@ -95,9 +95,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
         if ($this->getCourses()->isSuccessful()){
             $response = $this->getCourses()->getData();
             $data = $response['courses'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.course.index',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.course.index', compact('data'));
     }
 
@@ -159,9 +165,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['course'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.course.show',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.course.show',compact('data'));
     }
 
@@ -293,9 +305,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
             $modules = $modulesSdk['modules'];
             $response = $this->getLessons()->getData();
             $data = $response['lessons'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.lessons.index',compact('data', 'modules'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.lessons.index', compact('data', 'modules'));
     }
 
@@ -393,9 +411,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
             $courses = $coursesSdk['courses'];
             $response = $this->getModules()->getData();
             $data = $response['modules'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.modules.index', compact('data', 'courses'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.modules.index', compact('data', 'courses'));
     }
 
@@ -482,9 +506,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
         if ($this->getPrograms()->isSuccessful()){
             $response = $this->getPrograms()->getData();
             $data = $response['programs'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.programs.index',compact('data'));
 
     }
@@ -496,9 +526,15 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['program'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::tenants.programs.show', compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'Error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::tenants.programs.show', compact('data'));
     }
 
@@ -770,6 +806,26 @@ class ModulesLmsLearningBaseTenantController extends Controller
     }
 
     public function allLearnerPrograms($id,Sdk $sdk){
+        $query = $this->sdk->createLearnersProgramsService();
+        $query = $query
+            ->addQueryArgument('limit',100)
+            ->addQueryArgument('program',$id);
+        $path = [''];
+        $response = $query->send('get', $path);
+
+        if ($response->isSuccessful()){
+            $response = $response->getData();
+            $data = [
+                'Message' => 'Learners programs successfully fetched',
+                'learnerPrograms' => $response['learners_programs']
+            ];
+            return response($data, 200);
+        }
+        $data = ['error' => 'unable to fetch the learners'];
+        return response(['Message' => $data, 'learnerPrograms' => null], 404);
+    }
+
+    public function LearnerPrograms($id,Sdk $sdk){
         $query = $this->sdk->createLearnersProgramsService();
         $query = $query
             ->addQueryArgument('limit',100)

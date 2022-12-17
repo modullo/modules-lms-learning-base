@@ -124,7 +124,15 @@ Vue.component('open-course', {
                 <source :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" type="video/mp4" />
             </video>
 -->
-            <video id="player" v-else-if="currentVideoType=='mp4-normal'" class="video-cover" height="558" controlsList="nodownload" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" playsinline controls data-poster="#"></video>
+<!--
+            <video id="player" v-else-if="currentVideoType == 'mp4-normal'" class="video-cover" height="558" controlsList="nodownload" :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" playsinline controls data-poster="#"></video>
+-->
+            
+            <vue-plyr ref="plyr" v-else>
+                <video playsinline controls crossorigin data-poster="https://via.placeholder.com/1000x650.jpg?text=Video" controlsList="nodownload">
+                    <source :src="reformatAssetURL(currentVideo.lesson_resource.asset_url)" type="video/mp4" />
+                </video>
+            </vue-plyr>
             <br>
         </div>
     </div>
@@ -176,11 +184,16 @@ Vue.component('open-course', {
             if(newVal.lesson_type === 'quiz'){
                 this.processQuiz(newVal)
             }
+            if(newVal.lesson_type === 'video'){
+                this.currentVideoURL = this.currentVideo.lesson_resource.asset_url.toString();
+                // this.setCurrentVideoType()
+            }
         }
     },
     methods: {
         reformatAssetURL(asset_url) {
             let url = asset_url.toString();
+            console.log(url)
             if (url.indexOf("youtube") > -1) {
                 return this.reformatVideoYoutubeURL(url);
             }
@@ -202,6 +215,16 @@ Vue.component('open-course', {
                 video = video_split[1];
             }
             return video
+        },
+        setCurrentVideoType(){
+            let url = this.currentVideoURL;
+            console.log('here')
+            if (url.indexOf("youtube") > -1) {
+                this.currentVideoType = 'youtube';
+            }
+            if (url.indexOf("mp4") > -1) {
+                this.currentVideoType = 'mp4-normal';
+            }
         },
         emitCompletedCourse(payload) {
             this.$emit('send-new-updated-content', payload)
@@ -372,9 +395,9 @@ Vue.component('open-course', {
             if (url.indexOf("youtube") > -1) {
                 return "youtube";
             }
-            // if (url.indexOf("mp4") > -1) {
-            //     return "mp4-normal";
-            // }
+            if (url.indexOf("mp4") > -1) {
+                return "mp4-normal";
+            }
             // <video> tan not looking nice. Side arrows clicki events not going through
             return "youtube";
         }

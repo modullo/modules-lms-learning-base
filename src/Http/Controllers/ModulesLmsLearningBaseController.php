@@ -23,7 +23,13 @@ class ModulesLmsLearningBaseController extends Controller
     
     public function index()
     {
-        return view('modules-lms-learning-base::learners.base.dashboard');
+        $programs = [];
+        $glp = $this->getLearnersPrograms();
+        if ($glp->isSuccessful()){
+            $response = $glp->getData();
+            $programs = $response['learners_programs'];
+        }
+        return view('modules-lms-learning-base::learners.base.dashboard',compact('programs'));
     }
 
     public function settings(Sdk $sdk)
@@ -93,9 +99,15 @@ class ModulesLmsLearningBaseController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['course'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::learners.courses.show',compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::learners.courses.show',compact('data'));
     }
 
@@ -107,9 +119,15 @@ class ModulesLmsLearningBaseController extends Controller
         if ($response->isSuccessful()){
             $data = $response->data['course'];
             $data['started'] = true;
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::learners.courses.single', compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::learners.courses.single', compact('data'));
     }
 
@@ -200,9 +218,15 @@ class ModulesLmsLearningBaseController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['program'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'Success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::learners.programs.show', compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::learners.programs.show', compact('data'));
     }
 
@@ -214,9 +238,15 @@ class ModulesLmsLearningBaseController extends Controller
         if ($response->isSuccessful()){
             $data = $response->data['program'];
             $data['enrolled'] = true;
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::learners.programs.show', compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::learners.programs.show', compact('data'));
     }
 
@@ -255,9 +285,15 @@ class ModulesLmsLearningBaseController extends Controller
         $response = $sdkObject->send('get', $path);
         if ($response->isSuccessful()){
             $data = $response->data['course'];
+            if(\request()->wantsJson()){
+                return response()->json(['status' => 'success','data'=>$data],200);
+            }
             return view('modules-lms-learning-base::learners.courses.single', compact('data'));
         }
         $data = ['error' => 'unable to fetch the requested resource'];
+        if(\request()->wantsJson()){
+            return response()->json(['status' => 'error','data'=>$data],400);
+        }
         return view('modules-lms-learning-base::learners.courses.single', compact('data'));
     }
 
