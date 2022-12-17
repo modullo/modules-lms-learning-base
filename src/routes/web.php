@@ -53,6 +53,10 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             Route::get('/profile-settings/generate-token','SettingsController@generateToken')->name('generate-token');
             Route::get('/learner-management','ModulesLmsLearningBaseTenantController@management')->name('tenant-learner-management');
 
+            Route::group(['prefix' => 'learners'],function() {
+                Route::get('{learner}/programs', 'ModulesLmsLearningBaseTenantController@learnerPrograms');
+                Route::get('{learner}/courses', 'ModulesLmsLearningBaseTenantController@learnerCourses');
+            });
 
             Route::group(['prefix' => 'courses'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allCourses');
@@ -79,6 +83,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@showProgram');
                 Route::get('edit/{id}', 'ModulesLmsLearningBaseTenantController@editProgram');
                 Route::get('{id}/learners', 'ModulesLmsLearningBaseTenantController@allLearnerPrograms');
+                Route::get('{id}/learners/{learner}', 'ModulesLmsLearningBaseTenantController@learnerPrograms');
             });
 
             Route::group(['prefix' => 'modules'],function() {

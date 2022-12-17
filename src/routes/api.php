@@ -5,7 +5,37 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controllers')->name('api.')->group(function (){
     Route::middleware('auth:sanctum')->group(function (){
+        Route::prefix('learner')->group(function(){
+
+            // Routes for Courses
+            Route::group(['prefix' => 'courses'], function() {
+                Route::get('', 'ModulesLmsLearningBaseController@allLearnerCourses');
+//                Route::get('all', 'ModulesLmsLearningBaseController@allCourses')->name('learner-courses.all');
+                Route::get('{id}', 'ModulesLmsLearningBaseController@showCourse');
+//                Route::get('all/{id}', 'ModulesLmsLearningBaseController@allProgramCourses');
+                Route::post('completeCourse/{id}', 'ModulesLmsLearningBaseController@completeLesson');
+//                Route::get('fetchQuiz/{id}', 'ModulesLmsLearningBaseController@fetchLessonQuiz');
+//                Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
+//                Route::get('{id}/lesson/{slug}', 'ModulesLmsLearningBaseController@showLesson');
+//                Route::get('{id}/lesson/{slug}/complete', 'ModulesLmsLearningBaseController@completeLesson');
+                Route::get('{id}/start-course', 'ModulesLmsLearningBaseController@startCourse');
+
+
+//                Route::get('{id}/lesson/{lessonId}/launch-scheduler', 'ModulesLmsLearningBaseController@launchScheduler');
+            });
+
+            // Routes for Program
+            Route::group(['prefix' => 'programs'], function() {
+                Route::get('/', 'ModulesLmsLearningBaseController@allLearnerprograms');
+//                Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
+                Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
+                Route::get('{id}/enroll', 'ModulesLmsLearningBaseController@enrollToProgram');
+            });
+
+        });
+
         Route::prefix('tenant')->group(function(){
+            Route::get('/settings/generate-user-token/{email}','SettingsController@generateUserToken')->name('generate-user-token');
 
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('all-programs');
