@@ -449,6 +449,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('description',$request->ProgramDescription)
             ->addBodyParam('image',$request->ProgramImage)
             ->addBodyParam('visibility_type',$request->ProgramVisibility);
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
@@ -547,6 +553,13 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('course_state',$request->course_state)
         ->addBodyParam('skills_to_be_gained',$request->skills_to_be_gained)
         ->addBodyParam('description',$request->description);
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+        
         $response = $resource->send('post',['create',$request->program]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
