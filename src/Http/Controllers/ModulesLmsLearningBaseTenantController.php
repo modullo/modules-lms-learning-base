@@ -224,6 +224,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('code_language',$request->code_language)
         ->addBodyParam('resource_id',$request->resource_id);
 
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
         switch ($request->lesson_type){
             case 'scheduler':
                 $resource = $resource
@@ -234,16 +240,16 @@ class ModulesLmsLearningBaseTenantController extends Controller
                 $resource = $resource->addBodyParam('project_details',$request->project_details);
                 break;
         }
-        
+
         $response = $resource->send('post',['create', $id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''], $response['errors'][0]['status']);
-            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','error' => $response['errors'][0]['source'] ?? ''], $response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
 
-        return response()->json(['message' => 'Lesson Created Successfully!'],200);
+        return response()->json(['status' => true,'message' => 'Lesson Created Successfully!'],200);
     }
 
     public function editLesson(string $id, Sdk $sdk)
@@ -356,15 +362,22 @@ class ModulesLmsLearningBaseTenantController extends Controller
         ->addBodyParam('description',$request->description)
         ->addBodyParam('duration',$request->duration)
         ->addBodyParam('module_number',$request->module_number);
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
         $response = $resource->send('post',['create',$request->course_id]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
-            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
 
-        return response()->json(['message' => 'Module Created Successfully!'],200);
+        return response()->json(['status' => true,'message' => 'Module Created Successfully!'],200);
     }
 
     public function editModules(string $id, Sdk $sdk)
@@ -458,12 +471,12 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
-            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
 
-        return response()->json(['message' => 'creation successful'],200);
+        return response()->json(['status' => true,'message' => 'creation successful'],200);
     }
 
     /**
@@ -559,16 +572,16 @@ class ModulesLmsLearningBaseTenantController extends Controller
                 ->addBodyParam('uuid',$request->id)
                 ->addBodyParam('src','3p');
         }
-        
+
         $response = $resource->send('post',['create',$request->program]);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
-            return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status'=>false,'message' => $response['errors'][0]['source'] ?? '','error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status'=>false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
         }
 
-        return response()->json(['message' => 'Course Created Successfully!'],200);
+        return response()->json(['status' => true,'message' => 'Course Created Successfully!'],200);
     }
 
     // Assets 
