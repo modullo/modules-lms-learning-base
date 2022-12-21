@@ -17,7 +17,7 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
 //                Route::get('fetchQuiz/{id}', 'ModulesLmsLearningBaseController@fetchLessonQuiz');
 //                Route::post('submitQuiz/{quiz_id}/{lesson_id}', 'ModulesLmsLearningBaseController@submitQuiz');
 //                Route::get('{id}/lesson/{slug}', 'ModulesLmsLearningBaseController@showLesson');
-//                Route::get('{id}/lesson/{slug}/complete', 'ModulesLmsLearningBaseController@completeLesson');
+                Route::get('{id}/lesson/{slug}/complete', 'ModulesLmsLearningBaseController@completeLesson');
                 Route::get('{id}/start-course', 'ModulesLmsLearningBaseController@startCourse');
 
 
