@@ -37,6 +37,17 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
         Route::prefix('tenant')->group(function(){
             Route::get('/settings/generate-user-token/{email}','SettingsController@generateUserToken')->name('generate-user-token');
 
+            Route::group(['prefix' => 'learners'],function() {
+                Route::get('{id}/program/{programId}/enroll', 'ModulesLmsLearningBaseTenantController@programEnroll');
+                Route::get('{id}/program/{programId}/complete', 'ModulesLmsLearningBaseTenantController@programComplete');
+                
+                Route::get('{id}/course/{courseId}/start', 'ModulesLmsLearningBaseTenantController@courseStart');
+                Route::get('{id}/course/{courseId}/complete', 'ModulesLmsLearningBaseTenantController@courseComplete');
+                
+                Route::get('{id}/lesson/{lessonId}/start', 'ModulesLmsLearningBaseTenantController@lessonStart');
+                Route::get('{id}/lesson/{lessonId}/complete', 'ModulesLmsLearningBaseTenantController@lessonComplete');
+            });
+
             Route::group(['prefix' => 'programs'],function() {
                 Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('all-programs');
                 Route::put('edit/{id}', 'ModulesLmsLearningBaseTenantController@updateProgram')->name('update-programs');
@@ -45,6 +56,9 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
                 Route::get('{id}', 'ModulesLmsLearningBaseTenantController@showProgram');
 //                Route::get('edit/{id}', 'ModulesLmsLearningBaseTenantController@editProgram');
                 Route::get('{id}/learners', 'ModulesLmsLearningBaseTenantController@allLearnerPrograms');
+                
+                Route::post('enroll', 'ModulesLmsLearningBaseTenantController@programEnroll');
+                Route::post('complete', 'ModulesLmsLearningBaseTenantController@programComplete');
             });
 
             Route::group(['prefix' => 'courses'],function() {
@@ -54,6 +68,9 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
 //                Route::get('{id}', 'ModulesLmsLearningBaseTenantController@editCourse');
                 Route::put('{id}', 'ModulesLmsLearningBaseTenantController@updateCourse');
                 Route::get('{id}/learners', 'ModulesLmsLearningBaseTenantController@allLearnerCourses');
+
+                Route::post('start', 'ModulesLmsLearningBaseTenantController@courseStart');
+                Route::post('complete', 'ModulesLmsLearningBaseTenantController@courseComplete');
             });
 
             Route::group(['prefix' => 'modules'],function() {

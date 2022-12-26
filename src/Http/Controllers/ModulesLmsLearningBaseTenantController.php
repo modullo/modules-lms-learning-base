@@ -177,6 +177,60 @@ class ModulesLmsLearningBaseTenantController extends Controller
         return view('modules-lms-learning-base::tenants.course.show',compact('data'));
     }
 
+    public function courseStart(Request $request, Sdk $sdk)
+    {
+        $resource = $sdk->createCourseService();
+        $path = ['start'];
+        $resource = $resource
+            ->addBodyParam('course_id',$request->course_id)
+            ->addBodyParam('learner_id',$request->learner_id)
+            ->addBodyParam('learner_course_id',$request->learner_course_id ?? null)
+            ->addBodyParam('started_at',$request->started_at ?? null)
+            ->addBodyParam('completed_at',$request->completed_at ?? null)
+            ->addBodyParam('progress',$request->progress); //0 - 100
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+//                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
+        $response = $resource->send('post',$path);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['status' => true,'message' => 'Course successfully started'],200);
+    }
+
+    public function courseComplete(Request $request, Sdk $sdk)
+    {
+        $resource = $sdk->createCourseService();
+        $path = ['complete'];
+        $resource = $resource
+            ->addBodyParam('course_id',$request->course_id)
+            ->addBodyParam('learner_id',$request->learner_id)
+            ->addBodyParam('learner_course_id',$request->learner_course_id ?? null)
+            ->addBodyParam('started_at',$request->started_at ?? null)
+            ->addBodyParam('completed_at',$request->completed_at ?? null);
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+//                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
+        $response = $resource->send('post',$path);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['status' => true,'message' => 'Course successfully completed'],200);
+    }
 
 
 //    Lessons
@@ -558,6 +612,58 @@ class ModulesLmsLearningBaseTenantController extends Controller
             return response()->json(['status' => 'Error','data'=>$data],400);
         }
         return view('modules-lms-learning-base::tenants.programs.show', compact('data'));
+    }
+
+    public function programEnroll(Request $request, Sdk $sdk)
+    {
+        $resource = $sdk->createProgramService();
+        $path = ['enroll'];
+        $resource = $resource
+            ->addBodyParam('program_id',$request->program_id)
+            ->addBodyParam('learner_id',$request->learner_id)
+            ->addBodyParam('learner_program_id',$request->learner_program_id ?? null)
+            ->addBodyParam('started',$request->started ?? 'no')
+            ->addBodyParam('progress',$request->progress ?? null); //0 - 100
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+//                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
+        $response = $resource->send('post',$path);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['status' => true,'message' => 'Learner Successfully enrolled'],200);
+    }
+
+    public function programComplete(Request $request, Sdk $sdk)
+    {
+        $resource = $sdk->createProgramService();
+        $path = ['complete'];
+        $resource = $resource
+            ->addBodyParam('program_id',$request->program_id)
+            ->addBodyParam('learner_id',$request->learner_id)
+            ->addBodyParam('learner_program_id',$request->learner_program_id ?? null);
+
+        if ($request->hasHeader('src') && $request->header('src') == '3p'){
+            $resource = $resource
+//                ->addBodyParam('uuid',$request->id)
+                ->addBodyParam('src','3p');
+        }
+
+        $response = $resource->send('post',$path);
+        if (!$response->isSuccessful()) {
+            $response = $response->getData();
+            if ($response['errors'][0]['code'] === '005') return response()->json(['status' => false,'message' => $response['errors'][0]['source'] ?? '','validation_error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
+            return response()->json(['status' => false,'message' => $response['errors'][0]['title'] ?? '','error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
+
+        }
+        return response()->json(['status' => true,'message' => 'Learner Successfully enrolled and completed program'],200);
     }
 
     public function submitCourse(Request $request, Sdk $sdk){
