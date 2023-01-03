@@ -245,7 +245,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         }
 
         foreach ($request->courses as $course){
-            Complete3pCourseJob::dispatchSync($course);
+            Complete3pCourseJob::dispatch($course);
         }
 
         return response()->json(['status' => true,'message' => 'Courses successfully queued for processing'],200);
