@@ -71,6 +71,7 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
 
                 Route::post('start', 'ModulesLmsLearningBaseTenantController@courseStart');
                 Route::post('complete', 'ModulesLmsLearningBaseTenantController@courseComplete');
+                Route::post('complete-many', 'ModulesLmsLearningBaseTenantController@courseCompleteMany');
             });
 
             Route::group(['prefix' => 'modules'],function() {

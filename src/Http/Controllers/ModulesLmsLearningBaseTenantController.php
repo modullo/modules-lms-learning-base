@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modullo\ModulesLmsLearningBase\Jobs\Complete3pCourseJob;
 use Modullo\ModulesLmsLearningBase\Services\SchedulerService;
 
 class ModulesLmsLearningBaseTenantController extends Controller
@@ -230,6 +231,24 @@ class ModulesLmsLearningBaseTenantController extends Controller
 
         }
         return response()->json(['status' => true,'message' => 'Course successfully completed'],200);
+    }
+
+    public function courseCompleteMany(Request $request, Sdk $sdk)
+    {
+        $request->validate([
+            'courses' => 'required|array',
+            'count' => 'required|integer',
+        ]);
+
+        if ($request->count !== count($request->courses)) {
+            return response()->json(['status' => false,'message' => 'Course count does not match'],400);
+        }
+
+        foreach ($request->courses as $course){
+            Complete3pCourseJob::dispatchSync($course);
+        }
+
+        return response()->json(['status' => true,'message' => 'Courses successfully queued for processing'],200);
     }
 
 
