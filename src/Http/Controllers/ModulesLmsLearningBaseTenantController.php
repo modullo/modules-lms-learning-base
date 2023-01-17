@@ -841,6 +841,7 @@ class ModulesLmsLearningBaseTenantController extends Controller
         $response = $resource->send('post',['']);
         if (!$response->isSuccessful()) {
             $response = $response->getData();
+            dump($response);
             if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
             return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
