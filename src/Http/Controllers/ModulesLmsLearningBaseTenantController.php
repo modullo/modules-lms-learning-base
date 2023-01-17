@@ -839,9 +839,10 @@ class ModulesLmsLearningBaseTenantController extends Controller
             ->addBodyParam('retake_on_request',$request->retake_on_request === 'true' ? true : false)
             ->addBodyParam('questions', json_decode($request->questions, true));
         $response = $resource->send('post',['']);
+        dd($response->getRawResponse(),$response->getCode(),$response->getMessage(),$response->getData(),$response->getErrors(),$response->dumpRequest());
         if (!$response->isSuccessful()) {
             $response = $response->getData();
-            dump($response);
+            dd($response);
             if ($response['errors'][0]['code'] === '005') return response()->json(['error' => $response['errors'][0]['source'] ?? ''],$response['errors'][0]['status']);
             return response()->json(['error' => $response['errors'][0]['title'] ?? ''],$response['errors'][0]['status']);
 
