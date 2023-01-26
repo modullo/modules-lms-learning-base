@@ -18,11 +18,11 @@ use Modullo\ModulesLmsBaseAccounts\Services\ModulesLmsBaseAccountsTenantService;
 
 class SettingsController extends Controller
 {
-    protected Sdk $sdk;
+//    protected Sdk $sdk;
     protected $accountService;
-    public function __construct(Sdk $sdk)
+    public function __construct()
     {
-        $this->sdk = $sdk;
+//        $this->sdk = $sdk;
         $this->accountService = new ModulesLmsBaseAccountsTenantService();
     }
 
@@ -70,15 +70,29 @@ class SettingsController extends Controller
         return response()->json(['token' => $token->plainTextToken],200);
     }
 
-    public function generateUserToken(Request $request){
+    public function generateUserToken(Request $request, Sdk $sdk){
 //        $auth = app(ModulesAuthController::class)->
         $user = User::where('email',$request->email)->first();
+        if (is_null($user)){
+            $learner = $this->accountService->getSingleLearnerByEmail($request->email,$sdk);
+            $user = User::updateOrCreate(['email' => $request->email],
+                [
+                    'uuid' => $learner['id'],
+                    'email' => $request->email,
+                    'first_name' => $learner['first_name'],
+                    'last_name' => $learner['last_name'],
+                    'password' => $learner['password'] ?? 'password',
+                    'phone_number' => $learner['phone_number'],
+                    'learner_details' => $learner,
+                ]);
+
+        }
         if(is_null($user)){
             return response()->json(['error' => 'User not found'],404);
         }
         $user->tokens()->delete();
         $user->refresh();
         $token = $user->createToken('General Token');
-        return response()->json(['token' => $token->plainTextToken],200);
+        return response()->json(['email' => $request->email,'token' => $token->plainTextToken],200);
     }
 }
