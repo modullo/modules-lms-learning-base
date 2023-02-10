@@ -90,9 +90,40 @@ class SettingsController extends Controller
         if(is_null($user)){
             return response()->json(['error' => 'User not found'],404);
         }
+        $tempPassword = encrypt(str_random(8));
+        $user->update([
+            'temp_password' => $tempPassword
+        ]);
         $user->tokens()->delete();
         $user->refresh();
         $token = $user->createToken('General Token');
-        return response()->json(['email' => $request->email,'token' => $token->plainTextToken],200);
+        $sso = $this->generateSsoLink($user);
+        dd(['email' => $request->email,'token' => $token->plainTextToken,'sso_link' => $sso,
+            'possible_routes' => [
+                'programs' => 'programs',
+                'allPrograms' => 'allPrograms',
+                'courses' => 'learner-courses',
+                'allCourses' => 'learner-courses.all',
+            ]]);
+        return response()->json([
+            'email' => $request->email,
+            'token' => $token->plainTextToken,
+            'sso_link' => $sso,
+            'possible_routes' => [
+                'programs' => 'programs',
+                'allPrograms' => 'allPrograms',
+                'courses' => 'learner-courses',
+                'allCourses' => 'learner-courses.all',
+            ]
+        ],200);
+    }
+
+    private function generateSsoLink($user){
+        $email = $user->email;
+        $pass = decrypt($user->temp_password);
+        $data = $email.'**'.$pass;
+        $signature = encrypt($data);
+        return route('loginSSO',urlencode($signature));
+//        $signature = openssl_encrypt($data,'AES-256-CBC','dor2023',0,);
     }
 }

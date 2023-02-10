@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controllers')->name('api.')->group(function (){
     Route::middleware('auth:sanctum')->group(function (){
-        Route::prefix('learner')->group(function(){
+        Route::prefix('learner')->name('api.')->group(function(){
 
             // Routes for Courses
             Route::group(['prefix' => 'courses'], function() {
