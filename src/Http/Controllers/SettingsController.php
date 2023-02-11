@@ -98,13 +98,6 @@ class SettingsController extends Controller
         $user->refresh();
         $token = $user->createToken('General Token');
         $sso = $this->generateSsoLink($user);
-        dd(['email' => $request->email,'token' => $token->plainTextToken,'sso_link' => $sso,
-            'possible_routes' => [
-                'programs' => 'programs',
-                'allPrograms' => 'allPrograms',
-                'courses' => 'learner-courses',
-                'allCourses' => 'learner-courses.all',
-            ]]);
         return response()->json([
             'email' => $request->email,
             'token' => $token->plainTextToken,
