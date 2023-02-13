@@ -103,8 +103,8 @@ class SettingsController extends Controller
             'token' => $token->plainTextToken,
             'sso_link' => $sso,
             'possible_routes' => [
-                'programs' => 'programs',
-                'allPrograms' => 'allPrograms',
+                'programs' => 'learner-programs',
+                'allPrograms' => 'all-programs',
                 'courses' => 'learner-courses',
                 'allCourses' => 'learner-courses.all',
             ]

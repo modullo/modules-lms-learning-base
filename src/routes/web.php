@@ -36,8 +36,8 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
 
             // Routes for Program
             Route::group(['prefix' => 'programs'], function() {
-                Route::get('/', 'ModulesLmsLearningBaseController@programs');
-                Route::get('all', 'ModulesLmsLearningBaseController@allPrograms');
+                Route::get('/', 'ModulesLmsLearningBaseController@programs')->name('learner-programs');
+                Route::get('all', 'ModulesLmsLearningBaseController@allPrograms')->name('all-programs');
                 Route::get('{id}', 'ModulesLmsLearningBaseController@showProgram');
                 Route::get('{id}/enroll', 'ModulesLmsLearningBaseController@enrollToProgram');
             });
