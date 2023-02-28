@@ -34,7 +34,7 @@ Route::prefix('api/v1')->namespace('Modullo\ModulesLmsLearningBase\Http\Controll
 
         });
 
-        Route::prefix('tenant')->group(function(){
+        Route::prefix('tenant')->name('api.')->group(function(){
             Route::get('/settings/generate-user-token/{email}','SettingsController@generateUserToken')->name('generate-user-token');
 
             Route::group(['prefix' => 'learners'],function() {
