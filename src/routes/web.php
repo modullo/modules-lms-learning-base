@@ -75,7 +75,7 @@ Route::group(['namespace' => 'Modullo\ModulesLmsLearningBase\Http\Controllers','
             });
 
             Route::group(['prefix' => 'programs'],function() {
-                Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('all-programs');
+                Route::get('', 'ModulesLmsLearningBaseTenantController@allPrograms')->name('tenant.all-programs');
                 Route::put('edit/{id}', 'ModulesLmsLearningBaseTenantController@updateProgram')->name('update-programs');
                 Route::get('create', 'ModulesLmsLearningBaseTenantController@createProgram');
                 Route::post('create', 'ModulesLmsLearningBaseTenantController@submitProgram');
